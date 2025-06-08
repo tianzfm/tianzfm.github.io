@@ -284,6 +284,372 @@
       <tags>
         <tag>MySQL</tag>
         <tag>历史学习记录</tag>
+        <tag>面试问题总结</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>jvm常见问题-历史学习记录</title>
+    <url>/2025/06/08/jvm%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98-%E5%8E%86%E5%8F%B2%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[<h1 id="JVM-常见问题总结"><a href="#JVM-常见问题总结" class="headerlink" title="JVM 常见问题总结"></a>JVM 常见问题总结</h1><h3 id="3-JAVA内存如何分配？"><a href="#3-JAVA内存如何分配？" class="headerlink" title="3. JAVA内存如何分配？"></a>3. JAVA内存如何分配？</h3><blockquote>
+<p>Java内存可以分为程序计数器、Java虚拟机栈、本地方法栈、Java堆、方法区这几个部分。其中程序计数器、Java虚拟机栈、本地方法栈属于线程私有，而Java堆和方法区属于线程共享区域。对于Java的堆内存可以划分为新生代和老年代。在新生代中划分为一个Eden区和两个Survivor区。创建一个Java对象时，会通过指针碰撞或空闲列表法为对象分配内存。而当我们访问一个对象的时候可以通过句柄或者直接地址的方式进行对象的访问。</p>
+</blockquote>
+<h3 id="4-画出java运行时内存区结构图"><a href="#4-画出java运行时内存区结构图" class="headerlink" title="4. 画出java运行时内存区结构图"></a>4. 画出java运行时内存区结构图</h3><ul>
+<li>程序计数器</li>
+<li>java虚拟机栈</li>
+<li>本地方法栈</li>
+<li>java堆</li>
+<li>方法区  <ol>
+<li>运行时常量池</li>
+</ol>
+</li>
+<li>直接内存<blockquote>
+<p>前三个是线程私有的，java堆和方法区由所有线程共享。直接内存并不是java虚拟机运行时数据区域的一部分，但其中包括NIO类。</p>
+</blockquote>
+</li>
+</ul>
+<ol>
+<li>程序计数器可看作是当前线程所执行字节码的行号指示器。字节码解释器工作时就是通过改变这个计数器的值来选取下一条需要执行的字节码指令，是程序控制流的指示器，分支、循环、跳转、异常处理等基础功能都需要依赖该计数器；此外，为了线程切换后能恢复到正确的执行位置，每条线程都需要有一个独立的程序计数器；</li>
+<li>Java虚拟机栈的生命周期与线程相同，描述的是java方法执行的线程内存模型：每个方法执行的时候，java虚拟机就会同步创建一个栈帧来存储该方法的局部变量表、操作数栈、动态连接、方法出口等信息。每一个方法从调用直至执行完毕的过程，就对应着一个栈帧再虚拟机中从入栈到出栈的过程。</li>
+<li>本地方法栈： 和虚拟机栈类似，虚拟机栈为虚拟机执行java方法（也就是字节码服务），本地方法栈为虚拟机执行本地方法服务。</li>
+<li>java堆：虚拟机启动时创建。唯一目的就是存放对象实例，几乎所有对象实例都在这里分配内存。也是垃圾收集器管理的内存区域，因此也被称为（GC堆）</li>
+<li>方法区：用于存储已被虚拟机加载的类型信息、常量、静态变量、即时编译器编译后的代码缓存等数据。</li>
+</ol>
+<h3 id="5-堆区如何分类"><a href="#5-堆区如何分类" class="headerlink" title="5. 堆区如何分类"></a>5. 堆区如何分类</h3><ul>
+<li>设计者一般至少把Java堆划分为新生代和老年代两个区域。</li>
+<li><strong>对于新生代</strong>，如果采用Appel标记-复制算法，会把新生代分为Eden和两个Survivor区，Eden:Survivor &#x3D; 8：1。并一般用老年代来做分配担保。</li>
+<li>G1收集器是基于Region的内存布局。</li>
+</ul>
+<h3 id="6-堆与栈区别"><a href="#6-堆与栈区别" class="headerlink" title="6. 堆与栈区别"></a>6. 堆与栈区别</h3><ol>
+<li>堆存储的是对象。</li>
+<li>栈对应的是调用的方法，每一个方法从调用到结束就对应着一个栈帧在栈中从入栈到出栈的过程。</li>
+</ol>
+<h3 id="7-为什么要把字符串常量池放到堆区"><a href="#7-为什么要把字符串常量池放到堆区" class="headerlink" title="7. 为什么要把字符串常量池放到堆区"></a>7. 为什么要把字符串常量池放到堆区</h3><br/> 
+<br/> 
+<br/>
+
+<h3 id="8-java8方法区的变化"><a href="#8-java8方法区的变化" class="headerlink" title="8. java8方法区的变化"></a>8. java8方法区的变化</h3><blockquote>
+<p>JDK7之前，HotSpot使用永久代来实现方法区时，类变量（也就是静态变量，被static修饰的变量）所使用的内存都应该在方法区中进行分配，方法区本身是一个逻辑上的区域。而在JDK之后，类变量会随着Class对象一起存放在Java堆中。</p>
+</blockquote>
+<h3 id="9-判断对象已经无效"><a href="#9-判断对象已经无效" class="headerlink" title="9. 判断对象已经无效"></a>9. 判断对象已经无效</h3><ul>
+<li><p>引用计数器：<br>　　在对象中加一个引用计数器，每当有一个地方引用它，计数器就加1；引用失效时就减1；任何时刻计数器为0的对象就是不可能再被引用的。</p>
+</li>
+<li><p>可达性分析：<br>　　通过一系列成为“GC roots”的根对象作为起始节点集，从这些节点开始，根据引用关系向下搜索，搜索过程所走过的路径成为“引用链”，如果某对象到GC roots间没有任何引用链连接，或者说从GC roots到该对象不可达时，则证明此对象是不可能再被使用的。</p>
+</li>
+</ul>
+<h3 id="10-引用计数法实现原理"><a href="#10-引用计数法实现原理" class="headerlink" title="10. 引用计数法实现原理"></a>10. 引用计数法实现原理</h3><ol>
+<li>在对象中添加一个引用计数器，每当有一个地方引用它时，计数器值就加一；当引用失效时，计数器值就减一；任何时刻计数器为0的对象就是不可能再被使用的。</li>
+<li>虽然占用了一些额外的内存空间来进行计数，但原理简单，效率较高。但无法解决循环引用问题；</li>
+</ol>
+<h3 id="11-哪些对象可以作为GC-Root"><a href="#11-哪些对象可以作为GC-Root" class="headerlink" title="11. 哪些对象可以作为GC Root"></a>11. 哪些对象可以作为GC Root</h3><blockquote>
+<p>GC roots应是一组活跃的引用；</p>
+</blockquote>
+<ol>
+<li>虚拟机栈（栈帧中的本地变量表）中引用的对象</li>
+<li>方法区中类静态属性引用的对象</li>
+<li>方法区中常量引用的对象</li>
+<li>本地方法栈中JNI（即一般说的native方法）中引用的对象</li>
+<li>java虚拟机内部的引用</li>
+<li>所有被同步锁持有的对象</li>
+<li>反应java虚拟机内部情况的JMXBean、JVMTI中注册的回调、本地代码缓存等。</li>
+</ol>
+<h3 id="12-GCRoot详细"><a href="#12-GCRoot详细" class="headerlink" title="12. GCRoot详细"></a>12. GCRoot详细</h3><ol>
+<li>固定可作为GC Roots的节点主要在全局性的引用与执行上下文中，尽管目标明确，但高效的查找到这些节点并不容易；</li>
+<li>尽管可达性分析算法中耗时最长的查找引用链的过程已经可以做到与用户线程一起并发，但根节点枚举这一步骤都是必须暂停用户进程的，也就是Stop The World；而且根节点枚举还是必须在一个能保障一致性的快照中才得以进行。</li>
+<li>在类加载动作完成的时候，HotSpot就会通过一种OopMap的数据结构把对象内什么偏移量上存放的是什么类型的数据给计算出来，在即时编译的过程中，也会在特定的位置记录下栈里和寄存器里哪些位置是引用。这样收集器在扫描时就可以直接得知这些信息了，并不需要真正一个不漏的从方法区等GC Roots开始查找。</li>
+<li>在OopMap（一种可以直接得到那些地方存放着对象引用的数据结构）的帮助下，HotSpot可以快速准确的完成GC Roots枚举。</li>
+</ol>
+<h3 id="13-finalize-方法回收对象的两次标记过程"><a href="#13-finalize-方法回收对象的两次标记过程" class="headerlink" title="13. finalize()方法回收对象的两次标记过程"></a>13. finalize()方法回收对象的两次标记过程</h3><ul>
+<li>即使在可达性分析中判定为不可达的对象，也不是非死不可的。要真正宣告一个对象死亡，最多会经历两次标记过程；</li>
+</ul>
+<ol>
+<li>如果对象在进行可达性分析后发现没有和GC roots相连接的引用链，那它将会被第一次标记。随后进行一次筛选，筛选的条件是此对象是否有必要执行finalize()方法。如果对象没有覆盖finalize()方法，或者finalize()方法已经被虚拟机调用过，那么虚拟机将这两种情况都视为没有必要执行。</li>
+<li>如果对象被判定为有必要执行finalize()方法，那么该对象将会被放置到F-Queue队列之中。finalize()方法是对象逃脱死亡命运的最后一次机会，稍后收集器将对F-Queue中的队列进行第二次标记。如果想拯救自己，只需重新与引用链上的任何一个对象建立关联即可。</li>
+</ol>
+<h3 id="14-Java四种引用及场景"><a href="#14-Java四种引用及场景" class="headerlink" title="14. Java四种引用及场景"></a>14. Java四种引用及场景</h3><ol>
+<li>强引用:<br> 　最传统的引用定义，指在程序代码中普遍存在的引用赋值。无论任何情况下，只要强引用关系还存在，垃圾收集器就永远不会回收掉被引用的对象；</li>
+<li>软引用：<br>　　用来描述一些还有用，但非必须的对象。只被软引用关联着的对象，在系统将要发生内存溢出前，会把这些对象列进回收范围之中进行第二次回收，如果这次回收后还没有足够的内存，才会抛出内存溢出异常； softreference类</li>
+<li>弱引用：<br>　　描述非必须对象，但他的强度比软引用更弱，被弱引用关联的对象只能生存到下一次垃圾收集发生为止。当垃圾收集器开始工作，无论当前内存是否足够，都会回收掉只被弱引用关联的对象。weakreference类</li>
+<li>虚引用：<br>　　“幽灵引用”、“幻影引用”，是最弱的一种引用关系，是否有虚引用存在完全不会对对象的生存时间构成影响，为一个对象设置虚引用的唯一目的只是为了在这个对象被收集器回收时受到一个系统通知。phantomreference类</li>
+</ol>
+<h3 id="15-垃圾回收算法和流程"><a href="#15-垃圾回收算法和流程" class="headerlink" title="15. 垃圾回收算法和流程"></a>15. 垃圾回收算法和流程</h3><blockquote>
+<p>垃圾收集算法可分为引用计数式垃圾收集和追踪式垃圾收集两大类，这两大类也被称为直接垃圾收集和间接垃圾收集。下面的所有算法都是Tracing GC</p>
+</blockquote>
+<ul>
+<li>分代收集理论：<ol>
+<li>弱分代假说：绝大多数对象都是朝生夕灭的；</li>
+<li>强分代假说：熬过越多次垃圾收集过程的对象就越难以消亡；</li>
+<li>跨代引用假说：跨代引用相对于同代引用来说仅占极少数；<ul>
+<li>依据这个假说，我们就不应再为了少量的跨代引用去扫描整个老年代，也不必浪费空间专门记录每一个对象是否存在及存在哪些跨代引用，只需在新生代上建立一个全集的数据结构（记忆集），这个结构把老年代划分成若干个小块，标识出老年代哪一些内存中会存在跨代引用。此后当发生Minor GC时，只有包含了跨代引用的小块内存里的对象才会被加入到GC roots进行扫描。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<ol>
+<li><p>标记-清除算法：</p>
+<ul>
+<li>算法分为标记和清除两个阶段： 首先标记出所有需要回收的对象，在标记完成后，统一回收掉所有被标记的对象；也可以反过来，标记存活的对象，回收所有未被标记的对象。</li>
+<li>缺点：1.执行效率不稳定，如果java堆中包括大量对象，而且其中大部分是需要被回收的，这时就需要大量的标记和清除操作，导致执行效率随对象数量的增长而降低；2. 内存空间的碎片化问题，标记清除后会产生大量不连续的内存碎片，碎片太多可能导致程序运行过程中无法为较大对象分配足够的连续内存，从而不得不提前触发另一次垃圾收集动作。</li>
+</ul>
+</li>
+<li><p>标记-复制算法：</p>
+<ul>
+<li>为了解决标记-清除算法面对大量可回收对象时执行效率低的问题，提出“半区复制”的垃圾收集算法，将可用内存划分为大小相等的两块，每次只是有其中的一块。当这一块用完了，就把还存活着的对象复制到另外一块上面，然后再把已使用过的内存空间一次清理掉。这种算法的代价可用内存只有原来的一半，空间浪费严重。</li>
+<li>“Appel式回收”，一种更优化的半区复制分代策略。Serial Parnew等新生代收集器都采用这种策略来设计新生代的内存布局。具体做法是把新生代划分为一块较大的Eden空间和两块较小的Survivor空间，每次分配内存只使用Eden和其中一块Survivor。当发生垃圾收集时，把Eden和Survivor中仍然存活的对象都复制到另一块Survivor空间上，然后直接清理掉Eden和Survivor空间。默认Eden：survivor &#x3D; 8：1；<ul>
+<li><strong>逃生门设计</strong>：当Survivor空间不足以容纳一次Minor GC之后的存活对象时，就需要依赖其他内存区域（大多是老年代）进行分配担保。这些容纳不下的对象通过分配担保机制直接进入老年代。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>标记-整理算法：</p>
+<ul>
+<li>标记-复制算法在对象存活率较高的时候就会有较多的复制操作，效率将会降低。更关键的是，如果不想浪费50%的空间，就要有额外的空间进行分配担保，因此老年代一般不能直接选用这种算法。</li>
+<li>标记-整理算法的标记过程和标记-清除的标记过程一样，但后续步骤不是对所有被标记的对象进行清理，而是把所有存活的对象都向内存空间的一端移动，然后直接清理掉边界以外的内存。</li>
+<li>标记整理的缺点：在老年代这种每次回收都有大部分对象存活的区域，移动存活对象并更新引用这些对象的地方是一项十分负重的操作，必须停止用户程序才能进行，也就是Stop The World。<strong>会增大延迟</strong></li>
+<li>标记清除的缺点：空间碎片化问题要依靠更发杂的内存分配器和内存访问器来解决，<strong>会直接影响吞吐量。</strong></li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>因此更关注吞吐量的Parallel Old收集器是基于标记-整理算法的，而更关注低延迟的CMS收集器采用标记-清除算法。准确来说，CMS采用的是一种折中的算法：让虚拟机平时多数时间采用标记-清除算法，暂时容忍内存碎片的存在，直到内存空间的碎片化成都已经大到影响对象分配时，再用标记-整理算法收集一次，以获得规整的内存空间。</p>
+</blockquote>
+<h3 id="16-如何减少full-gc的次数？"><a href="#16-如何减少full-gc的次数？" class="headerlink" title="16. 如何减少full gc的次数？"></a>16. 如何减少full gc的次数？</h3><blockquote>
+<p>首先应明确为什么会发生full gc：当内存回收的速度赶不上内存分配的速度时，就会导致full gc，长时间stop the world.比如在CMS中的”Concurrent Mode Failure”失败。</p>
+</blockquote>
+<br/> 
+
+
+
+<h3 id="17-方法区是否需要gc"><a href="#17-方法区是否需要gc" class="headerlink" title="17. 方法区是否需要gc"></a>17. 方法区是否需要gc</h3><blockquote>
+<p>java虚拟机规范中提到过可以不要求虚拟机在方法区中实现垃圾收集，事实上有未实现或未能完整实现方法去类型卸载的收集器存在。方法区垃圾收集因为判定条件比较苛刻，因此性价比低。</p>
+</blockquote>
+<ul>
+<li>方法区的垃圾收集主要回收两部分内容：废弃的常量和不再使用的类型。<ol>
+<li>回收废弃的常量与回收java中的对象非常类似。  </li>
+<li>判定一个类型是否是不再使用的需要满足三个条件：  <ol>
+<li>该类所有的实例都已经被回收，也就是说Java堆中不存在该类及其任何派生子类的实例；</li>
+<li>加载该类的类加载器已经被回收；</li>
+<li>该类对应的java.lang.Class对象没有在任何地方被引用，无法在任何地方通过反射访问该对象。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="18-查看GC状态的命令"><a href="#18-查看GC状态的命令" class="headerlink" title="18. 查看GC状态的命令"></a>18. 查看GC状态的命令</h3><ul>
+<li>jstat命令可以查看堆内存各部分的使用量，以及加载类的数量。命令的格式如下：</li>
+<li>jstat [-命令选项] [vmid] [间隔时间&#x2F;毫秒] [查询次数]<br><a href="https://blog.csdn.net/jek123456/article/details/80432449">CSDN</a></li>
+</ul>
+<h3 id="19-CMS收集器的流程"><a href="#19-CMS收集器的流程" class="headerlink" title="19. CMS收集器的流程"></a>19. CMS收集器的流程</h3><blockquote>
+<p>CMS收集器是一种以获取最短回收停顿时间为目标的收集器。基于标记-清除算法。主要流程有：1)初始标记；2)并发标记；3)重新标记；4)并发清除。其中初始标记和重新标记两个步骤需要Stop the World。</p>
+</blockquote>
+<ol>
+<li>初始标记：仅仅只是标记一下GC Roots能直接关联到的对象，速度很快；个人理解有点像根节点枚举过程，需要stop the world，但根节点枚举的意思好像是找出GC Roots对象，而初始标记标记的是和roots直接关联的对象，所以还是不太一样吧。</li>
+<li>并发标记：从GC Roots的直接关联对象开始遍历整个对象图的过程，这个过程耗时很长但是不需要停顿用户线程，能与垃圾收集线程一起并发运行；</li>
+<li>重新标记：为了修正并发标记期间，因用户线程继续运作而导致标记产生变动的那一部分对象的标记记录。</li>
+<li>并发清除：清理删除掉标记阶段判断已经死亡的对象，由于不需要移动存活对象（因为CMS采用的是标记-清除算法），所以这个阶段也是可以与用户线程并发的。</li>
+</ol>
+<h3 id="20-G1收集器的流程"><a href="#20-G1收集器的流程" class="headerlink" title="20. G1收集器的流程"></a>20. G1收集器的流程</h3><blockquote>
+<p>G1收集器是一款面向服务端应用的垃圾收集器，开创了收集器面向局部收集的设计思路和基于Region的内存布局格式。能实现停顿时间模型，可以由用户指定期望的停顿时间使得G1在不同的场景下取得关注吞吐量和关注延迟之间的最佳平衡。</p>
+</blockquote>
+<ul>
+<li>停顿时间模型：能够支持指定在一个长度为M毫秒的时间片段内，消耗在垃圾收集上的时间大概率不超过N毫秒这样的目标。</li>
+<li>Mixed GC模式：G1收集器之前的垃圾收集器，包括CMS在内，垃圾收集的目标要么是整个新生代（Minor GC），要么是整个老年代（Major GC），要么就是整个Java堆（Full GC）。而G1跳出了这个樊笼，它可以面对堆内存的任何部分来组成回收集（Collection Set），衡量标准不再是它属于哪个分代，而是哪块内存中存放的垃圾最多，回收收益最大，这就是G1的Mixed GC模式。</li>
+<li><strong>G1开创的基于Region的堆内存布局是它能够实现这个目标的关键</strong>。虽然G1仍遵循分代收集理论，但其堆内存布局和其他收集器有明显差异：不再坚持固定大小以及固定数量的分代区域划分，而是把连续的Java堆划分为多个大小相等的独立区域（Region），每一个Region都可以根据需要，扮演新生代的Eden、Survivor空间，或者老年代空间。收集器能够对扮演不同角色的Region采用不同的策略去处理。这样无论是新对象还是存活了一段时间的旧对象都能获得较好的收集效果。</li>
+<li>Region中还有一类特殊的Humongous区域，专门用来存储大对象。</li>
+<li>虽然G1 还保留分代收集理论的思想，但是新生代和老年代不再固定，而是一系列Region区域的动态组合。<blockquote>
+<p>总结：G1收集器之所以能建立可预测的停顿时间模型，<strong>是因为它将Region作为单次回收的最小单元</strong>，即每次收集到的内存空间都是Region大小的整数倍，这样就可以有计划的避免在整个Java堆中进行全区域的垃圾收集。具体思路：让G1收集器去跟踪各个Region里面的垃圾堆积的价值大小，价值即回收所获得的空间大小以及回收所需时间的经验值，然后在后台维护一个优先级列表，根据用户设定的停顿时间，优先处理回收价值收益最大的那些Region。<strong>使用Region划分内存空间，以及具有优先级的区域回收方式保证了G1收集器在有限时间内获取尽可能高的收集效率</strong></p>
+</blockquote>
+</li>
+<li>G1实现细节：  <ol>
+<li>跨Region指针如何处理：每个Region都维护有自己的记忆集，记录着别的Region指向自己的指针，并标记这些指针分别在哪些卡页的范围内。这种双向卡表结构（记录我指向谁和谁指向我）实现起来更加复杂，Region分代数量比传统的多也造成卡表多，因此G1有更高的内存占用负担。</li>
+<li><strong>并发标记阶段如何保证收集线程和用户线程能互不干扰的进行</strong>：CMS采用增量更新，G1采用原始快照（SATB）。G1为每一个Region都创建了两个TAMS的指针，把Region中的一部分空间划分出来用于并发回收过程中的新对象分配，并发回收时新对象的分配地址要在两个指针位置以上，默认是存活的，不纳入回收范围。</li>
+<li>如何建立可靠的停顿预测模型：以衰减均值为理论基础实现。</li>
+</ol>
+</li>
+<li>流程：<ol>
+<li><strong>初始标记</strong>：仅仅标记一下GC Roots能直接关联到的对象，并修改TAMS指针的值，让下阶段用户线程并发运行时，能正确地在可用的Region上分配新对象。需要停顿线程，但耗时短，而且是借用Minor GC的时候同步完成的，所以G1收集器在这个地方没有额外的停顿。</li>
+<li><strong>并发标记</strong>：从GC Root开始对堆中的对象进行可达性分析，递归的扫描整个堆里的对象图，找出要回收的对象。耗时长，但可以与用户线程并发进行。对象图扫描完后，还要重新处理SATB记录下的在并发时有引用变动的对象。</li>
+<li><strong>最终标记</strong>：stop the world，处理并发阶段结束后遗留的少量的SATB记录。</li>
+<li><strong>筛选回收</strong>：更新Region的统计数据，对各个Region的回收价值和成本进行排序，根据用户所期望的停顿时间来制定回收计划，可以自由选择多个Region构成回收集，然后把决定回收的那一部分Region的存活对象复制到空Region中，再清理掉旧Region的全部空间（标记-复制垃圾收集算法）。涉及到了对象的移动，所以要stop the world。</li>
+</ol>
+</li>
+</ul>
+<h3 id="21-CMS收集器和G1收集器的区别"><a href="#21-CMS收集器和G1收集器的区别" class="headerlink" title="21. CMS收集器和G1收集器的区别"></a>21. CMS收集器和G1收集器的区别</h3><blockquote>
+<p>G1收集器可以指定最大停顿时间，分Region布局，按收益动态确定回收集，且不会产生内存碎片，有利于程序长时间运行。G1的卡表比CMS的复杂，内存占用负担较重。CMS只使用了写后屏障，G1使用写前、写后屏障。</p>
+</blockquote>
+<ol>
+<li><strong>采用的垃圾收集算法不同</strong>：CMS平时多数时间采用标记-清除算法，当内存空间的碎片程度影响到内存分配时，再采用标记-整理算法收集一次。而G1收集器采用整体上看标记-整理、局部看标记-复制算法，不会产生内存碎片。</li>
+<li>内存布局不同：CMS是传统的新生代、老年代布局，G1是基于Region的内存布局；</li>
+<li>垃圾收集的作用域不同：CMS要么Minor GC要么Major GC要么Full GC，而G1是局部收集思路，衡量标准不再是属于哪个分代，二十那块内存的回收收益最大，也就是Mixed GC。</li>
+<li>为了实现并发标记阶段所采用的方法不同：CMS是基于增量更新的方法；而G1是原始快照（SATB）；</li>
+</ol>
+<h3 id="22-内存管理-对象创建、布局、访问定位"><a href="#22-内存管理-对象创建、布局、访问定位" class="headerlink" title="22. 内存管理(对象创建、布局、访问定位)"></a>22. 内存管理(对象创建、布局、访问定位)</h3><h4 id="1-对象的创建过程"><a href="#1-对象的创建过程" class="headerlink" title="1. 对象的创建过程"></a>1. 对象的创建过程</h4><ol>
+<li>java虚拟机遇到一个new指令时，首先检查这个指令的参数能否在常量池中定位到一个类的符号引用，并检查符号引用所代表的类是否已经被加载、解析和初始化过，如果没有，执行类加载过程；</li>
+<li>类加载检查通过后，虚拟机将为对象分配内存。对象所需内存的大小在类加载完成时便可完全确定，为对象分配空间的任务实际上便等同于把一块确定大小的内存块从java堆中划分出来。（分配方式有指针碰撞、空闲列表，还要考虑分配内存时并发情况下的线程安全问题：对分配内存动作进行同步处理，或把内存分配的动作按照线程划分在不同空间中进行</li>
+<li>内存分配完成后，虚拟机将分配到的内存（除了对象头）都初始化为0，保证对象的实例字段在java代码中不赋初始值就能直接使用。</li>
+<li>设置对象头，如是哪个类的实例、如何找到类的元数据信息、GC分代年龄等。</li>
+<li>new指令后接着会执行&lt;\init&gt;()方法，按照程序员的意愿对对象进行初始化。</li>
+</ol>
+<h4 id="2-对象布局"><a href="#2-对象布局" class="headerlink" title="2. 对象布局"></a>2. 对象布局</h4><blockquote>
+<p>对象在堆内存中的存储布局可以划分为三部分：对象头、实例数据和对齐填充</p>
+</blockquote>
+<ol>
+<li>对象头：  包括两类信息  <ul>
+<li>第一类是用于存储对象自身的运行时数据，如哈希码、GC分代年龄、锁状态标志、线程持有的锁等；</li>
+<li>第二类是类型指针，即对象指向它的类型元数据的指针，java虚拟机通过这个指针来确定该对象是哪个类的实例。但并不是所有的虚拟机实现都必须在对象数据上保留类型指针，换句话说，查找对象的元数据信息并不一定要经过对象本身。</li>
+</ul>
+</li>
+<li>实例数据：  <ul>
+<li>是对象真正存储的有效信息，即我们在代码里所定义的各种类型的字段内容，无论是从父类继承下来的，还是在子类中定义的字段都必须记录下来。</li>
+</ul>
+</li>
+<li>对齐填充：<ul>
+<li>并不是必然存在的，仅仅起着占位符的作用。</li>
+</ul>
+</li>
+</ol>
+<h4 id="3-对象的访问定位"><a href="#3-对象的访问定位" class="headerlink" title="3. 对象的访问定位"></a>3. 对象的访问定位</h4><blockquote>
+<p>java程序会通过栈上的reference数据来操作堆上的具体对象。<br>主流的访问方式主要有两种：</p>
+</blockquote>
+<ul>
+<li>使用句柄：java堆中划分出一块内存座位句柄池，reference中存储的就是对象的句柄地址，而句柄中包含了对象实例数据和类型数据各自具体的地址信息；好处是对象被移动时只需要改变句柄中的实例数据指针，而不用改变reference。</li>
+<li>使用直接指针：reference中存储的直接就是对象地址。好处是速度快，节省了一次指针定位的时间开销。</li>
+</ul>
+<h3 id="23-堆内存分配策略"><a href="#23-堆内存分配策略" class="headerlink" title="23. 堆内存分配策略"></a>23. 堆内存分配策略</h3><ol>
+<li><strong>对象优先在Eden分配</strong>：大多数情况下对象在新生代Eden区中分配。当Eden区没有足够的空间进行分配时，虚拟机将发起一次Minor GC。</li>
+<li><strong>大对象直接进入老年代</strong>：大对象容易导致内存明明还有不少空间就提前触发垃圾收集。而当复制大对象时，就意味着高额的内存复制开销。直接将大对象进入老年代的<strong>目的就是为了避免在Eden和Survivor之间来回复制，产生大量的内存复制操作。</strong></li>
+<li><strong>长期存活的对象将进入老年代</strong>：对象头中定义了一个对象年龄计数器，每熬过一次Minor GC，年龄计数器加1，默认15时进入老年代。</li>
+<li><strong>动态对象年龄判定</strong>：并不是一定要达到age阈值才能进入老年代，如果在Survivor空间中低于或等于某年龄的所有对象大小的总和大于Survivor空间的一半，年龄大于或等于该年龄的对象就可以直接进入老年代。</li>
+<li><strong>空间分配担保</strong>：发生Minor GC前，虚拟机先检查老年代最大可用的连续空间是否大于新生代所有对象总空间，如果这个条件成立，那么这次Minor GC可以确保是安全的。如果不成立，检查–XX:HandlePromotionFailure参数，看是否允许担保失败，如果允许，继续检查老年代最大可用的连续空间是否大于历次晋升到老年代对象的平均大小，如果大于，将尝试进行一次Minor GC；如果小于，或者参数设置的不允许担保失败，那么就要改为进行一次Full GC。</li>
+</ol>
+<h3 id="24-查看java虚拟机内存占用？"><a href="#24-查看java虚拟机内存占用？" class="headerlink" title="24. 查看java虚拟机内存占用？ "></a>24. 查看java虚拟机内存占用？ <br/></h3><br/> 
+<br/> 
+<br/>
+
+<h3 id="25-java的类加载流程"><a href="#25-java的类加载流程" class="headerlink" title="25. java的类加载流程"></a>25. java的类加载流程</h3><ol>
+<li><p>加载:</p>
+<blockquote>
+<p>加载阶段是整个类加载过程的一个阶段，主要完成三件事：</p>
+</blockquote>
+<ol>
+<li>通过一个类的全限定名来获取定义此类的二进制字节流；</li>
+<li>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构；</li>
+<li>在这个内存中生成一个代表这个类的java.lang.Class对象，作为方法区整个类的各种数据的访问入口。<blockquote>
+<p>加载结束后，Java虚拟机外部的二进制字节流就按照虚拟机所设定的格式存储在方法区之中了，方法区的数据存储格式完全由虚拟机实现自己定义。类型数据妥善安置在方法区之后，会在Java堆内存中实例化一个java.lang.Class类的对象，这个对象将作为程序访问方法区中的类型数据的外部接口。</p>
+</blockquote>
+</li>
+</ol>
+</li>
+<li><p>验证：  </p>
+<blockquote>
+<p>验证是连接阶段的第一步，这一阶段的目的是确保Class文件的字节流中包含的信息符合《Java虚拟机规范》的全部约束要求，保证这些信息被当作代码运行后不会危害虚拟机自身的安全。验证阶段对于虚拟机的类加载机制来说，是一个非常重要，但却不是必须要执行的阶段。</p>
+</blockquote>
+<ol>
+<li><strong>文件格式验证</strong>：第一阶段验证字节流是否符合Class文件格式的规范，并能被当前版本的虚拟机处理。该阶段主要目的是保证输入的字节流能正确地解析并存储于方法区之内，格式上符合描述一个Java类型的要求。包括但不限于：<ul>
+<li>是否以魔数0xCAFEBABE开头；</li>
+<li>主次版本号是否在当前Java虚拟机接受范围之内；</li>
+<li>常量池的常量中是否有不被支持的常量类型；</li>
+</ul>
+</li>
+<li><strong>元数据验证</strong>：第二阶段是对字节码描述的信息进行语义分析，保证其描述的信息是否符合《Java语言规范》的要求。主要目的是对类的元数据信息进行语义校验，保证不存在与java语言规范相悖的元数据信息。<ul>
+<li>这个类是否有父类；</li>
+<li>父类是否继承了不允许被继承的类；</li>
+<li>如果这个类不是抽象类，是否实现了其父类或接口中要求实现的所有方法；</li>
+</ul>
+</li>
+<li><strong>字节码验证</strong>：主要目的是通过数据流分析和控制流分析，确定程序语义是合法的、符合逻辑的。</li>
+<li><strong>符号引用验证</strong>：发生在虚拟机将符号引用转化为直接引用的时候。符号引用验证可以看作是对类自身以外的各类信息进行匹配性校验。也就是验证该类是否缺少或者被禁止访问它所依赖的某些外部类、方法、字段等资源。</li>
+</ol>
+</li>
+<li><p>准备：  </p>
+<blockquote>
+<p>准备阶段是正式为类变量（即静态变量，被static修饰的变量）分配内存并设置<strong>初始值</strong>的阶段。JDK7之前，当HotSpot用永久代实现方法区时，这些类变量使用的内存应在方法区进行分配，方法区本身是一个逻辑上的区域。但JDK7之后，类变量会随着Class对象一起存放在Java堆中。</p>
+</blockquote>
+<ul>
+<li>准备阶段进行的内存分配仅包括类变量，而不包括实例变量，实例变量会在对象实例化时随着对象一起分配在java堆中。</li>
+<li>初始值通常是数据类型的零值。但如果类字段的字段属性表中存在ConstantValue属性，也就是该字段被final修饰，那在准备阶段变量值就会被初始化为ConstantValue属性所指定的初始值。</li>
+</ul>
+</li>
+<li><p>解析：</p>
+<blockquote>
+<p>解析阶段是Java虚拟机将常量池内的符号引用替换为直接引用的过程。常量池中主要存放两大类变量：字面量和符号引用。解析动作主要针对类或接口、字段、类方法、接口方法、方法类型、方法句柄和调用点限定符这7类符号引用进行。</p>
+</blockquote>
+<ul>
+<li>符号引用：以一组符号来描述所引用的目标，符号可以是任何形式的字面量，只要使用时能无歧义的定位目标即可。符号引用与虚拟机实现的内存布局无关，引用的目标并不一定是已经加载到虚拟机内存当中的内容。</li>
+<li>直接引用：可以直接指向目标的指针、相对偏移量或者是一个能间接定位到目标的句柄。直接引用和虚拟机实现的内存布局相关，且只能引用加载进虚拟机内存中的内容。</li>
+</ul>
+</li>
+<li><p>初始化</p>
+<blockquote>
+<p>类加载过程的最后一个步骤。前面几个步骤都由Java虚拟机主导。直到初始化阶段，Java虚拟机才开始真正执行类中编写的Java程序代码，将主导权移交给应用程序。初始化阶段就是执行类构造器<code>&lt;clinit&gt;()</code>方法的过程，该方法不是程序员在Java代码中直接编写的代码，而是javac编译器的自动生成物。</p>
+</blockquote>
+<ul>
+<li><code>&lt;clinit&gt;()</code>方法是由编译器自动收集类中的所有变量的赋值动作和静态语句块中的语句合并产生的。</li>
+<li><code>&lt;clinit&gt;()</code>与类的构造函数<code>&lt;init&gt;()</code>方法不同，它不需要显示地调用父类构造器。虚拟机保证子类的<code>&lt;clinit&gt;()</code>方法执行前，父类的<code>&lt;clinit&gt;()</code>方法已经执行完毕。因此在虚拟机中第一个被执行的<code>&lt;clinit&gt;()</code>方法肯定是java.lang.Class。</li>
+<li>由于父类的<code>&lt;clinit&gt;()</code>方法先执行，意味着父类中定义的静态语句块优先于子类的变量赋值操作。</li>
+<li><code>&lt;clinit&gt;()</code>方法对于类或接口来说不是必须的。如果类中没有静态语句块和对变量的赋值操作，那么编译器就不为这个类生成<code>&lt;clinit&gt;()</code>方法。</li>
+<li>接口中不能使用静态语句块，但有变量赋值操作，因此和类一样会生成<code>&lt;clinit&gt;()</code>方法。但接口与类不同的是，执行接口的<code>&lt;clinit&gt;()</code>方法不需要先执行父类的<code>&lt;clinit&gt;()</code>方法，因为只有父类中定义的变量被使用时，父类接口才会被初始化。</li>
+<li>如果多个线程同时初始化一个类，那么只会有一个线程去执行<code>&lt;clinit&gt;()</code>方法。其他线程都需要阻塞等待。</li>
+</ul>
+</li>
+</ol>
+<h3 id="26-类加载器"><a href="#26-类加载器" class="headerlink" title="26. 类加载器"></a>26. 类加载器</h3><blockquote>
+<p>类加载过程中加载阶段的“通过一个类的全限定名来获取描述该类的二进制字节流”这个动作放到Java虚拟机外部去实现，实现这个动作的代码被称为“类加载器”。</p>
+</blockquote>
+<ul>
+<li>类与类加载器：类加载器虽然只用于实现类的加载动作，但它在Java程序中起到的作用却远超类加载阶段。因为<strong>对于任何一个类，都必须由加载它的类加载器和这个类本身一起共同确立其在Java虚拟机中的唯一性，每一个类加载器，都拥有一个独立的类名称空间</strong>。</li>
+</ul>
+<h3 id="27-类加载器的双亲委派"><a href="#27-类加载器的双亲委派" class="headerlink" title="27. 类加载器的双亲委派"></a>27. 类加载器的双亲委派</h3><blockquote>
+<p>站在Java虚拟机的角度看，只存在两种类加载器：启动类加载器，c++语言实现，是虚拟机的一部分；和其他所有的类加载器，全都继承自抽象类java.lang.ClassLoader。  </p>
+</blockquote>
+<blockquote>
+<p>站在开发者的角度，自java1.2以来，Java一直保持着三层类加载器、双亲委派的类加载架构。</p>
+</blockquote>
+<ul>
+<li>三层类加载器：  <ol>
+<li>启动类加载器：负责加载存放在<code>&lt;JAVA_HOME&gt;\lib</code>目录，或者被<code>-Xbootclasspath</code>参数指定的路径中存放的并且能被java虚拟机识别的类库加载到虚拟机内存中。无法被程序员直接引用。</li>
+<li>扩展类加载器： 负责加载<code>&lt;JAVA_HOME&gt;\lib\ext</code>目录中，或者被java.ext.dirs系统变量所指定的路径中所有的类库。可直接在程序中使用该加载器。</li>
+<li>应用程序类加载器：也被称为“系统类加载器”。负责加载用户路径上所有的类库。如果应用程序没有自定义过自己的类加载器，一般情况下这个就是程序中默认的类加载器。可直接使用。</li>
+</ol>
+</li>
+<li>双亲委派模型：</li>
+</ul>
+<h3 id="28-为什么需要双亲委派"><a href="#28-为什么需要双亲委派" class="headerlink" title="28. 为什么需要双亲委派"></a>28. 为什么需要双亲委派</h3><ul>
+<li>使用双亲委派模型来组织类加载器之间的关系，一个显而易见的好处就是Java中的类随着它的类加载器一起具备了一种带有优先级的层次关系。例如类java.lang.Object，它存放在rt.jar中，无论哪一个类加载器要加载这个类，最终都是委派给Object类在程序的各种类加载器环境中都能够保证是同一个类。</li>
+<li>双亲委派模型对于baozhengJava程序的稳定运行极为重要。</li>
+</ul>
+<h3 id="29-线程上下文类加载器"><a href="#29-线程上下文类加载器" class="headerlink" title="29. 线程上下文类加载器"></a>29. 线程上下文类加载器</h3><br/> 
+<br/> 
+<br/>
+
+<h3 id="30-对象的创建过程"><a href="#30-对象的创建过程" class="headerlink" title="30. 对象的创建过程"></a>30. 对象的创建过程</h3><ol>
+<li>java虚拟机遇到一个new指令时，首先检查这个指令的参数能否在常量池中定位到一个类的符号引用，并检查符号引用所代表的类是否已经被加载、解析和初始化过，如果没有，执行类加载过程；</li>
+<li>类加载检查通过后，虚拟机将为对象分配内存。对象所需内存的大小在类加载完成时便可完全确定，为对象分配空间的任务实际上便等同于把一块确定大小的内存块从java堆中划分出来。（分配方式有指针碰撞、空闲列表，还要考虑分配内存时并发情况下的线程安全问题：对分配内存动作进行同步处理，或把内存分配的动作按照线程划分在不同空间中进行</li>
+<li>内存分配完成后，虚拟机将分配到的内存（除了对象头）都初始化为0，保证对象的实例字段在java代码中不赋初始值就能直接使用。</li>
+<li>设置对象头，如是哪个类的实例、如何找到类的元数据信息、GC分代年龄等。</li>
+<li>new指令后接着会执行&lt;\init&gt;()方法，按照程序员的意愿对对象进行初始化。</li>
+</ol>
+<h3 id="31-Class类文件怎么回收"><a href="#31-Class类文件怎么回收" class="headerlink" title="31. Class类文件怎么回收"></a>31. Class类文件怎么回收</h3><br/> 
+<br/> 
+<br/>
+
+<h3 id="32-Minor-Gc和FULL-Gc的区别"><a href="#32-Minor-Gc和FULL-Gc的区别" class="headerlink" title="32. Minor Gc和FULL Gc的区别"></a>32. Minor Gc和FULL Gc的区别</h3><ol>
+<li>部分收集（Partial GC）<ol>
+<li>新生代收集Minor GC指目标只是新生代的垃圾收集；</li>
+<li>老年代收集（Major GC）指目标指示老年代的垃圾收集。目前只有CMS收集器会有单独收集老年代的行为；</li>
+<li>混合收集（Mixed GC）：指目标收集整个新生代和部分老年代的垃圾收集。目前只有G1收集器会有这种行为。</li>
+</ol>
+</li>
+<li>整堆收集（FULL GC）：指收集整个Java堆和方法区的垃圾收集；</li>
+</ol>
+]]></content>
+      <categories>
+        <category>历史学习记录</category>
+      </categories>
+      <tags>
+        <tag>历史学习记录</tag>
+        <tag>面试问题总结</tag>
+        <tag>jvm</tag>
       </tags>
   </entry>
   <entry>
@@ -313,6 +679,1538 @@
         <tag>leetcode</tag>
         <tag>算法</tag>
         <tag>动态规划</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mysql基础语法-历史学习记录</title>
+    <url>/2025/06/08/mysql%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95-%E5%8E%86%E5%8F%B2%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[<h2 id="一、DQL"><a href="#一、DQL" class="headerlink" title="一、DQL"></a>一、DQL</h2><p>data query language  数据查询语言</p>
+<h3 id="1-基础查询"><a href="#1-基础查询" class="headerlink" title="1. 基础查询"></a>1. 基础查询</h3><ul>
+<li>语法：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select 查询列表 from 表名;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>特点：<br><br>1、查询列表可以是：表中的字段、常量值、表达式、函数<br/><br>2、查询的结果是一个虚拟的表</li>
+</ul>
+<ol>
+<li>选中特定的数据库：<br><code>use employees;</code></li>
+<li>查询表中的单个字段：<br><code>select last_name from employees;</code></li>
+<li>查询表中的多个字段：<br><code>select last_name,salary,email from employees;</code></li>
+<li>查询表中的所有字段：<br><code>select * from employees;</code></li>
+<li>查询常量值：<br><code>select 100;</code><br><code>select &#39;join&#39;;</code></li>
+<li>查询表达式：<br><code>select 100*98;</code></li>
+<li>查询函数：<br><code>select version();</code></li>
+<li>起别名</li>
+</ol>
+<ul>
+<li>便于理解</li>
+<li>如果要查询的字段有重名的情况，可以使用别名可以区分开来<br>方式一：使用as<br><code>select 100% 98 as 结果;</code><br><code>select last_name as 姓,first_name as 名 from employees;</code><br>方式二：省略as,使用空格<br><code>select last_name 姓,first_name 名 from employees;</code><br>案例：<br><code>select salary as &quot;out put&quot; from employees;</code></li>
+</ul>
+<ol start="9">
+<li>去重<ul>
+<li>案例：查询员工表中涉及到的所有的部门编号<br>  <code>select department_id form employees;</code>  不去重<br>  <code>select distinct department_id form employees;</code>　　去重</li>
+</ul>
+</li>
+<li>+号的作用<blockquote>
+<p>java中的＋号：<br></p>
+</blockquote>
+<ol>
+<li>运算符，两个操作数都为数值型;</br></li>
+<li>连接符，只要与一个操作数为字符串;</br><blockquote>
+<p>mysql 中的＋号</br><br>仅仅只有运算符的功能</br><br><code>select 100+90;</code>　两个操作数都是数值型，则做加法运算</br><br>｀select ‘123’+90;｀ 其中一方为字符型，试图将字符型数值转换为数值型，如果转换成功，则继续做加法运算；（213）</br><br>｀select ‘join’ + 90;｀ 如果转换失败，则将字符型数值转换为０；　（90）</br><br><code>select null+10;</code> 只要其中一方为null,则结果肯定为null</br></p>
+</blockquote>
+</li>
+</ol>
+</li>
+</ol>
+<ul>
+<li>案例：查询员工名和姓连接成一个字段，并显示为姓名; </br><br>  <code>select concat(last_name,first_name) as 姓名 from empolyees;</code></li>
+</ul>
+<h3 id="2-条件查询"><a href="#2-条件查询" class="headerlink" title="2. 条件查询"></a>2. 条件查询</h3><ul>
+<li>语法：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">	查询列表</span><br><span class="line">from</span><br><span class="line">	表名</span><br><span class="line">where</span><br><span class="line">	筛选条件;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>分类：<ol>
+<li>按条件表达式筛选<br><br> 条件运算符：&gt; &lt; &#x3D; !&#x3D; &gt;&#x3D; &lt;&#x3D;  &lt;&gt;</li>
+<li>按逻辑表达式筛选<br><br> 逻辑运算符：&amp;&amp; || !<br>     and or not</li>
+<li>模糊查询：<br><br> like <br><br> between and <br><br> in <br/><br> is null <br/></li>
+</ol>
+</li>
+</ul>
+<h4 id="1-按条件表达式筛选"><a href="#1-按条件表达式筛选" class="headerlink" title="1. 按条件表达式筛选"></a>1. 按条件表达式筛选</h4><p>案例１：查询工资 &gt; 12000的员工信息</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">	*</span><br><span class="line">from</span><br><span class="line">	employees 	</span><br><span class="line">where</span><br><span class="line">	salary &gt; 12000;</span><br></pre></td></tr></table></figure>
+<p>案例２：查询部门编号不等于90号的员工名和部门编号</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">	last_time,</span><br><span class="line">	department_id</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	department_id &lt;&gt; 90;</span><br></pre></td></tr></table></figure>
+<h4 id="2-按逻辑表达式筛选"><a href="#2-按逻辑表达式筛选" class="headerlink" title="2. 按逻辑表达式筛选"></a>2. 按逻辑表达式筛选</h4><p>案例１：查询工资ｚ在10000和20000之间的员工名、工资以及奖金</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">	last_name,</span><br><span class="line">	salary,</span><br><span class="line">	commission_pct</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	salary &gt;= 10000 and salary &lt;= 20000;</span><br></pre></td></tr></table></figure>
+<p>案例２：查询部门编号不是在90到110之间，或者工资高于15000的员工信息</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">	*</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	not(department_id &gt;=90 and department &lt;=110) or salary&gt;15000;</span><br></pre></td></tr></table></figure>
+<h4 id="3-模糊查询"><a href="#3-模糊查询" class="headerlink" title="3. 模糊查询"></a>3. 模糊查询</h4><ul>
+<li>like <br><br>  特点：<br><ol>
+<li>一般和通配符搭配使用<br><ul>
+<li>%:　任意多个字符，包含０个字符<br></li>
+<li>_：任意单个字符</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>between and <br><ol>
+<li>可以提高语句的简洁度； <br></li>
+<li>包含边界值；<br></li>
+<li>between 后面的值 要 &lt;&#x3D; and后面的值</li>
+</ol>
+</li>
+<li>in <br><ul>
+<li>含义：判断某字段的值是否属于in列表中的一项</li>
+<li>特点：<ol>
+<li>提高语句简洁度；<br></li>
+<li>in列表的值类型必须一致或兼容;<br></li>
+</ol>
+</li>
+</ul>
+</li>
+<li>is null <br><ul>
+<li>&#x3D; 或者&lt;&gt;不能用于判断null值</li>
+<li>判断null要用is null 和 is not null;</li>
+</ul>
+</li>
+<li>is not null <br></li>
+</ul>
+<ol>
+<li>like <br><br> 案例１：查询员工名中包含字符ａ的员工信息 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">	*</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	last_name like　&#x27;%a%&#x27;</span><br></pre></td></tr></table></figure>
+ 案例２：查询员工名中第三个字符为ｅ，第五个字符为ａ的员工名和工资 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">	last_name,</span><br><span class="line">	salary</span><br><span class="line">where</span><br><span class="line">	last_name like &#x27;__e_a%&#x27;;</span><br></pre></td></tr></table></figure>
+ 案例3：查询员工名中第二个字符为_的员工名(escape转义) <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">	last_name</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	last_name like &#x27;_$_%&#x27; escape &#x27;$&#x27;;</span><br></pre></td></tr></table></figure></li>
+<li>between and <br><br> 案例一：查询员工编号在100到120之间的员工信息 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">	*</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	employee_id &gt;= 100 and employees &lt;=120;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">	*</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	employee_id between 100 and 120;</span><br></pre></td></tr></table></figure></li>
+<li>in <br><br> 案例1：查询员工的工种编号是IT_PROG、AD_VP、AD_PRES中的一个的员工名和公众编号 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">	last_name,</span><br><span class="line">	job_id</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	job_id=&#x27;IT_PROG&#x27; or job_id=&#x27;AD_VP&#x27; or job_id=&#x27;AD_PRES&#x27;;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">	last_name,</span><br><span class="line">	job_id</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	job_id in (&#x27;IT_PROG&#x27;,&#x27;AD_VP&#x27;,&#x27;AD_PRES&#x27;);</span><br></pre></td></tr></table></figure></li>
+<li>is null (等于号不能判断null)<br><br> 案例1：查询没有奖金率的员工名和奖金率；<br> <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">	last_name,</span><br><span class="line">	commission_pct</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	commission_pct is null;</span><br></pre></td></tr></table></figure>
+ 案例2：查询有奖金率的员工名和奖金率；<br> <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">	last_name,</span><br><span class="line">	commission_pct</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	commission_pct is not null;</span><br></pre></td></tr></table></figure></li>
+<li>安全等于  &lt;&#x3D;&gt; <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">	last_name,</span><br><span class="line">	commission_pct</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	commission_pct &lt;=&gt; null;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">	last_name,</span><br><span class="line">	salary</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	salary &lt;=&gt; 12000;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>is null : 仅仅可以判断null值；<br><br>&lt;&#x3D;&gt; ：  既可以判断null值，又可以判断普通的数值；</p>
+</blockquote>
+</li>
+</ol>
+<p>ifnull(exp1,exp2): 如果表达式1的值为null，就替换为表达式2的值</p>
+<h3 id="3-排序查询"><a href="#3-排序查询" class="headerlink" title="3. 排序查询"></a>3. 排序查询</h3><ul>
+<li>语法：  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select 查询列表</span><br><span class="line">from 表</span><br><span class="line">[where 筛选条件]</span><br><span class="line">order by 排序列表 [asc|desc];</span><br></pre></td></tr></table></figure></li>
+<li>案例1：查询员工信息，要求工资从高到低排序 <br><br>  <code>SELECT * FROM employees ORDER BY salary DESC;</code></li>
+<li>特点：<ol>
+<li>asc代表升序，desc代表降序；<br></li>
+<li>如果不写，默认升序；<br></li>
+<li>order by 子句可以支持单个字段、多个字段、表达式、函数、别名；<br></li>
+<li><strong>order by 子句一般放在查询语句的最后面，limit子句除外;</strong> <br></li>
+</ol>
+</li>
+<li>案例2：查询部门编号&gt;&#x3D;90的员工信息，按入职时间的先后进行排序；<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select *</span><br><span class="line">from employees</span><br><span class="line">where department_id &gt;= 90</span><br><span class="line">order by hireday asc;</span><br></pre></td></tr></table></figure></li>
+<li>案例3：按年薪的高低显示员工的信息和年薪【按表达式排序】  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select *, salary*12*(1 + IFNULL(commission_pct,0)) 年薪</span><br><span class="line">from employees</span><br><span class="line">order by salary*12*(1 + IFNULL(commission_pct,0)) desc;</span><br></pre></td></tr></table></figure></li>
+<li>案例4：按年薪的高低显示员工的信息和年薪【按别名排序】  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select *, salary*12*(1 + IFNULL(commission_pct,0)) 年薪</span><br><span class="line">from employees</span><br><span class="line">order by 年薪 desc;</span><br></pre></td></tr></table></figure></li>
+<li>案例5：按姓名的长度显示员工的姓名和工资【按函数排序】  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select LENGTH(last_name) 姓名长度, last_name,salary</span><br><span class="line">from employees</span><br><span class="line">order by LENGTH(last_name) desc;</span><br></pre></td></tr></table></figure></li>
+<li>案例6：查询员工信息，要求先按工资升序排序，再按员工编号降序排序【按多个字段排序】(也就是先按工资排序，如果有俩人工资一样，按员工编号排序)  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select *</span><br><span class="line">from employees</span><br><span class="line">order by salary asc,employee_id desc;</span><br></pre></td></tr></table></figure>
+测试1：查询员工的姓名和部门号和年薪，按年薪降序，按姓名升序</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,department_id,salary*12*(1+ifnull(commission_pct,0)) 年薪</span><br><span class="line">from employees</span><br><span class="line">order by 年薪 asc,last_name desc;</span><br></pre></td></tr></table></figure>
+<p>测试2：选择工资不在8000到17000的员工的姓名和工资，按工资降序</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,salary</span><br><span class="line">from employees</span><br><span class="line">where not(salary &gt;= 8000 and salary &lt;= 17000)</span><br><span class="line">order by salary desc;</span><br></pre></td></tr></table></figure>
+<p>测试3：查询邮箱中包含e的员工信息，并先按邮箱的字节数降序，再按部门号升序</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select *</span><br><span class="line">from employees</span><br><span class="line">where email like(&#x27;%e%&#x27;)</span><br><span class="line">order by LENGTH(email) desc,department_id asc;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="4-常见函数"><a href="#4-常见函数" class="headerlink" title="4. 常见函数"></a>4. 常见函数</h3><ul>
+<li>功能：类似于java的方法，将我们的一组逻辑语句封装在方法体中，对外暴露方法名</li>
+<li>好处：<ol>
+<li>隐藏了实现细节；<br></li>
+<li>提高了代码的重用性;<br></li>
+</ol>
+</li>
+<li>调用：<br><br>  <code>select 函数名（参数） 【from 表】；</code></li>
+<li>分类：<ol>
+<li>单行函数<ul>
+<li>concat、length、ifnull等</li>
+</ul>
+</li>
+<li>分组函数<ul>
+<li>功能：做统计使用，又称为统计函数、聚合函数、组函数；</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h4 id="1-单行函数"><a href="#1-单行函数" class="headerlink" title="1. 单行函数"></a>1. 单行函数</h4><h5 id="1-字符函数"><a href="#1-字符函数" class="headerlink" title="1. 字符函数"></a>1. 字符函数</h5><ol>
+<li>length：获取参数值的字节个数；</li>
+<li>concat：拼接字符串；<br><br> <code>select concat(last_name,&#39;_&#39;,first_name) 姓名 from employees;</code></li>
+<li>upper\lower：大小写；<br><br> <code>select UPPER(&#39;john&#39;)</code><br> <code>select concat(UPPER(last_name),&#39;_&#39;,LOWER(first_name)) 姓名 from employees;</code></li>
+<li>substr、substring：截取字符串；<br><br><strong>注意：索引从1开始</strong><br><ul>
+<li>截取从指定索引处后面的所有字符 <br/>(陆展元)<br>  <code>select substr(&#39;李莫愁爱上了陆展元&#39;,7) out_put</code></li>
+<li>截取从指定索引处指定字符长度的字符 <br/>（李莫愁）<br>  <code>select substr(&#39;李莫愁爱上了陆展元&#39;,1,3) out_put</code>  </li>
+<li>案例：姓名中首字符大写，其他字符小写然后用_拼接，显示出来  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select concat(upper(substr(last_name,1,1)),&#x27;_&#x27;,lower(substr(last_name,2)))</span><br><span class="line">from</span><br><span class="line">employees;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>instr：返回子串第一次出现的索引，如果找不到返回0;<br><br> <code>select instr(&#39;杨不殷六侠&#39;，殷六侠) as out_put;</code>  (返回3)</li>
+<li>trim：去掉前后空格；<br><br> <code>selelct trim(&#39;    张翠山    &#39;) as out_put;</code><br> <code>select trim(&#39;a&#39; from &#39;aaaa张aaaaa翠山aaaaaa&#39;) as out_put;</code>(输出张aaaaa翠山)</li>
+<li>lpad：左填充，用指定的字符实现指定长度；<br> <code>select lpad(&#39;殷素素&#39;,5,&#39;*&#39;) as out_put;</code> (**殷素素)</li>
+<li>rpad：右填充，用指定的字符实现指定长度；</li>
+<li>replace 替换<br> <code>select replace(</code>张无忌爱周芷若<code>,</code>周芷若<code>,</code>赵敏<code>) as out_put;</code>(张无忌爱赵敏)</li>
+</ol>
+<h5 id="2-数学函数"><a href="#2-数学函数" class="headerlink" title="2.数学函数"></a>2.数学函数</h5><ol>
+<li>round：四舍五入；<br><br> <code>select round(-1.55);</code>(-2)<br><br> <code>select round(1.567,2);</code>(小数点后保留两位数字；1.57)<br></li>
+<li>ceil：向上取整,返回大于等于该参数的最小整数;<br><br> <code>select ceil(1.02);</code>(2)<br></li>
+<li>floor：向下取整,返回小于等于该参数的最大整数;<br><br> <code>select ceil(-9.9);</code>(-10)<br></li>
+<li>truncate：截断;<br><br> <code>select truncate(1.6999,1)</code>(1.6) <br></li>
+<li>mod：取余 <br><br> <code>select mod(10,-3)</code></li>
+</ol>
+<h5 id="3-日期函数"><a href="#3-日期函数" class="headerlink" title="3.日期函数"></a>3.日期函数</h5><ol>
+<li>now：返回当前系统日期 + 时间；<br><br> <code>select now();</code></li>
+<li>curdate 返回当前日期，不包含时间；<br><br> <code>select curdate();</code></li>
+<li>curtime 返回当前时间，不包含日期；<br><br> <code>select curtime();</code></li>
+<li>可以获取指定的部分，年、月、日、小时、分钟、秒；<br> <code>select year(now()) 年;</code>（2020）<br><br> <code>select year(&#39;1998-1-1&#39;) 年；</code>（1998）<br><br> <code>select month(now()) 月;</code>(九月)<br><br> <code>select monthname(now()) 月；</code> (September) <br></li>
+<li>str_to_date：将日期格式的字符转换成指定格式的日期;<br><br> <code>STR_TO_DATE(&#39;9-13-1999&#39;,&#39;%m-%d-%Y&#39;);</code> (1999-09-13) <br></li>
+<li>date_format：将日期转换成字符；<br><br> <code>DATE_FORMAT(&#39;2018/6/6&#39;,&#39;%Y年%m月%d日&#39;)；</code> (2018年6月6日) <br></li>
+</ol>
+<h5 id="4-其它函数"><a href="#4-其它函数" class="headerlink" title="4.其它函数"></a>4.其它函数</h5><ol>
+<li><code>select version();</code> 显示版本号; <br></li>
+<li><code>select database();</code> 查看当前的库<br></li>
+<li><code>select user();</code> 代表当前用户；<br></li>
+</ol>
+<h5 id="5-流程控制函数"><a href="#5-流程控制函数" class="headerlink" title="5.流程控制函数"></a>5.流程控制函数</h5><ol>
+<li>if函数： if else 的效果；<br><br> <code>select IF(exp1,exp2,exp3)</code> exp1成立的话返回exp2的值，否则返回exp3的值;<br></li>
+<li>case函数：<ul>
+<li>使用1：switch case的效果：<br><ol>
+<li>语法： <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">case 要判断的字段或表达式</span><br><span class="line">when 常量1 then 要显示的值1或语句1；</span><br><span class="line">when 常量2 then 要显示的值2或语句2；</span><br><span class="line">...</span><br><span class="line">else 要显示的值n或语句n；</span><br><span class="line">end</span><br></pre></td></tr></table></figure></li>
+<li>案例：查询员工的工资，要去部门号&#x3D;30，现实的工资为1.1倍；部门号&#x3D;40,1.2倍，…其他部门，原工资；<br> <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select salary 原始工资，department_id,</span><br><span class="line">case department_id</span><br><span class="line">when 30 then salary*1.1</span><br><span class="line">when 40 then salary*1.2</span><br><span class="line">when 50 then salary*1.3</span><br><span class="line">else salary</span><br><span class="line">end as 新工资</span><br><span class="line">from employees;</span><br></pre></td></tr></table></figure>
+ (结果是三列：原始工资、department_id、新工资) <br></li>
+</ol>
+</li>
+<li>使用2：类似于多重if  <br><ol>
+<li>语法： <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">case</span><br><span class="line">when 条件1 then 要显示的值1或语句1</span><br><span class="line">when 条件2 then 要显示的值2或语句2</span><br><span class="line">...</span><br><span class="line">else 要显示的值n或语句n</span><br><span class="line">end</span><br></pre></td></tr></table></figure></li>
+<li>案例：查询员工的工资情况：如果工资&gt;20000，显示A级别；大于15000，显示B级别；大于10000，显示C级别；否则D级别；<br> <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select salary,</span><br><span class="line">case</span><br><span class="line">when salary&gt;20000 then &#x27;A&#x27;</span><br><span class="line">when salary&gt;15000 then &#x27;B</span><br><span class="line">when salary&gt;10000 then &#x27;C</span><br><span class="line">else &#x27;D&#x27;</span><br><span class="line">end as 工资级别</span><br><span class="line">from employees;</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+<p>练习：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select(now());</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select id,last_name,salary,salary*1.2 as &quot;new salary&quot;</span><br><span class="line">from employees;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,LENGTH(last_name) 姓名长度</span><br><span class="line">from employees</span><br><span class="line">order by substr(lastname,1,1);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select job,</span><br><span class="line">case job</span><br><span class="line">when &#x27;AD_PROG&#x27; then &#x27;A&#x27;</span><br><span class="line">when &#x27;ST_MAN&#x27; then &#x27;B&#x27;</span><br><span class="line">when &#x27;IT_PROG&#x27; then &#x27;C&#x27;</span><br><span class="line">else &#x27;D&#x27;</span><br><span class="line">end as grade</span><br><span class="line">from employees;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-分组函数"><a href="#2-分组函数" class="headerlink" title="2.分组函数"></a>2.分组函数</h4><ul>
+<li>功能：用作统计使用，又称为聚合函数或统计函数或组函数；（多个输入，一个输出）</li>
+<li>分类：sum 求和、avg 平均值、max 最大值、min 最小值、count 计算个数；</li>
+</ul>
+<h5 id="1-简单使用"><a href="#1-简单使用" class="headerlink" title="1. 简单使用"></a>1. 简单使用</h5><p><code>select sum(salary) from employees;</code></p>
+<h5 id="2-特点"><a href="#2-特点" class="headerlink" title="2. 特点"></a>2. 特点</h5><ol>
+<li>sum 、avg一般用于处理数值型；max、min、count可以处理任何类型<br></li>
+<li>以上分组函数都忽略null值；<br></li>
+<li>和distinct搭配使用去重；<br><br> <code>select sum(distinct salary),sum(salary) from employees;</code><br> <code>select count(disinct salary) from employees;</code></li>
+<li>count函数；<br><br> <code>select count(salary) from employees;</code> <br><br> <code>select count(*) from employees;</code> (常用来统计行数，更常用) <br><br> <code>select count(1) from employees;</code> (count函数里可以传常量值，表示在表中加一列常量，返回行数) <br><br> 效率： <br><ul>
+<li>MYISAM存储引擎下，count(*) 的效率高；<br></li>
+<li>INNODB存储引擎下，count(*)和count(1)效率差不多，都比count(字段要高一些);<br></li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>练习：<br><br>查询员工工资的最大值、最小值，平均值和总和；<br></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">	max(salary),</span><br><span class="line">	min(salary),</span><br><span class="line">	avg(salary),</span><br><span class="line">	sum(salary)</span><br><span class="line">from</span><br><span class="line">	employees;</span><br></pre></td></tr></table></figure>
+<p>查询员工表中的最大入职时间和最小入职时间的相差天数;<br></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">	DATEDIFF(max(hiredate),min(hiredate)) diffrence</span><br><span class="line">from</span><br><span class="line">	employees;</span><br></pre></td></tr></table></figure>
+<p>查询部门编号为90的员工个数；<br></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select count(*)</span><br><span class="line">from employees</span><br><span class="line">where department_id = 90;</span><br></pre></td></tr></table></figure>
+<h3 id="5-分组查询"><a href="#5-分组查询" class="headerlink" title="5. 分组查询"></a>5. 分组查询</h3><ul>
+<li>分组查询中的筛选条件分为两类：<br><br>  1.分组前查询；(数据源：原始表；位置：group by的前面 where)<br><br>  2.分组后查询;（数据源：分组后的结果集；位置：group by的后面 having）<br><br>  <strong>分组函数做条件肯定是放在having子句中</strong></li>
+<li>group by子句支持单个字段分组，也支持多个字段分组（多个字段之间用逗号隔开没有顺序要求），也支持表达式或函数；<br></li>
+<li>也可添加排序（排序放在group by后面）；</li>
+<li>引入：查询每个部门的平均工资;<br><blockquote>
+<p>可以使用GROUP BY子句将表中的数据分为若干组；</p>
+</blockquote>
+</li>
+<li>语法：  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SELECT column(要求出现在group by的后面),group_function(column)</span><br><span class="line">FROM table</span><br><span class="line">[WHERE contion]</span><br><span class="line">[GROUP BY group_by_expression]</span><br><span class="line">[ORDER BY column];</span><br></pre></td></tr></table></figure>
+<strong>column（要查询的列表）比较特殊，要求是分组函数(group_function)和group by后出现的字段</strong><br></li>
+</ul>
+<hr>
+<ul>
+<li>案例一：查询每个工种的最高工资；<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select job_id,max(salary),</span><br><span class="line">from employees</span><br><span class="line">group by job_id;</span><br></pre></td></tr></table></figure></li>
+<li>案例二：查询每个位置上的部门个数；<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select location_id,count(*)</span><br><span class="line">from departments</span><br><span class="line">group by location_id;</span><br></pre></td></tr></table></figure></li>
+<li>案例三：查询邮箱中包含a字符的，每个部门的平均工资；  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select avg(salary),department_id</span><br><span class="line">from employees</span><br><span class="line">where email like &#x27;%a%&#x27;</span><br><span class="line">group by department_id;</span><br></pre></td></tr></table></figure></li>
+<li>案例四：查询每个领导手下有奖金的员工的最高工资；  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select max(salary),manager_id</span><br><span class="line">from employees</span><br><span class="line">where commission_pct is not null</span><br><span class="line">group by manager_id;</span><br></pre></td></tr></table></figure></li>
+<li>案例五：查询哪个部门的员工个数&gt;2 (添加分组后的筛选；先分组，再筛选。关键字HAVING)<ol>
+<li>查询每个部门的员工个数 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select count(*),department_id</span><br><span class="line">from employees</span><br><span class="line">group by department_id;</span><br></pre></td></tr></table></figure></li>
+<li>根据1的结果进行筛选，查询哪个部门的员工个数&gt;2 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select count(*),department_id</span><br><span class="line">from employees</span><br><span class="line">group by department_id</span><br><span class="line">having count(*)&gt;2;</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+<li>案例六：查询每个工种有奖金的员工的最高工资&gt;12000的工种编号和最高工资；  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select job_id,max(salary)</span><br><span class="line">from employees</span><br><span class="line">where commission_pct is not null</span><br><span class="line">group by job_id</span><br><span class="line">having max(salary) &gt; 12000;</span><br></pre></td></tr></table></figure></li>
+<li>案例七：查询领导编号&gt;102的每个领导手下的员工最低工资&gt;5000的领导编号，以及其最低工资；  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select manager_id,min(salary) 最低工资</span><br><span class="line">from employees</span><br><span class="line">where manager_id&gt;102</span><br><span class="line">group by manager_id</span><br><span class="line">having 最低工资&gt;5000;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<p>按表达式或函数分组；<br></p>
+<ul>
+<li>案例1：按员工姓名的长度分组，查询每一组的员工个数，筛选员工个数&gt;5的有哪些  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select length(last_name),count(*)</span><br><span class="line">from employees</span><br><span class="line">group by length(last_name)</span><br><span class="line">having count(*)&gt;5;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<p>按多个字段分组</p>
+<ul>
+<li>案例：查询每个部门每个工种的员工的平均工资  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select department_id,job_id,avg(salary)</span><br><span class="line">from employees</span><br><span class="line">group by department_id,job_id;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<p>添加排序</p>
+<ul>
+<li>案例：查询每个部门每个工种的员工的平均工资，并且按平均工资的高低显示  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select department_id,job_id,avg(salary)</span><br><span class="line">from employees</span><br><span class="line">group by department_id,job_id</span><br><span class="line">order by avg(salary) desc;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<p>练习：<br><br>查询各job_id的员工工资的最大值、最小值、平均值、总和，并按job_id升序；</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select job_id,max(salary),min(salary),avg(salary),sum(salary)</span><br><span class="line">from employees</span><br><span class="line">group by job_id</span><br><span class="line">order by job_id asc;</span><br></pre></td></tr></table></figure>
+<p>查询员工的最高工资和最低工资的差距(DIFFERENCE)；</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select max(salary) - min(salary) DIFFERENCE</span><br><span class="line">from employees;</span><br></pre></td></tr></table></figure>
+<p>查询各个管理者手下员工的最低工资，其中最低工资不能低于6000，没有管理者的员工不计算在内；</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select manager_id,min(salary)</span><br><span class="line">from employees</span><br><span class="line">where manager_id is not null</span><br><span class="line">group by manager_id</span><br><span class="line">having min(salary)&gt;=6000;</span><br></pre></td></tr></table></figure>
+<p>查询所有部门的编号，员工数量和工资平均值，并按平均工资降序；</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select department_id,count(*),avg(salary)</span><br><span class="line">from employees</span><br><span class="line">group by department_id</span><br><span class="line">order by avg(salary) desc;</span><br></pre></td></tr></table></figure>
+<p>选择具有各个job_id的员工个数；</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select job_id,count(*)</span><br><span class="line">from employees</span><br><span class="line">group by job_id;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-连接查询-又称多表查询"><a href="#6-连接查询-又称多表查询" class="headerlink" title="6. 连接查询(又称多表查询)"></a>6. 连接查询(又称多表查询)</h3><p>当查询的字段来自于多个表时，就会用到连接查询；<br><br><strong>笛卡尔乘积现象</strong>：表1有m行，表2有n行，结果&#x3D;m×n行；<strong>错误原因</strong>：没有添加有效的连接条件；</p>
+<ul>
+<li><p>分类<br><br>  1.按年代分类：<br></p>
+<ul>
+<li>sql92标准；<br></li>
+<li>sql99标准;[推荐]；支持内连+外连(左外和右外)+交叉连接 <br></li>
+</ul>
+<p>  2.按功能分类：<br></p>
+<ul>
+<li>内连接：<br><br>  1.等值连接；<br>  2.非等值连接；<br>  3.自连接；</li>
+<li>外连接:<br><br>  1.左外连接；<br>  2.右外连接；<br>  3.全外连接；</li>
+<li>交叉连接;<br></li>
+</ul>
+</li>
+</ul>
+<h4 id="一、sql92语法"><a href="#一、sql92语法" class="headerlink" title="一、sql92语法"></a>一、sql92语法</h4><h4 id="1-内连接"><a href="#1-内连接" class="headerlink" title="1. 内连接"></a>1. 内连接</h4><h5 id="1-等值连接"><a href="#1-等值连接" class="headerlink" title="1. 等值连接"></a>1. 等值连接</h5><ul>
+<li>案例1：查询女神名和对应的男朋友名<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">selet name,boyname</span><br><span class="line">from boys,beauty</span><br><span class="line">where beauty.boyfriend_id=boys.id;</span><br></pre></td></tr></table></figure></li>
+<li>案例2：查询员工名和对应的部门名<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,department_name</span><br><span class="line">from employees,departments</span><br><span class="line">where employees.`department_id`=departments.`department_id`;</span><br></pre></td></tr></table></figure></li>
+<li>案例3：查询员工名、工种号、工种名;<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,e.`job_id`,job_title</span><br><span class="line">from employees as e,jobs as j</span><br><span class="line">where e.`job_id`=j.`job_id`;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>可以为表起别名；</strong>,提高语句的简洁度，区分多个重名的字段；<strong>如果为表起了别名，则查询的字段就不能使用原来的表名去限定，要用别名，要么就不用</strong>；<br></p>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select employees.last_name,employees.`job_id`,jobs.job_title</span><br><span class="line">from employees as e,jobs as j</span><br><span class="line">where e.`job_id`=j.`job_id`;</span><br><span class="line">不可取，会报错</span><br></pre></td></tr></table></figure></blockquote>
+</li>
+</ul>
+<hr>
+<ol>
+<li><strong>可以加筛选</strong></li>
+</ol>
+<ul>
+<li>案例1：查询有奖金的员工名、部门名;<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,department_name</span><br><span class="line">from employees e,departments d</span><br><span class="line">where e.`department_id`=d.`department_id`</span><br><span class="line">and e.commision_pct is not null;</span><br></pre></td></tr></table></figure></li>
+<li>案例2：查询城市中第二个字符为o的部门名和城市名；<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select department_name,city</span><br><span class="line">from departments d,locations l</span><br><span class="line">where d.`location_id`=l.`location_id`</span><br><span class="line">and city like &#x27;_o%&#x27;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<ol start="2">
+<li><strong>可以加分组</strong></li>
+</ol>
+<ul>
+<li>案例1：查询每个城市的部门个数；<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select count(*) 个数,city</span><br><span class="line">from departments d,locations l</span><br><span class="line">where d.`location_id`=l.`location_id`</span><br><span class="line">group by city;</span><br></pre></td></tr></table></figure></li>
+<li>案例2：查询有奖金的每个部门的部门名、部门的领导标号和该部门的最低工资；<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select department_name,d.manager_id ,min(salary)</span><br><span class="line">from employees e,departments d</span><br><span class="line">where e.`department_id`=d.`department_id`</span><br><span class="line">and commision_pct is not null</span><br><span class="line">group by e.department_name,d.manager_id;</span><br><span class="line">group by后面跟两列是保证两列行数相同；</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<ol start="3">
+<li><strong>可以加排序</strong></li>
+</ol>
+<ul>
+<li>案例：查询每个工种的工种名和员工的个数，并且按员工个数降序；<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select count(*),j.job_title</span><br><span class="line">from employees e,jobs j</span><br><span class="line">where e.`job_id`=j.`job_id`</span><br><span class="line">group by j.job_title</span><br><span class="line">order by count(*) desc;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<ol start="4">
+<li><strong>可以实现三表连接</strong></li>
+</ol>
+<ul>
+<li>案例：查询员工名、部门名和所在的城市；<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,department_name,city</span><br><span class="line">from employees e, departments d, locations l</span><br><span class="line">where e.`department_id`=d.`department_id`</span><br><span class="line">and d.`location_id`=l.`location_id`;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<ol start="5">
+<li><strong>等值连接总结</strong><ol>
+<li>多表连接的结果为多表的交集部分；<br></li>
+<li>n表连接，至少需要n-1个连接条件；<br></li>
+<li>多表的顺序没有要求；<br></li>
+<li>一般需要为表起别名；<br></li>
+<li>可以搭配前面介绍的所有子句；<br></li>
+</ol>
+</li>
+</ol>
+<h5 id="2-非等值连接"><a href="#2-非等值连接" class="headerlink" title="2. 非等值连接"></a>2. 非等值连接</h5><p>连接条件中不用等于号;<br></p>
+<ul>
+<li>案例1：查询员工的工资和工资级别；<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select salary,grade_level</span><br><span class="line">from employees e,job_grades g</span><br><span class="line">where salary between g.`lowest_sal` and g.`highest_sal`;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="3-自连接"><a href="#3-自连接" class="headerlink" title="3. 自连接"></a>3. 自连接</h5><ul>
+<li>案例：查询员工名和上级的名称；<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select e.employee_id,e.last_name,m.employee_id,m.last_name</span><br><span class="line">from employees e, employees m</span><br><span class="line">where e.`manager_id`=m.`employee_id`;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<p>练习：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select max(salary),avg(salary)</span><br><span class="line">from employees;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select employee_id,job_id,last_name</span><br><span class="line">from employees</span><br><span class="line">order by department_id desc,salary asc;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select job_id,last_name</span><br><span class="line">from employees</span><br><span class="line">where job_id like &#x27;%a%e%&#x27;;</span><br></pre></td></tr></table></figure>
+<p>显示所有员工的姓名，部门号和部门名称；<br></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,d.department_id,department_name</span><br><span class="line">from employees e,departments d</span><br><span class="line">where e.&#x27;department_id&#x27;=d.`department_id`;</span><br></pre></td></tr></table></figure>
+<p>查询90号部门员工的job_id和90号部门的location_id;<br></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select job_id,location_id</span><br><span class="line">from employees e,departments d</span><br><span class="line">where e.`department_id`= d.`department_id`</span><br><span class="line">and e.`department_id`=90;</span><br></pre></td></tr></table></figure>
+<p>选择所有有奖金的员工的last_name,department_name,location_id,city;<br></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,department_name,location_id,city</span><br><span class="line">from employees e,departments d,locations l</span><br><span class="line">where e.`department_id`=d.`department_id`</span><br><span class="line">and d.`location_id`=l.`location_id`</span><br><span class="line">and e.`commission_pct` is not null;</span><br></pre></td></tr></table></figure>
+<p>选择city在Toronto工作的员工的last_name,job_id,department_id,department_name;<br></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,job_id,department_id,department_name</span><br><span class="line">from employees e,departments d,locations l</span><br><span class="line">where e.`department_id`=d.`department_id`</span><br><span class="line">and d.`location_id`=l.`location_id`</span><br><span class="line">and city=&#x27;Toronto&#x27;;</span><br></pre></td></tr></table></figure>
+<p>查询每个工种、每个部门的部门名、工种名和最低工资；<br></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select deparment_name,job_title,min(salary)</span><br><span class="line">from employees e,departments d,jobs j</span><br><span class="line">where e.`department_id`=d.`department_id`</span><br><span class="line">and e.`job_id`=j.`job_id`</span><br><span class="line">group by j.job_title,d.department_id;</span><br></pre></td></tr></table></figure>
+<p>查询每个国家下的部门个数大于2的国家编号；<br></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select country_id,count(*)</span><br><span class="line">from departments d,locations l</span><br><span class="line">where d.`location_id`=l.`location_id`</span><br><span class="line">group by country_id</span><br><span class="line">having count(*)&gt;2;</span><br></pre></td></tr></table></figure>
+<h4 id="二、sql99语法；"><a href="#二、sql99语法；" class="headerlink" title="二、sql99语法；"></a>二、sql99语法；</h4><ul>
+<li>语法：<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select 查询列表</span><br><span class="line">from 表1 别名 【连接类型】</span><br><span class="line">join 表2 别名</span><br><span class="line">on 连接条件</span><br><span class="line">【where 筛选条件】</span><br><span class="line">【group by 分组】</span><br><span class="line">【having 筛选条件】</span><br><span class="line">【order by 排序列表】</span><br></pre></td></tr></table></figure></li>
+<li>分类<ol>
+<li>内连接：inner <br><ul>
+<li>等值连接；<br></li>
+<li>非等值连接；<br></li>
+<li>自连接；<br></li>
+</ul>
+</li>
+<li>外连接：<ul>
+<li>左外：left [outer] <br></li>
+<li>右外：right [outer] <br></li>
+<li>全外： full [outer] <br></li>
+</ul>
+</li>
+<li>交叉连接：cross <br></li>
+</ol>
+</li>
+</ul>
+<h5 id="1-内连接："><a href="#1-内连接：" class="headerlink" title="1. 内连接："></a>1. 内连接：</h5><ul>
+<li>语法：  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select 查询列表</span><br><span class="line">from 表1 别名</span><br><span class="line">inner join 表2 别名</span><br><span class="line">on 连接条件;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h6 id="1-等值连接-1"><a href="#1-等值连接-1" class="headerlink" title="1. 等值连接"></a>1. 等值连接</h6><blockquote>
+<p>sql99的等值连接特点：<br><br>1.可以添加排序、分组和筛选；<br><br>2.inner可以省略；<br><br>3.筛选条件放在where后面，连接条件放在on后面，提高分离性，便于阅读;<br><br>4.inner join和sql92语法中的等值连接效果是一样的，<strong>都是查询多表的交集部分</strong>；<br></p>
+</blockquote>
+<ul>
+<li>案例1：查询员工名、部门名；  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,department_name</span><br><span class="line">from employees e</span><br><span class="line">inner join departments d</span><br><span class="line">on e.`department_id`=d.`department_id`;</span><br></pre></td></tr></table></figure></li>
+<li>案例2：查询名字中包含e的员工名和工种名(筛选)  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,job_title</span><br><span class="line">from employees e</span><br><span class="line">inner join jobs j</span><br><span class="line">on e.`job_id`=j.`job_id`</span><br><span class="line">where e.`last_name` like &#x27;%e%&#x27;;</span><br></pre></td></tr></table></figure></li>
+<li>案例3：查询部门个数&gt;3的城市名和部门个数；(分组+筛选)  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select l.city,count(*)</span><br><span class="line">from locations l</span><br><span class="line">inner join departments d</span><br><span class="line">on l.`location_id`=d.`location_id`</span><br><span class="line">group by l.city</span><br><span class="line">having count(*)&gt;3;</span><br></pre></td></tr></table></figure></li>
+<li>案例4：查询哪个部门的部门员工个数&gt;3的部门名和员工个数，并按个数降序排列；(排序)  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select department_name,count(*)</span><br><span class="line">from departments d</span><br><span class="line">inner join employees e</span><br><span class="line">on d.`department_id`=e.`department_id`</span><br><span class="line">group by department_name</span><br><span class="line">having count(*)&gt;3</span><br><span class="line">order by count(*) desc;</span><br></pre></td></tr></table></figure></li>
+<li>案例5：查询员工名、部门名、工种名，并按部门名降序(三表连接)  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,department_name,job_title</span><br><span class="line">from employees e</span><br><span class="line">inner join departments d</span><br><span class="line">on e.`department_id`=d.`department_id`</span><br><span class="line">inner join jobs j</span><br><span class="line">on e.`job_id`=j.`job_id`</span><br><span class="line">order by d.department_name desc;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h6 id="2-非等值连接-1"><a href="#2-非等值连接-1" class="headerlink" title="2. 非等值连接"></a>2. 非等值连接</h6><ul>
+<li>案例：查询员工的工资级别；  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select salary,grade_level</span><br><span class="line">from employee e</span><br><span class="line">join job_grade g</span><br><span class="line">on e.`salary` between g.`lowest_sal` and g.`highest_sal`;</span><br></pre></td></tr></table></figure></li>
+<li>案例：查询工资级别的个数&gt;2的个数，并且按工资级别降序；  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select count(*),grade_level</span><br><span class="line">from employees e</span><br><span class="line">join job_grade g</span><br><span class="line">where e.`salary` between g.`lowest_sal` and g.`highest_sal`</span><br><span class="line">group by grade_level</span><br><span class="line">having count(*)&gt;20</span><br><span class="line">order by grade_level desc;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h6 id="3-自连接-1"><a href="#3-自连接-1" class="headerlink" title="3. 自连接"></a>3. 自连接</h6><ul>
+<li>案例：查询员工名和对应的经理名；  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select e.`last_name`,m.`last_name`</span><br><span class="line">from employees e</span><br><span class="line">join employees m</span><br><span class="line">where e.`manager_id`=m.`employee_id`;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="2-外连接："><a href="#2-外连接：" class="headerlink" title="2. 外连接："></a>2. 外连接：</h5><blockquote>
+<p>应用场景：用于查询一个表中有，另一个表中没有的记录；<br><br>特点：<br><br>1. 外连接的查询结果为主表中的所有记录，<br><br>	如果从表中有和它匹配的，则显示匹配的值；<br><br>	如果从表中没有和它匹配的，则显示null；<br><br>	外连接查询的结果 &#x3D; 内连接查询结果 + 主表中有而从表中没有的记录；<br><br>2. 左外连接，left join左边的是主表；<br><br>	右外连接，right join右边的是主表；<br><br>3. 左外和右外，交换两个表的顺序，可以实现同样的效果；<br><br>4. 全外连接 &#x3D; 内连接的结果 + 表1中有但表2没有的 + 表2中有但表1中没有的；<br></p>
+</blockquote>
+<ul>
+<li>引入:查询男朋友名字不在男神表中的女神名；  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select b.name</span><br><span class="line">from beauty b</span><br><span class="line">left outer join boys bo</span><br><span class="line">on b.`boyfriend_id`=bo.`id`</span><br><span class="line">where bo.`id` is null;</span><br></pre></td></tr></table></figure></li>
+<li>案例1：查询哪个部门没有员工；  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select d.`department_name`</span><br><span class="line">from departments d</span><br><span class="line">left outer join employees e</span><br><span class="line">on d.`department_id`=e.`department_id`</span><br><span class="line">where e.`employee.id` is null;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="3-交叉连接"><a href="#3-交叉连接" class="headerlink" title="3. 交叉连接"></a>3. 交叉连接</h5><blockquote>
+<p>其实就是笛卡尔乘积；</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select b.*,bo.*</span><br><span class="line">from beauty b,</span><br><span class="line">cross join boys bo;</span><br></pre></td></tr></table></figure>
+<h5 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h5><ol>
+<li>内连接：求交集；<br></li>
+<li>外连接：分主表和从表，查询主表的所有记录；（查询交集和主表特有的部分）<br><br>（可以画图理解，交集并集图）</li>
+</ol>
+<hr>
+<p>练习：<br><br>查询编号&gt;3的女神的男朋友信息，如果有则列出详细，如果没有，用null填充；</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select b.`name`,bo.*</span><br><span class="line">from beauty b</span><br><span class="line">left outer join boys bo</span><br><span class="line">on b.`boyfriend_id`=bo.`id`</span><br><span class="line">where b.`id`&gt;3;</span><br></pre></td></tr></table></figure>
+<p>查询哪个城市没有部门</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select city</span><br><span class="line">from locations l</span><br><span class="line">left outer departments d</span><br><span class="line">on l.`location_id`=d.`location_id`</span><br><span class="line">where d.`department_id` is null;</span><br></pre></td></tr></table></figure>
+<p>查询部门名为SAL或IT的员工信息；</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select e.*</span><br><span class="line">from employees e</span><br><span class="line">right outer join departments d</span><br><span class="line">on e.`department_id`=d.`department_id`</span><br><span class="line">where d.`department_name` in(&#x27;SAL&#x27;,&#x27;IT&#x27;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-子查询"><a href="#7-子查询" class="headerlink" title="7. 子查询"></a>7. 子查询</h3><blockquote>
+<p>含义：出现在其他语句内部的select语句，称为子查询或内查询；内部嵌套其他select语句的查询，成为外查询或主查询；<br><br>分类：<br><br>1.按子查询出现的位置：<br><br>select后面（只支持标量子查询）；<br><br>from后面；（支持表子查询）<br><br>where或having后面；（支持标量子查询，列子查询，行子查询） 【重点】<br><br>exists后面（相关子查询）（表子查询）;<br><br>2.按结果集的行列数不同：<br><br>标量子查询（结果集只有一行一列）；<br><br>列子查询（结果集有一列多行）；<br><br>行子查询（结果集有一行多列）；<br><br>表子查询（结果集一般为多行多列）；<br></p>
+</blockquote>
+<h4 id="1-where或having后面"><a href="#1-where或having后面" class="headerlink" title="1. where或having后面"></a>1. where或having后面</h4><blockquote>
+<p>特点：<br><br>子查询一般放在小括号内；<br><br>子查询一般放在条件的右侧；<br><br>标量子查询，一般搭配着单行操作符使用；(&gt; &lt; &#x3D; &lt;&gt; &gt;&#x3D; &lt;&#x3D; )<br><br>列子查询，一般搭配着多行操作符使用；(in&#x2F;not in,any&#x2F;some,all);<br><br>子查询的执行优先于主查询；<br></p>
+</blockquote>
+<h5 id="1-标量子查询（单行子查询）"><a href="#1-标量子查询（单行子查询）" class="headerlink" title="1. 标量子查询（单行子查询）"></a>1. 标量子查询（单行子查询）</h5><ul>
+<li>案例1：谁的工资比Abel高？  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select *</span><br><span class="line">from employees</span><br><span class="line">where salary&gt;(</span><br><span class="line">	select salary</span><br><span class="line">	from employees</span><br><span class="line">	where last_name=&#x27;Abel&#x27;</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>案例2：返回job_id与141号员工相同，salary比143号员工多的员工的姓名，job_id和工资  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,job_id,salary</span><br><span class="line">from employees</span><br><span class="line">where job_id=(</span><br><span class="line">	select job_id</span><br><span class="line">	from employees</span><br><span class="line">	where employee_id=141</span><br><span class="line">)and salary&gt;(</span><br><span class="line">	select salary</span><br><span class="line">	from employees</span><br><span class="line">	where employee_id=143</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>案例3：返回公司工资最少的员工的last_name,job_id和salary  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,job_id,salary</span><br><span class="line">from employees</span><br><span class="line">where salary=(</span><br><span class="line">	select min(salary)</span><br><span class="line">	from employees</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>案例4：查询最低工资大于50部门最低工资的部门id和其最低工资  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select department_id,min(salary)</span><br><span class="line">from employees</span><br><span class="line">group by department_id</span><br><span class="line">having min(salary)&gt;(</span><br><span class="line">	select min(salary)</span><br><span class="line">	from employees</span><br><span class="line">	where department_id=50</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="2-列子查询（多行子查询）"><a href="#2-列子查询（多行子查询）" class="headerlink" title="2. 列子查询（多行子查询）"></a>2. 列子查询（多行子查询）</h5><ul>
+<li>案例1：返回location_id是1400或1700的部门中的所有员工姓名  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">   select last_name</span><br><span class="line">from employees</span><br><span class="line">where department_id in(</span><br><span class="line">	select distinct department_id</span><br><span class="line">	from departments</span><br><span class="line">	where location_id in (1400,1700)</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>案例2：返回其它工种中比job_id为‘IT_PROG’工种任一工资低的员工的员工号、姓名、job_id以及salary;  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select employee_id,last_name,job_id,salary</span><br><span class="line">from employees</span><br><span class="line">where salary&lt;any(</span><br><span class="line">	select distinct salary</span><br><span class="line">	from employees</span><br><span class="line">	where job_id=&#x27;IT_PROG&#x27;</span><br><span class="line">) and job_id&lt;&gt;&#x27;IT_PROG&#x27;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="3-行子查询（多列多行）"><a href="#3-行子查询（多列多行）" class="headerlink" title="3. 行子查询（多列多行）"></a>3. 行子查询（多列多行）</h5><ul>
+<li>案例1：查询员工编号最小并且工资最高的员工信息;<br><br>  以前的做法：  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select *</span><br><span class="line">from employees</span><br><span class="line">where employee_id=(</span><br><span class="line">	select min(employee_id)</span><br><span class="line">	from employees</span><br><span class="line">) and salary=(</span><br><span class="line">	select max(salary)</span><br><span class="line">	from employees</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+  行子查询方法：  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select *</span><br><span class="line">from employees</span><br><span class="line">where (employee_id,salary)=(</span><br><span class="line">	select min(employee_id),max(salary)</span><br><span class="line">	from employees</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="2-select后面"><a href="#2-select后面" class="headerlink" title="2. select后面"></a>2. select后面</h4><ul>
+<li>案例:查询每个部门的员工个数  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select d.*,(</span><br><span class="line">	select count(*)</span><br><span class="line">	from employee e</span><br><span class="line">	where e.department_id = d.department_id</span><br><span class="line">) 个数</span><br><span class="line">from departments d;</span><br></pre></td></tr></table></figure></li>
+<li>案例2：查询员工号&#x3D;120的部门名；  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select (</span><br><span class="line">	select department_name</span><br><span class="line">	from departments d</span><br><span class="line">	inner join employees e</span><br><span class="line">	on d.department_id=e.department_id</span><br><span class="line">	where e.employee_id=102</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="3-from后面"><a href="#3-from后面" class="headerlink" title="3. from后面"></a>3. from后面</h4><blockquote>
+<p>将子查询结果充当一张表，要求必须起别名；</p>
+</blockquote>
+<ul>
+<li>案例：查询每个部门的平均工资的工资等级  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select ag_dep.ag,g.grade_level</span><br><span class="line">from(</span><br><span class="line">	select avg(salary) ag,department_id</span><br><span class="line">	from employees</span><br><span class="line">	group by department_id</span><br><span class="line">) ag_dep</span><br><span class="line">inner join job_grades g</span><br><span class="line">on ag_dep.ag between lowest_sal and highest_sal;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="4-exists后面（相关子查询）"><a href="#4-exists后面（相关子查询）" class="headerlink" title="4. exists后面（相关子查询）"></a>4. exists后面（相关子查询）</h4><blockquote>
+<p>exists（完整的查询语句）,结果是布尔值；</p>
+</blockquote>
+<ul>
+<li>案例1：查询有员工的部门名  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select department_name</span><br><span class="line">from departments d</span><br><span class="line">where exists(</span><br><span class="line">	select *</span><br><span class="line">	from employees e</span><br><span class="line">	where e.`department_id`=d.`department_id`</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#用in也可以做</span><br><span class="line">select department_name</span><br><span class="line">from departments d</span><br><span class="line">where d.`department_id` in(</span><br><span class="line">	select department_id</span><br><span class="line">	from employees</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>案例2：查询没有女朋友的男神信息；  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select boys.*</span><br><span class="line">from boys</span><br><span class="line">where boys.id not in(</span><br><span class="line">	select boyfriend_id</span><br><span class="line">	from beauty</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select boys.*</span><br><span class="line">from boys</span><br><span class="line">where  not exists(</span><br><span class="line">	select *</span><br><span class="line">	frmo beauty</span><br><span class="line">	where beauty.boyfriend_id=boys.id</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<p>练习：<br></p>
+<ol>
+<li>查询和Zlotkey相同部门的员工姓名和工资； <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,salary</span><br><span class="line">from employees</span><br><span class="line">where department_id=(</span><br><span class="line">	select department_id</span><br><span class="line">	from employees</span><br><span class="line">	where last_name=&#x27;Zlotkey&#x27;</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>查询工资比公司平均工资高的员工的员工号，姓名和工资； <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select employee_id,last_name,salary</span><br><span class="line">from employees</span><br><span class="line">where salary &gt; (</span><br><span class="line">	select avg(salary)</span><br><span class="line">	from employees</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>查询各部门中工资比本部门平均工资高的员工的员工号，姓名和工资； <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select employee_id,last_name,salary,department_id</span><br><span class="line">from (</span><br><span class="line">	select avg(salary) avg,department_id</span><br><span class="line">	from employees</span><br><span class="line">	group by department_id</span><br><span class="line">) avg_dep</span><br><span class="line">inner join employees e</span><br><span class="line">on avg_dep.`department_id`=e.`department_id`</span><br><span class="line">where e.salary &gt; avg_dep.avg;</span><br></pre></td></tr></table></figure></li>
+<li>查询和姓名中包含字母u的员工在相同部门的员工的员工号和姓名 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select employee_id,last_name</span><br><span class="line">from employees e</span><br><span class="line">where e.department_id in(</span><br><span class="line">	select distinct department_id</span><br><span class="line">	from employees</span><br><span class="line">	where last_name = &#x27;%u%&#x27;</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>查询在部门的location_id为1700的部门工作的员工的员工号； <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select employee_id</span><br><span class="line">from employees</span><br><span class="line">where department_id in(</span><br><span class="line">	select distinct department_id</span><br><span class="line">	from departments</span><br><span class="line">	where location_id=1700</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>查询管理者是King的员工姓名和工资； <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,salary</span><br><span class="line">from employees</span><br><span class="line">where manager_id=(</span><br><span class="line">	select employee_id</span><br><span class="line">	from employees</span><br><span class="line">	where last_name = &#x27;King&#x27;</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>查询工资最高的员工的姓名，要求first_name和last_name显示为一列，列名为姓名； <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select concat(first_name,last_name) 姓名</span><br><span class="line">from employees</span><br><span class="line">where salary=(</span><br><span class="line">	select max(salary)</span><br><span class="line">	from employees</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+<p>子查询经典案例：<br></p>
+<ol>
+<li>查询工资最低的员工信息：last_name,salary <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,salary</span><br><span class="line">from employees</span><br><span class="line">where salary = (</span><br><span class="line">	select min(salary)</span><br><span class="line">	from employees</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>查询平均工资最低的部门信息； <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select department_id,department_name</span><br><span class="line">from(</span><br><span class="line">	select avg(salary),department_id</span><br><span class="line">	from employees</span><br><span class="line">	group by department_id</span><br><span class="line">	order by avg(salary) asc</span><br><span class="line">	limit 1</span><br><span class="line">) avg_dep</span><br><span class="line">inner join departments d</span><br><span class="line">on d.`department_id`=avg_dep.`department_id;`</span><br></pre></td></tr></table></figure></li>
+<li>查询平均工资最低的部门信息和该部门的平均工资； <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select d.*,avg_dep.avg(salary)</span><br><span class="line">from(</span><br><span class="line">	#平均工资最低的部门id</span><br><span class="line">	select avg(salary),department_id</span><br><span class="line">	from employees</span><br><span class="line">	group by department_id</span><br><span class="line">	order by avg(salary) asc</span><br><span class="line">	limit 1</span><br><span class="line">) avg_dep</span><br><span class="line">inner join departments d</span><br><span class="line">on d.`department_id`=avg_dep.`department_id;`</span><br></pre></td></tr></table></figure></li>
+<li>查询平均工资最高的job信息； <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select *</span><br><span class="line">from jobs</span><br><span class="line">where job_id =(</span><br><span class="line">	# 查询平均工资最高的job_id</span><br><span class="line">	select avg(salary),job_id</span><br><span class="line">	from employees </span><br><span class="line">	group by job_id</span><br><span class="line">	order by avg(salary) desc</span><br><span class="line">	limit 1</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li>查询平均工资高于公司平均工资的部门有哪些； <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select department_id,avg(salary) 部门平均工资</span><br><span class="line">from employees e</span><br><span class="line">group by department_id</span><br><span class="line">having 部门平均工资&gt;(</span><br><span class="line">	select avg(salary) 公司平均工资</span><br><span class="line">	from employees</span><br><span class="line">)；</span><br></pre></td></tr></table></figure></li>
+<li>查询出公司中所有manager的详细信息； <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select *</span><br><span class="line">from employees </span><br><span class="line">where employees_id=any(</span><br><span class="line">	select distinct manager_id</span><br><span class="line">	from employees</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li>各个部门中最高工资最低的那个部门的最低工资是多少；<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select min(salary),department_id</span><br><span class="line">from employees</span><br><span class="line">where department_id = (</span><br><span class="line">	# 最高工资最低的部门id</span><br><span class="line">	select department_id</span><br><span class="line">	from employees e</span><br><span class="line">	group by department_id; </span><br><span class="line">	order by max(salary) </span><br><span class="line">	limit 1</span><br><span class="line">) </span><br></pre></td></tr></table></figure></li>
+<li>查询平均工资最高的部门的manager的详细信息：last_name,department_id,email,salary; <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select last_name,e.department_id,email,salary</span><br><span class="line">from employees e</span><br><span class="line">inner join departments d </span><br><span class="line">on e.department_id=d.department_id</span><br><span class="line">where d.department_id = (</span><br><span class="line">	#平均工资最高的部门id</span><br><span class="line">	select department_id,</span><br><span class="line">	from employees</span><br><span class="line">	group by department_id</span><br><span class="line">	order by avg(salary) desc</span><br><span class="line">	limit 1</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="8-分页查询"><a href="#8-分页查询" class="headerlink" title="8. 分页查询"></a>8. 分页查询</h3><blockquote>
+<p>当要显示的数据一页显示不全，需要分页提交sql请求;<br><br>特点：<br><br>limit 子句要放在sql语句的最后。也是最后执行limit； <br><br>公式：要显示的页数page，每页的条目数size    <br><br>select .. from .. limit (page-1)*size,size;</p>
+</blockquote>
+<ul>
+<li>语法：<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select 查询列表</span><br><span class="line">from 表</span><br><span class="line">【join type join 表2</span><br><span class="line">on 连接条件</span><br><span class="line">where 筛选条件</span><br><span class="line">group by 分组字段</span><br><span class="line">having 分组后的筛选</span><br><span class="line">order by排序后的字段】</span><br><span class="line">limit 【offset,】size；</span><br></pre></td></tr></table></figure>
+  offset要显示条目的起始索引（<strong>起始索引和instr，substr不同，从0开始</strong>）,size 要现实的条目个数</li>
+<li>案例1：查询前五条员工信息；  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select * from employees</span><br><span class="line">limit 0,5;</span><br></pre></td></tr></table></figure>
+  <strong>offset如果是0，可以省略不写</strong></li>
+<li>案例2：查询第11条到第25条；  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select * from employees limit 10,25;</span><br></pre></td></tr></table></figure></li>
+<li>案例3：有奖金的员工信息，并且工资较高的前10名显示出来；  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select *</span><br><span class="line">from employees</span><br><span class="line">where commission_pct is not null</span><br><span class="line">order by salary desc</span><br><span class="line">limit 10;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="9-union联合查询"><a href="#9-union联合查询" class="headerlink" title="9. union联合查询"></a>9. union联合查询</h3><blockquote>
+<p>将多条查询语句的结果合并成一个结果<br><br>应用场景：<br><br>要查询的结果来自于多个表，且多个表没有直接的连接关系，但查询的信息一致时；<br><br>特点：<br><br>要求多条查询语句的查询列数一致；<br><br>要求多条查询语句查询的每一列的类型和顺序最好一致；<br><br>union关键字默认去重，如果使用 union all ，则不去重；<br></p>
+</blockquote>
+<ul>
+<li>语法：  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">查询语句1</span><br><span class="line">union</span><br><span class="line">查询语句2</span><br><span class="line">union</span><br><span class="line">...</span><br></pre></td></tr></table></figure></li>
+<li>引入案例：查询部门编号&gt;90或邮箱包含a的员工信息  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select * from employees where email like &#x27;%a%&#x27;</span><br><span class="line">union</span><br><span class="line">select * from employees where department_id&gt;90;</span><br></pre></td></tr></table></figure></li>
+<li>案例： 查询中国用户中男性的信息以及外国用户中男性的信息；  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select id, cname, cname,csex from t_ca where csex=&#x27;男&#x27;</span><br><span class="line">union</span><br><span class="line">select t_id,tName,tGender from t_ua where tGender=&#x27;mail&#x27;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="二、DML"><a href="#二、DML" class="headerlink" title="二、DML"></a>二、DML</h2><blockquote>
+<p>data manipulation 数据操作语言;<br><br>插入：insert	<br><br>修改：update	<br><br>删除：delete	<br></p>
+</blockquote>
+<h3 id="1-插入语句"><a href="#1-插入语句" class="headerlink" title="1. 插入语句"></a>1. 插入语句</h3><ul>
+<li>语法一：<br>  <code>insert into 表名（列名，...） values（值1，...）</code></li>
+<li>注意：<ol>
+<li>插入值的类型要与列的类型一致或兼容；<br></li>
+<li>不可以为null的值必须插入值，可以为null的列要么插入null，要么直接不写；<br></li>
+<li>列的顺序可以调换；<br></li>
+<li>插入的时候列数和值数必须一致；<br></li>
+<li>可以省略列名，默认所有列，而且列的顺序和表中列的顺序一致<br></li>
+</ol>
+</li>
+<li>语法二：<br>  <code>insert into 表名 set 列名=值，列名=值...</code></li>
+<li>两种语法比较：<br></li>
+</ul>
+<ol>
+<li>方式一支持插入多行，方式二不支持； <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">insert into beauty </span><br><span class="line">values(......,....,....),</span><br><span class="line">values(....,.....,...);</span><br></pre></td></tr></table></figure></li>
+<li>方式一支持子查询，方式二不支持； <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">insert into beauty(id,name,phone)</span><br><span class="line">select 26,&#x27;宋茜&#x27;,&#x27;11023&#x27;;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="2-删"><a href="#2-删" class="headerlink" title="2. 删"></a>2. 删</h3><ol>
+<li>方式1：delete</li>
+</ol>
+<ul>
+<li>语法：<ol>
+<li>单表的删除；<br><br>  <code>delete from 表名 where 筛选条件</code>(删除整行)<br>- 案例1：删除手机号以9结尾的女神信息；<br> <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">delete from beauty where phone like &#x27;%9&#x27;;</span><br></pre></td></tr></table></figure></li>
+<li>多表的删除；<br><ul>
+<li>sql92语法：  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">delete 表1，表2</span><br><span class="line">from 表1 别名，表2 别名</span><br><span class="line">where 连接条件</span><br><span class="line">and 筛选条件;</span><br></pre></td></tr></table></figure></li>
+<li>sql99语法：  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">delete 表1，表2</span><br><span class="line">from 表1 别名</span><br><span class="line">inner |left |right join 表2 别名 on 连接条件</span><br><span class="line">where 筛选条件;</span><br></pre></td></tr></table></figure></li>
+<li>案例：删除张无忌的女朋友的信息;  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">delete b</span><br><span class="line">from boys bo</span><br><span class="line">inner join beauty b on b.`boyfriend_id`=bo.`id`</span><br><span class="line">where bo.`boyName`=&#x27;张无忌&#x27;;</span><br></pre></td></tr></table></figure></li>
+<li>案例：删除黄晓明的信息以及他女朋友的信息  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">delete b,bo</span><br><span class="line">from boys bo</span><br><span class="line">inner join beauty b on b.`boyfriend_id`=bo.`id`</span><br><span class="line">where bo.`boyName`=&#x27;黄晓明&#x27;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<ol start="2">
+<li>方式2：truncate</li>
+</ol>
+<ul>
+<li>语法：<br>  <code>truncate table 表名</code>(整表删除，不能加where筛选条件)<br>也就是整表清空；<br></li>
+</ul>
+<ol start="3">
+<li><strong>delete和truncate比较；</strong><br><ol>
+<li>delete可以加where条件，truncate不能；<br></li>
+<li>truncate删除效率较高；<br></li>
+<li>加入要删除的表中有自增长列，如果用delete删除后再插入数据，自增长列的值从断电开始；<br> 而truncate删除后，再插入数据，自增长列从1开始；<br></li>
+<li>truncate删除没有返回值，delete删除有返回值；<br></li>
+<li>truncate删除不能回滚，delete删除可以回滚；<br></li>
+</ol>
+</li>
+</ol>
+<h3 id="3-改"><a href="#3-改" class="headerlink" title="3. 改"></a>3. 改</h3><ul>
+<li>语法：<br></li>
+</ul>
+<ol>
+<li>修改单表的记录： <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">update 表名</span><br><span class="line">set 列=新值，列=新值，...</span><br><span class="line">where 筛选条件；</span><br></pre></td></tr></table></figure>
+<ul>
+<li>案例1：修改beauty中姓唐的人的电话为1883  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">	update beauty set phone = &#x27;1883&#x27;</span><br><span class="line">	where name like &#x27;唐%&#x27;;</span><br><span class="line">- 案例2：修改boys中id号为2的名称为张飞，魅力值为10；</span><br><span class="line">	```mysql</span><br><span class="line">	update boys set boyname=&#x27;张飞&#x27;,usercp=10</span><br><span class="line">	where id=2;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>修改多表的记录:<br><ul>
+<li>sql92语法：</li>
+</ul>
+ <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">update 表1 别名，表2 别名</span><br><span class="line">set 列=值，...</span><br><span class="line">where 连接条件</span><br><span class="line">and 筛选条件；</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>sql99 语法：</li>
+</ul>
+ <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">update 表1 别名</span><br><span class="line">inner|left|right join 表2 别名</span><br><span class="line">on 连接条件</span><br><span class="line">set 列=值,...</span><br><span class="line">where 筛选条件;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>案例1：修改张无忌女朋友的手机号为114</li>
+</ul>
+ <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">update boys bo</span><br><span class="line">inner join beauty b</span><br><span class="line">on bo.`id`=b.`boyfriend_id`</span><br><span class="line">set b.`phone`=&#x27;114&#x27;</span><br><span class="line">where bo.&#x27;boyName&#x27;=&#x27;张无忌&#x27;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>案例2：修改没有男朋友的女神的男朋友编号都为2号；</li>
+</ul>
+ <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">update boys bo </span><br><span class="line">right join beauty b </span><br><span class="line">on bo.`id`=b.`boyfriend_id`</span><br><span class="line">set b.`boyfriend_id`=2</span><br><span class="line">where bo.`id` is null;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="三、DDL"><a href="#三、DDL" class="headerlink" title="三、DDL"></a>三、DDL</h2><blockquote>
+<p>data define language 数据定义语言，库和表的管理；</p>
+</blockquote>
+<ul>
+<li>创建：create</li>
+<li>修改：alter</li>
+<li>删除：drop</li>
+</ul>
+<h3 id="1-库的管理"><a href="#1-库的管理" class="headerlink" title="1. 库的管理"></a>1. 库的管理</h3><blockquote>
+<p>创建、修改、删除</p>
+</blockquote>
+<h4 id="1-库的创建；"><a href="#1-库的创建；" class="headerlink" title="1.库的创建；"></a>1.库的创建；</h4><ul>
+<li>语法：<br>  <code>create database 库名;</code><br>  <code>create database if not exists 库名;</code></li>
+</ul>
+<h4 id="2-库的修改"><a href="#2-库的修改" class="headerlink" title="2.库的修改"></a>2.库的修改</h4><ol>
+<li>更改库的字符集：<br> <code>alter database books character set gbk;</code></li>
+</ol>
+<h4 id="3-库的删除"><a href="#3-库的删除" class="headerlink" title="3.库的删除"></a>3.库的删除</h4><pre><code>`drop database if exists books;`
+</code></pre>
+<h3 id="2-表的管理"><a href="#2-表的管理" class="headerlink" title="2. 表的管理"></a>2. 表的管理</h3><blockquote>
+<p>创建、修改、删除</p>
+</blockquote>
+<h4 id="1-表的创建："><a href="#1-表的创建：" class="headerlink" title="1.表的创建："></a>1.表的创建：</h4><ul>
+<li>语法：  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create table 表名(</span><br><span class="line">		列名 列的类型【（长度） 约束】</span><br><span class="line">		列名 列的类型【（长度） 约束】</span><br><span class="line">		...</span><br><span class="line">		列名 列的类型【（长度） 约束】</span><br><span class="line">)	</span><br></pre></td></tr></table></figure></li>
+<li>案例：创建表Book  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create table Book(</span><br><span class="line">	id int,</span><br><span class="line">	bName varchar(20),</span><br><span class="line">	price double,</span><br><span class="line">	author varchar(20),</span><br><span class="line">	publishDate datetime</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="2-表的修改："><a href="#2-表的修改：" class="headerlink" title="2.表的修改："></a>2.表的修改：</h4><ul>
+<li>语法：  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">alter table 表名</span><br><span class="line">add|drop|modify|change column 列名 【列类型 约束】;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol>
+<li>修改列名 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># column 可以省略</span><br><span class="line">alter table book change column publishdate pubDate DATETIME;</span><br></pre></td></tr></table></figure></li>
+<li>修改列的类型或约束<br> <code>alter table book modify column pubDate TIMESTAMP;</code></li>
+<li>添加新列<br> <code>alter table author add column annual double;</code></li>
+<li>删除列<br> <code>alter table author drop column annual;</code></li>
+<li>修改表名<br> <code>alter table author rename to book_author</code></li>
+</ol>
+<h4 id="3-表的删除："><a href="#3-表的删除：" class="headerlink" title="3.表的删除："></a>3.表的删除：</h4><pre><code>`drop table if exists author;`
+</code></pre>
+<p>通用写法：<br><br>	<code>drop database if exists 旧库名;</code><br>	<code>create database 新库名;</code><br>	<code>drop table if exists 旧表名;</code><br>	<code>create table 表名();</code></p>
+<h4 id="3-表的复制："><a href="#3-表的复制：" class="headerlink" title="3.表的复制："></a>3.表的复制：</h4><ol>
+<li>仅仅复制表的结构：<br> <code>create table copy like author;</code></li>
+<li>复制表的结构外加数据 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create table copy2 </span><br><span class="line">select * from author</span><br></pre></td></tr></table></figure></li>
+<li>只复制部分数据 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create table copy3</span><br><span class="line">select id,au_name</span><br><span class="line">from author </span><br><span class="line">where nation=&#x27;中国&#x27;;</span><br></pre></td></tr></table></figure></li>
+<li>仅复制某些列，不带数据 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create table copy4</span><br><span class="line">select id,au_name</span><br><span class="line">from author</span><br><span class="line">where 0;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="3-常见约束"><a href="#3-常见约束" class="headerlink" title="3.常见约束"></a>3.常见约束</h3><blockquote>
+<p>一种限制，用于限制表中的数据，为了保证表中的数据的准确和可靠性</p>
+</blockquote>
+<ul>
+<li><p>分类：六大约束</p>
+<ol>
+<li>NOT NULL:非空，用于保证该字段的值非空；比如姓名，学号等；</li>
+<li>DEFAULT：用于保证该字段有默认值；</li>
+<li>PRIMARY KEY：主键约束，用于保证该字段的值具有唯一性，并且非空；</li>
+<li>UNIQUE：唯一，用于保证该字段的值具有唯一性，但可以为空；比如座位号；</li>
+<li>CHECK：检查约束，【mysql中不支持】；比如年龄、性别（性别只能有男女）</li>
+<li>FOREIGN KEY：外键，用于限制两个表的关系，用于保证该字段的值必须来自于主表的关联列的值；<br> 在从表中添加外键约束，用于引用主表中的某列的值；<br> 比如：学生表的专业编号，员工表的部门编号等；</li>
+</ol>
+</li>
+<li><p>添加约束的时机：</p>
+<ol>
+<li>创建表时；</li>
+<li>修改表时；</li>
+</ol>
+</li>
+<li><p>约束的添加分类：</p>
+<ol>
+<li>列级约束；<ul>
+<li>在语法上六大约束都支持，但外键约束没有效果</li>
+</ul>
+</li>
+<li>表级约束；<ul>
+<li>除了非空、默认，其他的都支持；</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h4 id="1-创建表时添加约束"><a href="#1-创建表时添加约束" class="headerlink" title="1.创建表时添加约束"></a>1.创建表时添加约束</h4><h5 id="1-添加列级约束"><a href="#1-添加列级约束" class="headerlink" title="1.添加列级约束"></a>1.添加列级约束</h5><pre><code><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create table stuinfo(</span><br><span class="line">	id int primary key,#主键</span><br><span class="line">	stuName varchar(20) not null,# 非空</span><br><span class="line">	gender char(1) check(gender=&#x27;男&#x27; or gender=&#x27;女&#x27;),#检查</span><br><span class="line">	seat int unique,# 唯一</span><br><span class="line">	age int default 18,#默认</span><br><span class="line">	majorId int references major(id)#外键	（mysql不支持）	</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+**show index from stuinfo** 查看stuinfo表中所有的索引；
+</code></pre>
+<h5 id="2-添加表级约束"><a href="#2-添加表级约束" class="headerlink" title="2.添加表级约束"></a>2.添加表级约束</h5><ul>
+<li>语法：在各个字段的最下面<br>【contraint 约束名】  约束类型(字段名)<br>  create table stuinfo(<br>  id int,<br>  stuName varchar(20),<br>  gender char(1),<br>  seat int,<br>  age int,<br>  majorId int<br>  CONSTRAINT pk PRIMARY KEY(id),<br>  CONSTRAINT uq UNIQUE(seat),<br>  CONSTRAINT ck check(gender&#x3D;’男’ or gender&#x3D;’女’),<br>  CONSTRAINT fk_stuinfo_major FROEIGN KEY(majorid) references major(id)#外键<br>  );</li>
+</ul>
+<p><strong>最好外键约束写成表级的，其他约束写成列级的</strong></p>
+<blockquote>
+<p>主键和唯一的对比：<br>	保证唯一性	是否允许为空	一个表中可以有多少个	是否允许组合（不推荐使用）<br>主键	√		×		最多一个		允许（PRIMARY KEY(id,stuName)）<br>唯一	√		√		可以多个		允许（和主键一样）</p>
+</blockquote>
+<ul>
+<li>外键：<ol>
+<li>要求在从表设置外键关系；</li>
+<li>从表的外键列的类型和主表的关联列的类型要求一致或兼容，名称则无要求；</li>
+<li>主表中的关联列必须是一个key(一般是主键或唯一键)；</li>
+<li>插入数据时，先插入主表，再插入从表；删除数据时，先删除从表，再删除主表；</li>
+</ol>
+</li>
+</ul>
+<h4 id="2-修改表时添加约束"><a href="#2-修改表时添加约束" class="headerlink" title="2.修改表时添加约束"></a>2.修改表时添加约束</h4><ul>
+<li>添加列级约束：<br>  <code>alter table 表名 modify column 字段名 字段类型 新约束;</code></li>
+<li>添加表级约束：<br>  <code>alter table 表名 add 【constraint 约束名】 约束类型(字段名);</code></li>
+</ul>
+<p><code>alter table stuinfo modify column stuname varchar(20) NOT NULL;</code><br><code>alter table stuinfo modify column age int default 18;</code><br><code>alter table stuinfo modify column id int primary key;</code><br>或者：<br><code>alter table stuinfo add primary key(id);</code></p>
+<h4 id="3-修改表时删除约束"><a href="#3-修改表时删除约束" class="headerlink" title="3.修改表时删除约束"></a>3.修改表时删除约束</h4><h3 id="标识列"><a href="#标识列" class="headerlink" title="标识列"></a>标识列</h3><blockquote>
+<p>又称为自增长列，可以不用手动的插入值，系统提供默认的序列值；</p>
+</blockquote>
+<ul>
+<li>特点：<ol>
+<li>标识列必须和key搭配（主键或unique键或外键）；</li>
+<li>一个表中最多只能有一个自增长列；</li>
+<li>标识列的类型只能是数值型；（int float double）</li>
+<li>标识列可以通过<code>set auto_increment_increment=3;</code>设置步长，还可以通过手动插入值设置起始值；</li>
+</ol>
+</li>
+</ul>
+<ol>
+<li>创建表时设置标识列 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create table tab_identity(</span><br><span class="line">	ind int primary key auto_increment,</span><br><span class="line">	name varchar(20)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+ <code>show variables like &#39;%auto_increment%&#39;</code>;  显示自增长的起始值和步长；<br> <code>set auto_increment_increment=3;</code>  设置自增长的步长</li>
+</ol>
+<h2 id="四、TCL"><a href="#四、TCL" class="headerlink" title="四、TCL"></a>四、TCL</h2><blockquote>
+<p>transaction control language 事物控制语言<br>事务：一个或一组sql语句组成一个执行单元，这个执行单元要么全部执行<br>要么全部不执行；整个单独单元作为一个不可分割的整体，如果单元中<br>某条sql语句一旦执行失败或产生错误，整个单元将会回滚。所有受到<br>影响的数据将返回到事务开始以前的状态；如果单元中的所有sql语句均<br>执行成功，则事物被顺利执行；</p>
+</blockquote>
+<ul>
+<li>事务的acid属性：<ol>
+<li>原子性(Atomicity)：指事务是一个不可分割的工作单位，事务中的操作<strong>要么同时执行，要么都不执行</strong>；</li>
+<li>一致性(Consistency)：事务必须使数据库从一个一致性状态变换到另外一个一致性状态；</li>
+<li>隔离性(Isolation)：事务的隔离性是指一个事务的执行不能被其他食物干扰，即一个事务内部的操作及<br>     使用的数据对并发的其他事务是隔离的，并发执行的各个事务之间不能互相干扰。</li>
+<li>持久性(Durability)：一个事务一旦被提交，它对数据库的改变就是永久性的，接下来的其他操作和数据<br>     库故障不应该对其有任何影响；</li>
+</ol>
+</li>
+<li>事务的创建：<ol>
+<li><p>隐式事务：事务没有明显的开启和结束的标记；比如insert、update、delete语句 </p>
+</li>
+<li><p>显式事务：事务没有明显的开启和结束的标记；<br> 前提：必须先设置自动提交功能为禁用；set autocommit&#x3D;0;</p>
+<p> 步骤1：开启事务<br> set auto commit&#x3D;0;<br> start transaction;  可选<br> 步骤2：编写事务中的sql语句(select insert update delete)<br> 语句1；<br> 语句2；<br> …<br> 步骤3：结束事务<br> commit;提交事务<br> rollback；回滚事务<br> 提交和回滚都算结束事务；</p>
+<ul>
+<li>演示事务的使用步骤：  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 开启事务</span><br><span class="line">set auto commit=0;</span><br><span class="line">start transaction;</span><br><span class="line"># 编写一组事务的语句</span><br><span class="line">update account set balance = 500 where username = &#x27;张无忌&#x27;;</span><br><span class="line">update account set balance = 1500 where username = &#x27;赵敏&#x27;；</span><br><span class="line"># 结束事务</span><br><span class="line">commit;</span><br></pre></td></tr></table></figure></li>
+<li>回滚点：savepoint;(搭配rollback使用)  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">set autocommitt=0;</span><br><span class="line">start transaction;</span><br><span class="line">delete from account where id=25;</span><br><span class="line">savepoint a; #设置保存点</span><br><span class="line">delete from account where id=28;</span><br><span class="line">rollback to a; #回滚到保存点</span><br><span class="line">#25号删了；28 没删</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>数据库的隔离级别<br>  对于同时运行的多个事务，当这些事务访问数据库相同的数据时，如果没有采取必要的<br>  隔离措施，就会导致各种并发问题：<br>  1. 脏读：两个事务T1、T2，T1读取了已经被T2更新但还没提交的字段之后，若T2回滚，T1读取的内容就是临时且无效的；<br>  2. 不可重复读：T1读取了一个字段，然后T2更新了该字段之后，T1再次读同一个字段，值就不同了；<br>  3. 幻读：T1从一个表中读取了一个字段，然后T2在该表中插入了一些新的行，如果T1再次读取同一个表，就会多出几行；<br>  数据事务的隔离性：数据库系统必须具有隔离并发运行的哥哥事物的能力，使它们之间不会相互影响，避免各种并发问题；<br>  一个事务与其他事务隔离的成都成为隔离级别。隔离级别越高，数据一致性越好，但并发性越弱；<br>  1. read uncommitted(读未提交数据)：允许事务读取未被其他事务提交的变更。脏读、不可重复读和幻读的问题都会出现；<br>  2. read committed(读已提交数据)：只允许事务读取已经被其他事务提交的变更。可以避免脏读，但不可重复读和幻读的问题仍然可能出现；<br>  3. repeadable read(可重复读)：确保事务可以多次从一个字段中读取相同的值。在这个事务持续期间，禁止其他事务对这个字段进行更新。可以避免脏读和不可重复读。幻读仍存在；<br>  4. serializable(串行化)：确保事务可以从一个表中读取相同的行。在这个事务持续期间，禁止其他事务对该表执行插入、更新和删除操作。所有的并发问题都可以避免，但性能十分低下；<br>  查看当前的隔离级别：<code>select@@tx_isolation;</code><br>  设置当前mysql连接的隔离级别：<code>set transaction isolation level READ COMMITTED;</code><br>  设置数据库系统的全局的隔离级别：<code>set global transaction isolation level read committed;</code></li>
+</ul>
+<h3 id="视图；"><a href="#视图；" class="headerlink" title="视图；"></a>视图；</h3><p><strong>有点像封装的方法（也就是函数）</strong></p>
+<blockquote>
+<p>虚拟表，和普通表一样使用。仅保存查询逻辑，不保存查询结果。并动态生成临时查询的结果表。</p>
+</blockquote>
+<ul>
+<li>应用场景：<ol>
+<li>多个地方用到同样的查询结果；</li>
+<li>该查询结果使用的sql语句较复杂；</li>
+</ol>
+</li>
+<li>创建视图的语法：  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create view 视图名</span><br><span class="line">as</span><br><span class="line">查询语句;</span><br></pre></td></tr></table></figure></li>
+<li>视图的好处：<ol>
+<li>实现了sql语句的重用；</li>
+<li>简化复杂的sql操作，不必知道它的查询细节；</li>
+<li>保护数据，提高安全性；</li>
+</ol>
+</li>
+<li>视图的修改：<br>  方式1：<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create or replace view 视图名</span><br><span class="line">as</span><br><span class="line">查询语句;</span><br></pre></td></tr></table></figure><br>  方式2：<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">alter view 视图名</span><br><span class="line">as </span><br><span class="line">查询语句;</span><br></pre></td></tr></table></figure></li>
+<li>删除视图：<br>  语法：<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">drop view 视图名1，视图名2...</span><br></pre></td></tr></table></figure></li>
+<li>查看视图：<br>  语法：<br>  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">desc 视图名;</span><br><span class="line">或</span><br><span class="line">show create view 视图名;</span><br></pre></td></tr></table></figure></li>
+<li>案例1：创建视图emp_v1，要求查询电话号码以’011’开头的员工姓名和工资、邮箱；  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create or replace view emp_v1</span><br><span class="line">as </span><br><span class="line">select last_name,salary,email</span><br><span class="line">from employees</span><br><span class="line">where phone_number like &#x27;011%&#x27;;</span><br></pre></td></tr></table></figure></li>
+<li>案例2：创建视图emp_v2,要求查询部门的最高工资高于12000的部门信息；  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create or replace view emp_v2</span><br><span class="line">as </span><br><span class="line">#最高工资高于12000的部门名</span><br><span class="line">select max(salary) mx_dep,department_id</span><br><span class="line">from employees</span><br><span class="line">group by department_id</span><br><span class="line">having mx_dep&gt;12000;</span><br><span class="line"></span><br><span class="line">select d.*,m.mx_dep </span><br><span class="line">from departments d</span><br><span class="line">inner join emp_v2 m</span><br><span class="line">on d.department_id = m.department_id;</span><br></pre></td></tr></table></figure></li>
+<li>视图的更新：<br>  一般不用；语法和表的更新一样 insert into ;delete; update;</li>
+</ul>
+<h2 id="五、常见的数据类型："><a href="#五、常见的数据类型：" class="headerlink" title="五、常见的数据类型："></a>五、常见的数据类型：</h2><ol>
+<li>数值型：<ul>
+<li>整型:</li>
+<li>小数：<ol>
+<li>定点数</li>
+<li>浮点数</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>字符型：<ul>
+<li>较短的文本：char、varchar</li>
+<li>较长的文本：text、blob（较长的二进制数据）</li>
+</ul>
+</li>
+<li>日期型：</li>
+</ol>
+<h3 id="1-整型"><a href="#1-整型" class="headerlink" title="1. 整型"></a>1. 整型</h3><p>分类：<br>	tinyint、smallint、mediumint、int&#x2F;integer、bigint<br>字节数	1	  2		3	4	    8	</p>
+<ul>
+<li>特点：<ol>
+<li>如果不设置无符号还是有符号，默认是有符号，如果想设置无符号，需要添加unsigned关键字；</li>
+<li>如果插入超出了整型的范围，会报out of range异常，并且插入临界值；</li>
+<li>如果不设置长度，会有默认的长度；</li>
+</ol>
+</li>
+</ul>
+<h3 id="2-小数"><a href="#2-小数" class="headerlink" title="2. 小数"></a>2. 小数</h3><ul>
+<li>分类：<ol>
+<li>浮点型：<br> float(M,D)<br> double(M,D)  </li>
+<li>定点型：<br> dec(M,D)<br> decimal(M,D)</li>
+</ol>
+</li>
+<li>特点：<br>  1.<br>  M：整数部位+小数部位<br>  D：小数部位<br>  如果超过范围，则插入临界值；<br><br>  2.<br>  M和D都可以省略；<br>  如果是decimal，则M默认为10，D默认为0；<br>  如果是float和double，则会根据插入的数值的精度来决定精度；</li>
+</ul>
+<h3 id="3-字符型"><a href="#3-字符型" class="headerlink" title="3. 字符型"></a>3. 字符型</h3><h3 id="2-日期"><a href="#2-日期" class="headerlink" title="2. 日期"></a>2. 日期</h3><ul>
+<li>分类：<ol>
+<li>date        只有日期</li>
+<li>datetime    日期和时间    </li>
+<li>timestamp    某个时刻（时间戳）</li>
+<li>time        只有时间</li>
+<li>year        只有年份</li>
+</ol>
+</li>
+</ul>
+<h2 id="六、变量"><a href="#六、变量" class="headerlink" title="六、变量"></a>六、变量</h2><h3 id="1-系统变量"><a href="#1-系统变量" class="headerlink" title="1. 系统变量"></a>1. 系统变量</h3><blockquote>
+<p>由系统提供，不是用户定义，属于服务器层面；</p>
+</blockquote>
+<ul>
+<li>语法<ol>
+<li>查看所有的系统变量:<code>show global | session variables;</code></li>
+<li>查看满足条件的部分系统变量：<code>show global | session variables like &#39;%char%&#39;;</code></li>
+<li>查看指定的某个系统变量的值：<code>select @@global | session.系统变量名;</code></li>
+<li>为某个系统变量赋值: <code>set global | session 系统变量名 = 值;</code></li>
+</ol>
+</li>
+</ul>
+<h4 id="1-全局变量"><a href="#1-全局变量" class="headerlink" title="1. 全局变量"></a>1. 全局变量</h4><h4 id="2-会话变量"><a href="#2-会话变量" class="headerlink" title="2. 会话变量"></a>2. 会话变量</h4><h3 id="2-自定义变量"><a href="#2-自定义变量" class="headerlink" title="2.自定义变量"></a>2.自定义变量</h3><h4 id="1-用户变量"><a href="#1-用户变量" class="headerlink" title="1. 用户变量"></a>1. 用户变量</h4><blockquote>
+<p>用户自定义<br>使用步骤：声明 赋值  使用<br>作用域：针对当前会话（连接） 有效，等同于会话变量的作用域；</p>
+</blockquote>
+<ul>
+<li>声明并初始化：<br>  <code>set @用户变量名=值;</code><br>  <code>set @用户变量名:=值;</code><br>  <code>select @用户变量名:=值;</code></li>
+<li>赋值：<br>  方式1：<br>  <code>set @用户变量名=值;</code><br>  <code>set @用户变量名:=值;</code><br>  <code>select @用户变量名:=值;</code><br>  方式2：<br>  <code>select 字段 into 变量名 from 表;</code></li>
+<li>查看<br>  <code>select @用户变量名;</code></li>
+</ul>
+<h4 id="2-局部变量"><a href="#2-局部变量" class="headerlink" title="2. 局部变量"></a>2. 局部变量</h4><ul>
+<li>声明：<br>  <code>declare 变量名 类型;</code><br>  <code>declare 变量名 类型 default 值;</code></li>
+</ul>
+<h2 id="七、存储过程和函数"><a href="#七、存储过程和函数" class="headerlink" title="七、存储过程和函数"></a>七、存储过程和函数</h2><ul>
+<li>创建存储过程：  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create procedure 存储过程名(参数)</span><br><span class="line">begin</span><br><span class="line">	存储过程体(一组合法的sql语句)</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<ul>
+<li>注意：参数列表包含三部分：参数模式 参数名 参数类型</li>
+</ul>
+<ol>
+<li>参数模式：<ul>
+<li>in：该参数可以作为输入，需要调用方传入值</li>
+<li>out：该参数可以作为输出，可以作为返回值</li>
+<li>inout：即可做输入，又可做输出。即需要传入值，有需要返回值；</li>
+</ul>
+</li>
+<li>如果存储过程体只有一句话，begin end可以省略；</li>
+<li>存储过程体的每条sql的结尾要求必须加分号；存储过程的结尾可以使用DELIMITER重新设置；<br> DELIMITER $</li>
+</ol>
+</li>
+<li>调用语法：<br>  <code>CALL 存储过程名(实参列表);</code></li>
+<li>创建函数：  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create function 函数名(参数列表) returns 返回类型</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="八、流程控制结构"><a href="#八、流程控制结构" class="headerlink" title="八、流程控制结构"></a>八、流程控制结构</h2>]]></content>
+      <categories>
+        <category>历史学习记录</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+        <tag>历史学习记录</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>并发常见问题-历史学习记录</title>
+    <url>/2025/06/08/%E5%B9%B6%E5%8F%91%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98-%E5%8E%86%E5%8F%B2%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[<h2 id="1-什么是线程？"><a href="#1-什么是线程？" class="headerlink" title="1. 什么是线程？"></a>1. 什么是线程？</h2><ol>
+<li>现代操作系统在运行一个程序时，会为其创建一个进程。</li>
+<li>而线程是现代操作系统进行资源调度的基本单元，也叫轻量级进程，在一个进程里可以创建多个线程，这些线程都拥有各自的计数器、堆栈和局部变量等属性，并且能够访问共享的内存变量。处理器在这些线程上告诉切换，让使用者感受到这些线程在同时执行。</li>
+</ol>
+<h2 id="2-java线程间通信"><a href="#2-java线程间通信" class="headerlink" title="2. java线程间通信"></a>2. java线程间通信</h2><figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">1. volatile和synchronized关键字</span><br><span class="line">2. 等待/通知机制</span><br><span class="line">3. 管道输入/输出流</span><br><span class="line">4. Thread.join()的使用</span><br><span class="line">5. ThreadLocal的使用</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>volatile和synchronized关键字  </p>
+<ul>
+<li>本质上是通过共享内存的方式实现线程通信：  <ol>
+<li>关键字volatile可以用来修饰字段（成员变量），就是告知程序任何堆该变量的访问都需从共享内存中获取，而且对它的改变需要立刻刷新回共享内存。它能保证所有线程对volatile修饰的变量的可见性。</li>
+<li>关键字synchronized用来修饰方法或者以同步块的形式使用。它保主要确保在同一个时刻，只能有一个线程处于方法或同步块中，保证了线程对变量访问的可见性和排他性。  <ol>
+<li>具体实现本质上是对一个对象的监视器进行获取，而这个获取的过程是排他的，也就是同一个时刻只能有一个线程获取到由synchronized所保护对象的监视器。</li>
+<li>任意一个对象都拥有自己的监视器，当这个对象由同步块或者这个对象的同步方法调用时，执行方法的线程必须先获得该对象的监视器才能进入同步块或同步方法，而没有获取到监视器的线程将会被阻塞在同步块或同步方法的入口处。</li>
+<li>任意线程对Object（Object由synchronized保护）的访问，首先要获得Object的监视器。如果获取失败，线程进入同步队列，线程状态变为BLOCKED。当访问Object的前驱释放了锁，则该释放动作唤醒阻塞在同步队列中的线程，使其重新尝试对监视器的获取。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>等待&#x2F;通知机制  </p>
+<ul>
+<li>本质上是生产者和消费者模式，这种模式隔离了做什么和怎么做，在功能层面上实现了解耦。  </li>
+<li>等待通知的相关方法是任意Java对象都具备的，因为这些方法被定义在所有对象的超类<code>java.lang.Object</code>上；通过<code>wait()</code>,<code>notify()</code>,<code>notifyAll()</code>来实现。    <ol>
+<li>等待&#x2F;通知机制，是指一个线程A调用了对象O的<code>wait()</code>方法进入等待状态，而另一个线程B调用了对象O的<code>notify()</code>或<code>notifyAll()</code>方法，线程A收到通知后从<code>wait()</code>方法返回，进而执行后续操作。上述两个线程通过对象O来完成交互。</li>
+<li>调用<code>wait()</code>,<code>notify()</code>,<code>notifyAll()</code>需要注意的细节：  <ol>
+<li>使用<code>wait()</code>,<code>notify()</code>,<code>notifyAll()</code>方法前，需要先对调用对象加锁；</li>
+<li>调用<code>wait()</code>方法后，线程状态由RUNNING变为WAITING，并将当前线程放置到对象的等待队列；</li>
+<li><code>notify()</code>和<code>notifyAll()</code>方法调用后，等待线程依旧不会从<code>wait()</code>方法返回，需要调用<code>notify()</code>和<code>notifyAll()</code>的线程释放锁之后，等待线程才有机会从<code>wait()</code>返回；</li>
+<li><code>notify()</code>方法将等待队列中的一个线程从等待队列中移到同步队列中，而<code>notifyAll()</code>方法将等待队列中的所有线程全部从等待队列中移到同步队列，被移动的线程状态由WAITING变为BLOCKED;</li>
+<li>从<code>wait()</code>方法返回的前提是获得了调用对象的锁；</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>等待&#x2F;通知机制依托于同步机制，其目的就是确保等待线程从<code>wait()</code>方法返回时能够感知到通知线程对变量做出的修改；</li>
+<li><code>WaitThread</code>首先获取了对象的锁，然后调用对象的<code>wait()</code>方法，从而放弃了锁进入了对象的等待队列WaitQueue中，进入等待状态。由于WaitThread释放了对象的锁，NntifyThread随后获取了对象的锁，并调用对象的<code>notify()</code>方法，将WaitThread从WaitQueue移到SynchronizedQueue中，此时WaitThread的状态变为阻塞状态。NotifyThread释放了锁之后，WaitThread再次获取到锁并从<code>wait()</code>方法返回继续执行；</li>
+</ul>
+</li>
+<li><p>管道输入&#x2F;输出流  </p>
+<ul>
+<li>管道输入&#x2F;输出流和普通文件输入&#x2F;输出流或者网络输入&#x2F;输出流不同之处在于，它主要用于线程之间的数据传输，而传输的媒介为内存；</li>
+<li>管道输入&#x2F;输出流主要包括如下4中具体实现：前两种面向字节，而后两种面向字符。<ol>
+<li><code>PipedOutputStream</code>:</li>
+<li><code>PipedInputStream</code></li>
+<li><code>PipedReader</code></li>
+<li><code>PipedWriter</code></li>
+</ol>
+</li>
+<li>对于Piped类型的流，必须要先进行绑定，也就是调用<code>connect()</code>方法，如果没有将输入&#x2F;输出流绑定起来，对于该流的访问将会抛出异常；</li>
+</ul>
+</li>
+<li><p><code>Thread.join()</code>的使用</p>
+<ul>
+<li>是主线程等待子线程的终止。也就是说主线程的代码块中，如果碰到了<code>t.join()</code>方法，此时主线程需要等待（阻塞），等待子线程结束了(Waits for this thread to die.),才能继续执行<code>t.join()</code>之后的代码块。</li>
+</ul>
+</li>
+<li><p><code>ThreadLocal</code>的使用</p>
+<ul>
+<li>即线程变量，是一个以Thread对象为键，任意对象为值的存储结构。这个结构被附带在线程上，也就是一个线程可以根据一个ThreadLocal对象查询到绑定在这个线程上的一个值。</li>
+</ul>
+</li>
+</ol>
+<h2 id="3-多线程共享数据"><a href="#3-多线程共享数据" class="headerlink" title="3. 多线程共享数据"></a>3. 多线程共享数据</h2><ol>
+<li>如果每个线程执行的代码相同，可以使用同一个Runnable对象，这个Runnable对象中有那个共享数据，例如，买票系统就可以这么做。 </li>
+<li>如果每个线程执行的代码不同，这时候需要用不同的Runnable对象，有如下两种方式来实现这些Runnable对象之间的数据共享： <ul>
+<li>将共享数据封装在另外一个对象中，然后将这个对象逐一传递给各个Runnable对象。每个线程对共享数据的操作方法也分配到那个对象身上去完成，这样容易实现针对该数据进行的各个操作的互斥和通信。</li>
+<li>将这些Runnable对象作为某一个类中的内部类，共享数据作为这个外部类中的成员变量，每个线程对共享数据的操作方法也分配给外部类，以便实现对共享数据进行的各个操作的互斥和通信，作为内部类的各个Runnable对象调用外部类的这些方法。</li>
+</ul>
+</li>
+</ol>
+<h2 id="4-信号量和互斥量的区别"><a href="#4-信号量和互斥量的区别" class="headerlink" title="4. 信号量和互斥量的区别"></a>4. 信号量和互斥量的区别</h2><ol>
+<li>互斥用于线程的互斥，信号量用于线程的同步<ul>
+<li>这是互斥量和信号量的根本区别，也就是互斥和同步之间的区别。</li>
+<li>互斥：是指某一资源同时只允许一个访问者对其进行访问，具有唯一性和排它性。但互斥无法限制访问者对资源的访问顺序，即访问是无序的。</li>
+<li>同步：是指在互斥的基础上（大多数情况），通过其它机制实现访问者对资源的有序访问。在大多数情况下，同步已经实现了互斥，特别是所有写入资源的情况必定是互斥的。少数情况是指可以允许多个访问者同时访问资源</li>
+</ul>
+</li>
+<li>互斥量只能是0&#x2F;1，信号量可以是任何非负整数<ul>
+<li>一个互斥量只能用于一个资源的互斥访问，它不能实现多个资源的多线程互斥问题。信号量可以实现多个同类资源的多线程互斥和同步。当信号量为单值信号量是，也可以完成一个资源的互斥访问。</li>
+</ul>
+</li>
+<li>互斥量的加锁和解锁必须由同一线程分别对应使用，信号量可以由一个线程释放，另一个线程得到。</li>
+</ol>
+<h2 id="5-线程是怎么实现的-线程有哪些方法？Wait-是线程的方法吗？"><a href="#5-线程是怎么实现的-线程有哪些方法？Wait-是线程的方法吗？" class="headerlink" title="5. 线程是怎么实现的 线程有哪些方法？Wait()是线程的方法吗？"></a>5. 线程是怎么实现的 线程有哪些方法？Wait()是线程的方法吗？</h2><h3 id="5-1-多线程实现的四种方法"><a href="#5-1-多线程实现的四种方法" class="headerlink" title="5.1 多线程实现的四种方法"></a>5.1 多线程实现的四种方法</h3><p><a href="https://www.cnblogs.com/duanjiapingjy/p/9434244.html">csdn线程实现</a></p>
+<figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">1. 继承`Thread`类，重写run方法（因为Thread本身也实现了Runnable接口）</span><br><span class="line">2. 实现`Runnable`接口，重写`run`方法</span><br><span class="line">3. 实现`Callable`接口，重写call方法（**有返回值**）</span><br><span class="line">4. 使用线程池（**有返回值**）</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>继承<code>Thread</code>类，重写run方法:<ul>
+<li>每次新建一个线程，都要新建一个<code>Thread</code>子类的对象；</li>
+<li>启动线程，<code>new Thread子类().start()</code>；</li>
+<li>创建线程实际上调用的是父类<code>Thread</code>空参的构造器；</li>
+</ul>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyThread</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String ards[])</span>&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">			<span class="keyword">new</span> <span class="title class_">ExtendsThread</span>().start();</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(Thread.currentThread().getName());</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ExtendsThread</span> <span class="keyword">extends</span> <span class="title class_">Thread</span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">		System.out.println(Thread.currentThread().getName());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>实现<code>Runnable</code>接口，重写<code>run</code>方法：<ul>
+<li>不管创建多少线程，都只需要一个<code>Runnable</code>接口实现类的对象；</li>
+<li>启动线程，<code>new Thread(Runnable接口实现类).start()</code>；</li>
+<li>创建线程实际上调用的是父类<code>Thread</code>类<code>Runnable</code>类型参数的构造器；</li>
+</ul>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyThread</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String ards[])</span>&#123;</span><br><span class="line">		<span class="type">Runnable</span> <span class="variable">implRunnable</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ImplRunnable</span>();</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">			<span class="keyword">new</span> <span class="title class_">Thread</span>(implRunnable).start();</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(Thread.currentThread().getName());</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ImplRunnable</span> <span class="keyword">implements</span> <span class="title class_">Runnable</span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">volatile</span>  <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">		System.out.println(Thread.currentThread().getName()+<span class="string">&quot;--&quot;</span>+ i++);</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>实现实现<code>Callable</code>接口，重写call方法<ul>
+<li>自定义类实现Callable接口时，必须指定泛型，该泛型即返回值的类型</li>
+<li>每次创建一个新的线程，都要创建一个新的Callable接口的实现类、</li>
+<li>如何启动线程？<ol>
+<li>创建一个Callable接口的实现类的对象</li>
+<li>创建一个FutureTask对象，传入Callable类型的参数。<code>public FutureTask(Callable&lt;V&gt; callable)&#123;……&#125;</code></li>
+<li>调用Thread类重载的参数为Runnable的构造器创建Thread对象，将FutureTask作为参数传递<ul>
+<li><code>public class FutureTask&lt;V&gt; implements RunnableFuture&lt;V&gt;</code></li>
+<li><code>public interface RunnableFuture&lt;V&gt; extends Runnable, Future&lt;V&gt;</code></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>如何获取返回值？<ol>
+<li>调用FutureTask类的get()方法</li>
+</ol>
+</li>
+</ul>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyThread</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String ards[])</span> <span class="keyword">throws</span> InterruptedException, ExecutionException&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">			Callable&lt;Integer&gt; implCallable = <span class="keyword">new</span> <span class="title class_">ImplCallable</span>();</span><br><span class="line">			FutureTask&lt;Integer&gt; futureTask = <span class="keyword">new</span> <span class="title class_">FutureTask</span>&lt;Integer&gt;(implCallable);</span><br><span class="line">			<span class="keyword">new</span> <span class="title class_">Thread</span>(futureTask).start();</span><br><span class="line">			System.out.println(Thread.currentThread().getName()+<span class="string">&quot;----&quot;</span>+futureTask.get());</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		System.out.println(Thread.currentThread().getName());</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ImplCallable</span> <span class="keyword">implements</span> <span class="title class_">Callable</span>&lt;Integer&gt;&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> Integer <span class="title function_">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">		<span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">			result += i;</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(Thread.currentThread().getName());</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>线程池<ul>
+<li><code>Executor</code>类</li>
+</ul>
+</li>
+</ol>
+<h2 id="6-线程实现各有什么优缺点？"><a href="#6-线程实现各有什么优缺点？" class="headerlink" title="6. 线程实现各有什么优缺点？"></a>6. 线程实现各有什么优缺点？</h2><ol>
+<li><p>继承Thread类：</p>
+<ul>
+<li>Java是单继承， 继承Thread类之后无法再继承其他类</li>
+<li>需要为每个需要线程执行的方法单独创建一个class文件，开发效率较低</li>
+<li>没有返回值</li>
+<li>一般不推荐使用</li>
+<li>但编写简单，直接使用<code>this</code>就可以获得当前线程；</li>
+</ul>
+</li>
+<li><p>实现Runnable和Callable接口方式：</p>
+<ul>
+<li>优点：<ol>
+<li>线程类只是实现了Runnable接口（JDK1.0开始）或Callable接口（JDK1.5开始），还可以继承其他类。</li>
+<li>多线程可以共享同一个target对象，非常适合多个相同线程来处理同一份资源的情况，从而可以将CPU、代码和数据分开，形成清晰的模型，较好地体现了面向对象的思想。</li>
+<li>实现Callable接口创建多线程最大的好处是可以有返回值。</li>
+</ol>
+</li>
+<li>缺点：<ol>
+<li>编程稍显复杂，如果要访问当前线程，则必须使用Thread.currentThread()方法。</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="7-wait和sleep的区别和联系"><a href="#7-wait和sleep的区别和联系" class="headerlink" title="7. wait和sleep的区别和联系"></a>7. wait和sleep的区别和联系</h2><ol>
+<li><code>sleep()</code>没有释放锁，<code>wait()</code>释放锁；</li>
+<li>两者都可以暂停线程；</li>
+<li><code>wait()</code>方法被用于线程间的通信&#x2F;交互，<code>sleep()</code>方法用于暂停线程；</li>
+<li><code>wait()</code>方法被调用后，除非使用<code>wait(long timeout)</code>，超时后线程自动苏醒，否则线程不会自动苏醒，需要别的线程调用同一对象上的<code>notify()</code>或<code>notifyAll()</code>方法。而<code>sleep()</code>方法执行完后，线程会自动苏醒。</li>
+</ol>
+<h2 id="8-要用start-方法区执行run-方法而不是直接调用run-方法"><a href="#8-要用start-方法区执行run-方法而不是直接调用run-方法" class="headerlink" title="8. 要用start()方法区执行run()方法而不是直接调用run()方法"></a>8. 要用start()方法区执行run()方法而不是直接调用run()方法</h2><blockquote>
+<p>new一个Thread会使线程进入新建状态，然后调用线程的<code>start()</code>方法，会启动一个线程并使线程进入就绪状态，当分配到时间片后，就可以开始运行了。<code>start()</code>会执行线程相应的准备工作，然后自动执行<code>run()</code>方法的内容，这是真正的多线程工作。但是，直接执行<code>run()</code>方法，会把<code>run()</code>方法当作<code>main</code>线程下的一个普通方法来执行，并不会在某个线程中执行它，所有这并不是多线程工作。</p>
+</blockquote>
+<h2 id="9-线程有几种状态-上下文切换"><a href="#9-线程有几种状态-上下文切换" class="headerlink" title="9. 线程有几种状态 上下文切换"></a>9. 线程有几种状态 上下文切换</h2><ol>
+<li>NEW：			初始状态，线程被构建，但还没调用<code>start()</code>方法；</li>
+<li>RUNNABLE:   		运行状态，Java线程将操作系统中的就绪和运行两种状态统称为“运行状态”；</li>
+<li>BLOCKED：  		阻塞状态，标识线程阻塞于锁；</li>
+<li>WAITING:     	等待状态，该状态标识线程已经获得锁，但需要当前线程需要等待其他线程做出一些特定动作（如通知或中断）</li>
+<li>TIME_WAITING:  	超时等待，可以在指定的时间自行返回；</li>
+<li>TERMINATED:      终止状态，表示当前线程已经执行完毕；</li>
+</ol>
+<ul>
+<li><p>总结：  </p>
+<ol>
+<li>线程创建后，调用<code>start()</code>方法开始运行。</li>
+<li>当线程执行<code>wait()</code>方法之后，线程进入等待状态。进入等待状态的线程需要依靠其他现成的通知才能够返回到运行状态；而超时等待状态相当于在等待状态的基础上增加了超时限制，也就是超时时间到达时将会返回到运行状态。</li>
+<li>当线程调用同步方法时，在没有获取到锁的情况下，线程将会进入阻塞状态；</li>
+<li>当线程运行Runnable的<code>run()</code>方法之后将会进入到终止状态。</li>
+</ol>
+</li>
+<li><p>上下文切换：  </p>
+<ol>
+<li>CPU通过时间片分配算法来循环执行任务，当前任务执行一个时间片后会切换到下一个任务。但是，在切换前会保存上一个任务的状态，以便下次切换回这个任务时，可以再加载这个任务的状态。所以任务从保存到再加载就是一次上下文切换。</li>
+</ol>
+</li>
+<li><p>如何减少上下文的开销：  </p>
+<ol>
+<li>无锁并发编程；</li>
+<li>CAS算法</li>
+<li>使用最少线程</li>
+<li>协程</li>
+</ol>
+</li>
+</ul>
+<h2 id="10-ThreadLocal"><a href="#10-ThreadLocal" class="headerlink" title="10. ThreadLocal"></a>10. ThreadLocal</h2><p><a href="https://www.cnblogs.com/fsmly/p/11020641.html">ThreadLocal详解</a> </p>
+<h3 id="10-1-ThreadLocal简介"><a href="#10-1-ThreadLocal简介" class="headerlink" title="10.1 ThreadLocal简介"></a>10.1 ThreadLocal简介</h3><blockquote>
+<p>多线程访问同一个共享变量的时候容易出现并发问题，特别是多个线程对一个变量进行写入的时候，为了保证线程安全，一般使用者在访问共享变量的时候需要进行额外的同步措施才能保证线程安全性。ThreadLocal是除了加锁这种同步方式之外的一种保证一种规避多线程访问出现线程不安全的方法，当我们在创建一个变量后，如果每个线程对其进行访问的时候访问的都是线程自己的变量这样就不会存在线程不安全问题。<br>ThreadLocal是JDK包提供的，它提供线程本地变量，如果创建一个<code>ThreadLocal</code>变量，那么访问这个变量的每个线程都会有这个变量的一个副本，在实际多线程操作的时候，操作的是自己本地内存中的变量，从而规避了线程安全问题。</p>
+</blockquote>
+<ol>
+<li><code>ThreadLocal</code>，即线程变量，是一个以<code>ThreadLocal</code>对象为键、任意对象为值的存储结构。</li>
+<li>这个结构被附带再线程上，也就是说一个线程可以根据一个<code>Thread</code>对象查询到绑定在这个线程上的一个值。</li>
+<li>比如可以通过<code>set(T)</code>方法来设置一个值，在当前线程下再通过<code>get()</code>方法获取到原先设置的值。</li>
+</ol>
+<h3 id="10-2-ThreadLocal的实现原理"><a href="#10-2-ThreadLocal的实现原理" class="headerlink" title="10.2 ThreadLocal的实现原理"></a>10.2 ThreadLocal的实现原理</h3><blockquote>
+<p><code>Thread</code>类中有一个<code>threadLocals</code>和<code>inheritableThreadLocals</code>变量，它们都是<code>ThreadLocalMap</code>类型的变量，可以把<code>ThreadLocalMap</code>变量理解成一个为<code>ThreadLocal</code>类实现而定制化的<code>HashMap</code>。默认情况下，每个线程的这两个变量都为<code>null</code>，只有当线程第一次调用<code>ThreadLocal</code>类的<code>set()</code>或<code>get()</code>方法时才会创建他们。</p>
+</blockquote>
+<ol>
+<li><p><code>set()</code>方法源码：</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(T value)</span> &#123;</span><br><span class="line">	<span class="comment">//(1)获取当前线程（调用者线程）</span></span><br><span class="line">	<span class="type">Thread</span> <span class="variable">t</span> <span class="operator">=</span> Thread.currentThread();</span><br><span class="line">	<span class="comment">//(2)以当前线程作为key值，去查找对应的线程变量，找到对应的map</span></span><br><span class="line">	<span class="type">ThreadLocalMap</span> <span class="variable">map</span> <span class="operator">=</span> getMap(t);</span><br><span class="line">	<span class="comment">//(3)如果map不为null，就直接添加本地变量，key为当前线程，值为添加的本地变量值</span></span><br><span class="line">	<span class="keyword">if</span> (map != <span class="literal">null</span>)</span><br><span class="line">		map.set(<span class="built_in">this</span>, value);</span><br><span class="line">	<span class="comment">//(4)如果map为null，说明首次添加，需要首先创建出对应的map</span></span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		createMap(t, value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ThreadLocalMap <span class="title function_">getMap</span><span class="params">(Thread t)</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> t.threadLocals; <span class="comment">//获取线程自己的变量threadLocals，并绑定到当前调用线程的成员变量threadLocals上</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//createMap方法不仅创建了threadLocals，同时也将要添加的本地变量值添加到了threadLocals中。</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">createMap</span><span class="params">(Thread t, T firstValue)</span> &#123;</span><br><span class="line">	t.threadLocals = <span class="keyword">new</span> <span class="title class_">ThreadLocalMap</span>(<span class="built_in">this</span>, firstValue);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>get()</code>方法源码：</p>
+<blockquote>
+<p><code>get()</code>方法首先获取当前线程，<code>getMap()</code>方法获取当前线程的<code>ThreadLocal</code>对象，如果不为null，就返回当前线程绑定的本地变量值；否则执行<code>setInitialValue()</code>方法初始化<code>ThreadLocals</code>变量。</p>
+</blockquote>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Returns the value in the current thread&#x27;s copy of this</span></span><br><span class="line"><span class="comment"> * thread-local variable.  If the variable has no value for the</span></span><br><span class="line"><span class="comment"> * current thread, it is first initialized to the value returned</span></span><br><span class="line"><span class="comment"> * by an invocation of the &#123;<span class="doctag">@link</span> #initialValue&#125; method.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> the current thread&#x27;s value of this thread-local</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> T <span class="title function_">get</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">Thread</span> <span class="variable">t</span> <span class="operator">=</span> Thread.currentThread();</span><br><span class="line">    <span class="type">ThreadLocalMap</span> <span class="variable">map</span> <span class="operator">=</span> getMap(t);</span><br><span class="line">    <span class="keyword">if</span> (map != <span class="literal">null</span>) &#123;</span><br><span class="line">        ThreadLocalMap.<span class="type">Entry</span> <span class="variable">e</span> <span class="operator">=</span> map.getEntry(<span class="built_in">this</span>);</span><br><span class="line">        <span class="keyword">if</span> (e != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span></span><br><span class="line">            <span class="type">T</span> <span class="variable">result</span> <span class="operator">=</span> (T)e.value;</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> setInitialValue();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>remove()</code>方法：</p>
+<blockquote>
+<p>remove方法判断该当前线程对应的threadLocals变量是否为null，不为null就直接删除当前线程中指定的threadLocals变量</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">remove</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">ThreadLocalMap</span> <span class="variable">m</span> <span class="operator">=</span> getMap(Thread.currentThread());</span><br><span class="line">    <span class="keyword">if</span> (m != <span class="literal">null</span>) &#123;</span><br><span class="line">        m.remove(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></blockquote>
+</li>
+<li><p><strong>总结</strong>：每个线程内部都有一个<code>threadLocals</code>的成员变量，该变量的类型是<code>ThreadLocal.ThreadLocalMap</code>类型（类似于一个HashMap），其中的<code>key</code>是当前定义的Thread变量的this引用，<code>value</code>是<code>set()</code>方法设置的值。<strong>每个线程的本地变量存放在自己的本地内存变量<code>threadLocals</code>中，如果当前线程一直不消亡，那么这些本地变量就会一直存在，可能导致内存溢出，因此使用完毕需要将其<code>remove</code>掉。</strong></p>
+</li>
+</ol>
+<h3 id="10-3-ThreadLocal内存泄漏问题"><a href="#10-3-ThreadLocal内存泄漏问题" class="headerlink" title="10.3 ThreadLocal内存泄漏问题"></a>10.3 ThreadLocal内存泄漏问题</h3><blockquote>
+<p><code>ThreadLocalMap</code>中使用的 <code>key</code>被传递给了<code>WeakReference</code>的构造函数，所以<code>key</code>为 <code>ThreadLocal</code> 的弱引用,而<code>value</code>是强引用。所以，如果 <code>ThreadLocal</code> 没有被外部强引用的情况下，在垃圾回收的时候，key 会被清理掉，而 value 不会被清理掉。这样一来，ThreadLocalMap 中就会出现 key 为 null 的 Entry。假如我们不做任何措施的话，value 永远无法被 GC 回收，这个时候就可能会产生内存泄露。<code>ThreadLocalMap</code> 实现中已经考虑了这种情况，在调用 <code>set()</code>、<code>get()</code>、<code>remove()</code> 方法的时候，会清理掉 key 为 null 的记录。使用完 <code>ThreadLocal</code>方法后 最好手动调用<code>remove()</code>方法.  </p>
+</blockquote>
+<h2 id="11-就绪状态和阻塞状态有什么区别-两者可以互相切换吗"><a href="#11-就绪状态和阻塞状态有什么区别-两者可以互相切换吗" class="headerlink" title="11. 就绪状态和阻塞状态有什么区别  两者可以互相切换吗"></a>11. 就绪状态和阻塞状态有什么区别  两者可以互相切换吗</h2><p>Java中就绪和运行两种状态统称为Runnable状态。  </p>
+<p>但在常规线程中（比如操作系统中的线程），就绪状态是指，在线程被创建后，其他线程中调用了该线程的<code>start()</code>方法。就绪状态的线程位于“可运行线程池中”，运行的所有其他条件都满足，只等待获取cpu的使用权（时间片）。也即是，就绪状态的线程除了cpu分配的时间片外，其他的运行所需资源已经全部满足。  </p>
+<p>阻塞状态是线程因为某种原因而放弃了cpu的使用权，暂时停止运行。直到线程进入就绪状态，才有机会转换到运行状态。阻塞状态分三种：  </p>
+<ol>
+<li>等待阻塞：运行的线程执行wait()方法，该线程会释放占用的所有资源，JVM会把该线程放入“等待池”中。进入这个状态后，是不能自动唤醒的，必须依靠其他线程调用notify()或notifyAll()方法才能被唤醒，</li>
+<li>同步阻塞：运行的线程在获取对象的同步锁时，若该同步锁被别的线程占用，则JVM会把该线程放入“锁池”中。</li>
+<li>其他阻塞：运行的线程执行sleep()或join()方法，或者发出了I&#x2F;O请求时，JVM会把该线程置为阻塞状态。当sleep()状态超时、join()等待线程终止或者超时、或者I&#x2F;O处理完毕时，线程重新转入就绪状态。</li>
+</ol>
+<h2 id="12-进程和线程切换开销对比"><a href="#12-进程和线程切换开销对比" class="headerlink" title="12. 进程和线程切换开销对比"></a>12. 进程和线程切换开销对比</h2><ol>
+<li>进程切换开销<ul>
+<li>切换虚拟地址空间</li>
+<li>切换CPU上下文</li>
+<li>切换内核栈</li>
+</ul>
+</li>
+<li>线程切换开销<ul>
+<li>切换CPU上下文</li>
+<li>切换内核栈</li>
+</ul>
+</li>
+</ol>
+<h2 id="13-Java中的锁"><a href="#13-Java中的锁" class="headerlink" title="13. Java中的锁"></a>13. Java中的锁</h2><p><a href="https://www.cnblogs.com/jyroy/p/11365935.html">Java锁</a><br><img src="/./image/%E9%94%81.png" alt="锁"></p>
+<h2 id="14-CAS的含义-ABA问题"><a href="#14-CAS的含义-ABA问题" class="headerlink" title="14. CAS的含义 ABA问题"></a>14. CAS的含义 ABA问题</h2><p><a href="https://blog.csdn.net/bjweimengshu/article/details/78949435?ops_request_misc=%25257B%252522request%25255Fid%252522%25253A%252522160851567016780302998169%252522%25252C%252522scm%252522%25253A%25252220140713.130102334.pc%25255Fblog.%252522%25257D&request_id=160851567016780302998169&biz_id=0">这个人的CAS讲的很好，还有其他博客可以看看</a> </p>
+<blockquote>
+<p>compare and swap,CAS操作需要输入两个数值，一个旧值（期望操作前的值）和一个新值，在操作期间先比较旧值有没有发生变化，如果没有发生变化，才交换成新值，发生了变化则不交换。   </p>
+</blockquote>
+<ol>
+<li>CAS底层是通过<code>unsafe</code>类的<code>compareandSwap</code>方法实现的；<code>compareandSwap</code>有四个参数，分别是要修改的对象、对象中要修改变量的偏移量（可理解为要修改变量的内存地址）、修改之前的旧值、要修改的新值；  </li>
+<li>CAS机制包括三个基本操作数：内存地址V、旧的预期值A、要修改的新值B，更新一个变量的时候，只有当变量的预期值A和内存地址V当中的实际值相同时，才会将内存地址V对应的值修改为B；  </li>
+<li>CAS缺点：<ul>
+<li>CPU开销大</li>
+<li>不能保证代码块的原子性</li>
+<li>ABA问题：<ol>
+<li>当一个值从A更新成B，又更新会A，普通CAS机制会误判通过检测。</li>
+<li>利用版本号比较可以有效解决ABA问题。<code>AtomicStampedReference</code>类</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="15-volatile关键字"><a href="#15-volatile关键字" class="headerlink" title="15. volatile关键字"></a>15. volatile关键字</h2><h3 id="15-1-volatile简介"><a href="#15-1-volatile简介" class="headerlink" title="15.1 volatile简介"></a>15.1 <code>volatile</code>简介</h3><blockquote>
+<p><code>volatile</code>是Java提供的一种轻量级的同步机制，它在<strong>多处理器的开发中</strong>保证了共享变量的可见性。<code>volatile</code>变量修饰符如果使用恰当，回避<code>sychronized</code>更轻量，因为它不会引起线程上下文的切换和调度。<strong><code>volatile</code>的作用主要有两个：实现可见性，禁止指令重排序。</strong></p>
+</blockquote>
+<h3 id="15-2-并发编程的三个基本概念"><a href="#15-2-并发编程的三个基本概念" class="headerlink" title="15.2 并发编程的三个基本概念"></a>15.2 并发编程的三个基本概念</h3><ol>
+<li><strong>原子性</strong>  <ul>
+<li>定义：一个操作或多个操作，要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。</li>
+<li><strong>处理器</strong>如何实现原子操作（解决缓存不一致的问题）：<ol>
+<li>总线锁：所谓总线锁就是使用处理器提供的一个<code>LOCK#</code>信号，当一个处理器在总线上输出此信号时，其他处理器的请求将被阻塞住，那么该处理器可以独占共享内存。</li>
+<li>缓存锁：当CPU写数据时，如果发现操作的变量是共享变量，即在其他CPU中也存在该变量的副本，会发出信号通知其他CPU将该变量的缓存行置为无效状态，因此当其他CPU需要读取这个变量时，发现自己缓存中缓存该变量的缓存行是无效的，那么它就会从内存重新读取。</li>
+</ol>
+</li>
+<li><strong>Java</strong>如何实现原子操作：<ol>
+<li>锁：<code>volatile</code>可以保证单次操作的原子性，也就是不保证原子性，而<code>synchronized</code>可以保证原子性；</li>
+<li>循环CAS</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><strong>可见性</strong><ul>
+<li>定义：当多个线程访问同一变量时，一个线程修改了这个变量的值，其他线程能立即看到这个修改的值。</li>
+<li>Java通过提供<code>volatile</code>保证可见性：（汇编指令中多了<code>lock</code>指令，Lock前缀的指令在多核处理器引发下面两件事，从而保证可见性）  <ol>
+<li>当写一个volatile变量时，JMM会把该线程本地内存中的变量强制刷新到主内存中去；</li>
+<li>这个写操作会导致其他线程中的缓存无效。（通过缓存一致性协议来做到）</li>
+</ol>
+</li>
+<li>总结：底层原理是汇编中的LOCK指令，该指令使得当前处理器缓存行中的数据写回到系统内存，这个写操作通过缓存一致性协议使得其他CPU里缓存的该共享变量的副本无效，要想使用该共享变量，必须重新从主存中读取。从而保证了共享变量的可见性。</li>
+</ul>
+</li>
+<li><strong>有序性</strong><ul>
+<li>定义：程序的执行顺序按照代码的先后顺序执行。</li>
+<li>在Java内存模型中，允许编译器和处理器对指令进行重排序，但是重排序过程不会影响到单线程程序的执行，却会影响到多线程并发执行的正确性。</li>
+<li><code>volatile</code>可以保证一定的有序性：  <ol>
+<li>当程序执行到<code>volatile</code>变量的读操作或者写操作时，在其前面的操作的更改肯定全部已经进行，且结果已经对后面的操作可见；在其后面的操作肯定还没有进行；</li>
+<li>在进行指令优化时，不能将在对<code>volatile</code>变量访问的语句放在其后面执行，也不能把<code>volatile</code>变量后面的语句放到其前面执行。</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="15-3-volatile原理总结："><a href="#15-3-volatile原理总结：" class="headerlink" title="15.3 volatile原理总结："></a>15.3 <code>volatile</code>原理总结：</h3><p>“观察加入volatile关键字和没有加入volatile关键字时所生成的汇编代码发现，加入volatile关键字时，会多出一个lock前缀指令”<br>lock前缀指令实际上相当于一个内存屏障（也成内存栅栏），内存屏障会提供3个功能：  </p>
+<ol>
+<li>它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障的后面；即在执行到内存屏障这句指令时，在它前面的操作已经全部完成；</li>
+<li>它会强制将对缓存的修改操作立即写入主存；</li>
+<li>如果是写操作，它会导致其他CPU中对应的缓存行无效。</li>
+</ol>
+<h3 id="15-4-synchronized关键字和-volatile-关键字的区别"><a href="#15-4-synchronized关键字和-volatile-关键字的区别" class="headerlink" title="15.4 synchronized关键字和 volatile 关键字的区别"></a>15.4 <code>synchronized</code>关键字和 <code>volatile</code> 关键字的区别</h3><ol>
+<li><code>volatile</code>本质上是在告诉JVM缓存中的变量值是不确定的，需要从共享内存中读取；而<code>synchronized</code>是只允许一个线程访问该变量，其他线程被阻塞，直到该线程操作完为止；</li>
+<li><code>volatile</code>是在变量级别，而<code>synchronized</code>是在变量、方法和类级别；</li>
+<li><code>volatile</code>仅能保证变量的修改可见性，不能保证原子性；而<code>synchronized</code>能保证修改可见性和原子性；</li>
+<li><code>volatile</code>不会造成线程阻塞，<code>synchronized</code>可能会造成线程阻塞；</li>
+<li><code>volatile</code>不会被编译器优化，<code>synchronized</code>可以被编译器优化；</li>
+<li><strong><code>volatile</code>关键字主要用于解决变量在多个线程之间的可见性，而<code>synchronized</code>关键字解决的是多个线程之间访问资源的同步性</strong>；</li>
+</ol>
+<h2 id="16-synchronized关键字"><a href="#16-synchronized关键字" class="headerlink" title="16. synchronized关键字"></a>16. synchronized关键字</h2><h3 id="16-1-对于synchronized关键字的了解"><a href="#16-1-对于synchronized关键字的了解" class="headerlink" title="16.1. 对于synchronized关键字的了解"></a>16.1. 对于synchronized关键字的了解</h3><p><strong><code>synchronized</code>解决的是多个线程访问资源的同步性，<code>synchronized</code>可以保证被它修饰的方法或代码块在任意时刻只有一个线程执行</strong>；另外在早期的java版本中<code>synchronized</code>属于重量级锁，效率低下。<br>为什么呢？<br>这是因为监视器锁(monitor)是依赖于底层的操作系统的<code>Mutex Lock</code>实现的，Java线程是映射到操作系统的原生线程上的。如果要挂起或者唤醒一个线程，都需要操作系统帮忙完成，而操作系统实现线程的切换需要从用户态转换成核心态，这个转换需要相对较长的时间，时间成本比较高。<br>但Java6之后java官方从JVM层面对<code>synchronized</code>较大优化。JDK1.6之后对锁的实现引入大量优化，如自旋锁、适应性自旋锁、锁消除、锁粗化、偏向锁、轻量级锁等技术来减少锁操作的开销。  </p>
+<h3 id="16-2-synchronized关键字的使用"><a href="#16-2-synchronized关键字的使用" class="headerlink" title="16.2. synchronized关键字的使用"></a>16.2. synchronized关键字的使用</h3><ul>
+<li>三种方式：   <ol>
+<li><strong>修饰实例方法</strong>：作用于当前对象实例加锁，进入同步代码前要获得<strong>当前对象实例的锁</strong></li>
+<li><strong>修饰静态方法</strong>：也就是给当前类加锁，会作用类的所有对象实例。要获得当前class的锁</li>
+<li><strong>修饰代码块</strong>：指定加锁对象，对给定对象&#x2F;类加锁。<code>synchronized(this|object)</code> 表示进入同步代码库前<strong>要获得给定对象的锁</strong>。<code>synchronized(类.class)</code> 表示进入同步代码前要获得<strong>当前 class 的锁</strong></li>
+</ol>
+</li>
+<li>总结：修饰静态方法和代码块都是给class上锁修饰实例方法是给对象实例上锁；</li>
+<li><strong>双重校检锁实现对象单例模式</strong>：  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Singleton</span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Instance instance;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> Instance <span class="title function_">getInstance</span><span class="params">()</span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(instance == <span class="literal">null</span>)&#123;</span><br><span class="line">			<span class="keyword">synchronized</span>(Singleton.class)&#123;</span><br><span class="line">				<span class="keyword">if</span>(instance == <span class="literal">null</span>)</span><br><span class="line">					instance = <span class="keyword">new</span> <span class="title class_">instance</span>();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>instance = new instance()</code>实际上分为三步：  <ol>
+<li>为instance分配内存空间</li>
+<li>初始化instance</li>
+<li>设置instance指向刚分配的内存地址<br>  <strong>所以要用volatile修饰instance，从而禁止jvm的指令重排，防止多线程访问时，由于2 3 重排导致线程访问到一个还没有被初始化的对象；</strong></li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="16-3-synchronized关键字的底层原理"><a href="#16-3-synchronized关键字的底层原理" class="headerlink" title="16.3. synchronized关键字的底层原理"></a>16.3. synchronized关键字的底层原理</h3><p><strong>synchronized关键字底层原理是属于JVM层面的</strong></p>
+<ol>
+<li><strong>synchronized修饰同步块时</strong>：从java字节码可以看出，synchronized同步语句块是使用<code>monitorenter</code>和<code>monitorexit</code>来实现的，<code>monitorenter</code>指向进入同步代码块的开始位置，<code>monitorexit</code>指向同步代码块的结束位置。当执行<code>monitorenter</code>时，线程试图获取锁也就是<strong>获取对象监视器monitor</strong>的所有权。<ul>
+<li>在执行<code>monitorenter</code>时，会尝试获取对象的锁，如果锁的计数器为0则表示锁可以被获取，获取后将锁的计数器设为1也就是加1；</li>
+<li>在执行<code>monitorexit</code>时，将锁计数器设为0，表明锁被释放。</li>
+<li>如果获取对象锁失败，当前线程就要被阻塞等待，直到锁被另一个线程释放为止。</li>
+</ul>
+</li>
+<li><strong>synchronized修饰方法时</strong>：修饰方法时没有使用<code>monitorenter</code>和<code>monitorexit</code>指令，而是使用<code>ACC_SYNCHRONIZED</code>标识，该标识指明了该方法是一个同步方法。JVM通过该<code>ACC_SYNCHRONIZED</code>标识来辨别一个方法是否被声明为一个同步方法，从而执行相应的同步调用。</li>
+<li>总结：synchronized修饰同步语句块的实现时，使用<code>monitorenter</code>和<code>monitorexit</code>指令，其中<code>monitorenter</code>指令指向同步语句块的开头位置，<code>monitorexit</code>指令指向同步语句块的结束位置；修饰方法时，使用<code>ACC_SYNCHRONIZED</code>标识，该标识指明了该方法是一个同步方法。</li>
+</ol>
+<h3 id="16-4-synchronized锁状态转换（锁优化）"><a href="#16-4-synchronized锁状态转换（锁优化）" class="headerlink" title="16.4. synchronized锁状态转换（锁优化）"></a>16.4. synchronized锁状态转换（锁优化）</h3><p><a href="https://www.cnblogs.com/xdyixia/p/9364247.html">csdn锁优化</a><br><a href="https://www.cnblogs.com/wuqinglong/p/9945618.html">Java6及以上版本对synchronized的优化</a><br>JDK1.6之后，对锁的实现引入了大量的优化，如<strong>自旋锁、适应性自旋锁、锁消除、锁粗化、偏向锁、轻量级锁</strong>等技术来减少锁操作的开销；<br><strong>锁主要存在4种状态：无锁、偏向锁、轻量级锁、重量级锁状态</strong>，他们会随着竞争的激烈而逐渐升级，但不会降级，这种策略是为了提高获得锁和释放锁的效率。</p>
+<ol>
+<li><p>自旋锁：<br> 线程的阻塞和唤醒需要CPU从用户态转为核心态，频繁的阻塞和唤醒对于CPU来说是一件很沉重的工作，会给系统的并发性能带来很大压力。但在很多应用上，对象锁的持续状态通常很短，为了这么短的持续时间而频繁的进行阻塞和唤醒线程很不值得，因此<strong>引入了自旋锁</strong>。  </p>
+<p> <strong>所谓自旋锁，就是让试图获取锁（该锁已被其他线程获取）的线程等待一段时间，不会被立即阻塞，看持有锁的线程会不会很快释放锁。</strong>   </p>
+<p> 怎么等待？<strong>就是执行一段无意义的循环即可（自旋）</strong>   </p>
+<p> 但自旋不能替代阻塞，虽然它避免了线程切换的开销，但是也占用了处理器的时间。如果持有锁的线程很快就释放了锁，那自旋的效率就非常好。但如果不是这样，自旋就会白白浪费处理器资源，反而带来性能上的下降。  </p>
+<p> 所以自旋的时间（也就是次数）应该有一定的限度，当超过了这个限度之后还是没有获取锁，那么该线程就应当被挂起（也就是阻塞）。  </p>
+</li>
+<li><p>适应性自旋锁：<br> JDK 1.6引入了更加聪明的自旋锁，即自适应自旋锁。所谓自适应就意味着自旋的次数不再是固定的，它是由前一次在同一个锁上的自旋时间及锁的拥有者的状态来决定。  </p>
+<p> 线程如果自旋成功了，那么下次自旋的次数会更加多，因为虚拟机认为既然上次成功了，那么此次自旋也很有可能会再次成功，那么它就会允许自旋等待持续的次数更多。反之，如果对于某个锁，很少有自旋能够成功的，那么在以后要或者这个锁的时候自旋的次数会减少甚至省略掉自旋过程，以免浪费处理器资源。有了自适应自旋锁，随着程序运行和性能监控信息的不断完善，虚拟机对程序锁的状况预测会越来越准确，虚拟机会变得越来越聪明。  </p>
+</li>
+<li><p>偏向锁：<br> 大多数情况下，锁不仅不存在多线程竞争，而且总是由同一个线程多次获得，为了让线程获得锁的代价更低而引入了偏向锁。当一个线程访问同步块并获取锁时，会在对象头和栈帧中的锁记录里存储锁偏向的线程ID，以后该线程在进入和退出同步块时不需要用CAS操作来加锁和解锁，只需要简单地测试一下对象头的Mark Word里是否存储着指向当前线程的偏向锁。如果测试成功，表示线程已经获得锁；如果测试失败，则需要再测试一下Mark Word中偏向锁的标识是否设置成1（标识当前是偏向锁）：如果没有设置，使用CAS竞争锁；如果设置了，则尝试使用CAS将对象头的偏向锁指向当前线程。   </p>
+<p> <strong>偏向锁的撤销：</strong>  </p>
+<p> **偏向锁使用了一种等到竞争出现才释放锁的机制，所以当其他线程尝试竞争偏向锁时，持有偏向锁的线程才会释放锁。**偏向锁的撤销，需要等到全局安全点（此时没有正在执行的字节码）。它会首先暂停拥有偏向锁的线程，判断锁对象是否处于被锁定状态，撤销偏向锁后恢复到未锁定（标志位为“01”）或轻量级锁（标志位为“00”）的状态。  </p>
+</li>
+<li><p>轻量级锁：<br> 轻量级锁是由偏向锁升级而来的，一个线程获取偏向锁进入同步块的情况下，若第二个线程加入锁争用的时候，偏向锁就会升级为轻量级锁；  </p>
+<ol>
+<li><strong>轻量级锁加锁</strong>：线程在执行同步块之前，JVM会先在当前线程的栈帧中创建用于存储锁记录的空间，然后将对象头中的Mark Word复制到锁记录中，官方称为Displaced Mark Word。然后线程尝试使用CAS将对象头中的Mark Word替换成指向锁记录的指针。如果成功，当前线程获得锁；如果失败，表示其他线程竞争锁，当前线程便尝试使用自旋来获取锁。  </li>
+<li><strong>轻量级锁解锁</strong>：轻量级锁解锁时，会使用原子得CAS操作将栈帧中的Displaced Mark Word替换到对象头中，如果成功，则说明没有竞争发生，解锁成功；如果失败，则说明当前锁存在竞争，轻量级锁就会膨胀为重量级锁。</li>
+</ol>
+</li>
+<li><p>重量级锁：<br> **因为自旋会消耗CPU，为了避免无用的自旋（比如获得锁得线程被阻塞住了），一旦锁升级成重量级锁，就不会再恢复到轻量级锁状态。**当锁处于这个状态下，其他线程试图获取锁时，都会被阻塞住，当持有锁的线程释放锁之后会唤醒这些线程，被唤醒的线程就会进行新一轮的夺锁之争。  </p>
+<ol>
+<li>重量级锁通过对象内部的监视器（monitor）实现，其中monitor的本质是依赖于底层操作系统的Mutex Lock实现，操作系统实现线程之间的切换需要从用户态到内核态的切换，切换成本非常高。</li>
+</ol>
+</li>
+</ol>
+<h3 id="16-5-synchronized和ReentrantLock的区别和联系："><a href="#16-5-synchronized和ReentrantLock的区别和联系：" class="headerlink" title="16.5. synchronized和ReentrantLock的区别和联系："></a>16.5. synchronized和ReentrantLock的区别和联系：</h3><ol>
+<li>两者都是可重入锁<blockquote>
+<p>可重入锁表示该锁能够支持一个线程对资源的重复加锁。</p>
+</blockquote>
+</li>
+<li>两者都是加锁方式同步，而且都是阻塞式同步。</li>
+<li><code>syn</code>操作Mark Word，而<code>lock</code>调用<code>Unsafe</code>的<code>park()</code>方法；</li>
+<li><code>synchronized</code>是基于JVM的，而<code>ReentrantLock</code>是基于API的；</li>
+<li><code>ReentrantLock</code>比<code>synchronized</code>增加了一些高级功能：<ol>
+<li><strong>等待可中断</strong>：<code>ReentrantLock</code>提供了一种能够中断等待锁的线程的机制，通过 <code>lock.lockInterruptibly()</code> 来实现这个机制。也就是说正在等待的线程可以选择放弃等待，改为处理其他事情。  </li>
+<li><strong>可实现公平锁</strong>:<code>ReentrantLock</code>可以指定是公平锁还是非公平锁。而<code>synchronized</code>只能是非公平锁。所谓的公平锁就是先等待的线程先获得锁。<code>ReentrantLock</code>默认情况是非公平的，可以通过 <code>ReentrantLock</code>类的<code>ReentrantLock(boolean fair)</code>构造方法来制定是否是公平的。</li>
+<li><strong>锁可以绑定多个条件</strong>：<code>ReentrantLock</code>可以同时绑定多个<code>Condition</code>对象，只需多次调用<code>newCondition</code>方法即可。<code>synchronized</code>中，锁对象的<code>wait()</code>和<code>notify()</code>或<code>notifyAll()</code>方法可以实现一个隐含的条件。但如果要和多于一个的条件关联的时候，就不得不额外添加一个锁。</li>
+</ol>
+</li>
+</ol>
+<h2 id="17-AQS，基于AQS实现的lock-CountDownLatch、CyclicBarrier、Semaphore介绍"><a href="#17-AQS，基于AQS实现的lock-CountDownLatch、CyclicBarrier、Semaphore介绍" class="headerlink" title="17. AQS，基于AQS实现的lock, CountDownLatch、CyclicBarrier、Semaphore介绍"></a>17. AQS，基于AQS实现的lock, CountDownLatch、CyclicBarrier、Semaphore介绍</h2><h3 id="17-1-AQS简介"><a href="#17-1-AQS简介" class="headerlink" title="17.1 AQS简介"></a>17.1 AQS简介</h3><blockquote>
+<p>AQS是一个用来构建锁和或者其他同步器组件的基础框架，它使用了一个int成员变量表示同步状态，通过内置的FIFO队列来完成资源获取线程的排队操作。<br>同步器的主要使用方式是继承，<strong>子类通过继承并实现它的抽象方法来管理同步状态</strong>，这时就需要使用同步器提供的三个方法：<code>getState()</code>、<code>setState(int newState)</code>、<code>compareAndSetState(int expect, int update)</code>来进行操作，它们能够保证状态的改变是安全的。<strong>子类推荐被定义为自定义同步组件的静态内部类</strong>，也就是<strong>自定义同步组件implements Lock，然后自定义同步组件里有一个静态内部类，这个静态类extends AQS，并实现获取和释放同步状态的抽象方法。</strong><br>同步器是实现锁（也可以是任意同步组件）的关键，在锁的实现中聚合同步器，利用同步器实现锁的语义。  </p>
+</blockquote>
+<h3 id="17-2-AQS的使用"><a href="#17-2-AQS的使用" class="headerlink" title="17.2 AQS的使用"></a>17.2 AQS的使用</h3><ol>
+<li>AQS支持两种同步方式<ul>
+<li>独占式</li>
+<li>共享式</li>
+</ul>
+</li>
+<li>同步器的设计是基于模板方法模式的，一般的使用方式为：<ol>
+<li>使用者继承同步器并重写其指定的方法（重写对共享资源state获取和释放的方法）</li>
+<li>将同步器组合在自定义同步组件的实现中，并调用同步器提供的模板方法，而这些模板方法将会调用使用者重写的方法。</li>
+</ol>
+</li>
+<li>重写同步器指定的方法时，需要使用同步器提供的3个方法来访问或修改同步状态：<ol>
+<li><code>getState()</code>：获取当前同步状态</li>
+<li><code>setState(int newState)</code>：设置当前同步状态</li>
+<li><code>compareAndSetState(int expect, int update)</code>：使用CAS设置当前状态，该方法能够保证状态设置的原子性</li>
+</ol>
+</li>
+<li>同步器可重写的方法：<ol>
+<li><code>protected boolean tryAcquire(int arg)</code> : 独占式获取同步状态，试着获取，成功返回true，反之为false    </li>
+<li><code>protected boolean tryRelease(int arg)</code> ：独占式释放同步状态，等待中的其他线程此时将有机会获取到同步状态；</li>
+<li><code>protected int tryAcquireShared(int arg)</code> ：共享式获取同步状态，返回值大于等于0，代表获取成功；反之获取失败；</li>
+<li><code>protected boolean tryReleaseShared(int arg)</code> ：共享式释放同步状态，成功为true，失败为false</li>
+<li><code>protected boolean isHeldExclusively()</code> ： 是否在独占模式下被线程占用。</li>
+</ol>
+</li>
+</ol>
+<h3 id="17-3-AQS实现分析"><a href="#17-3-AQS实现分析" class="headerlink" title="17.3 AQS实现分析"></a>17.3 AQS实现分析</h3><ol>
+<li><strong>同步队列</strong>：同步器依赖内部的同步队列（一个FIFO的双向队列）来完成同步状态的管理，当前线程获取同步状态失败时，同步器会将当前线程以及等待状态等信息构造成一个节点并将其加入同步队列，并阻塞该线程，当同步状态释放时，会把首节点中的线程唤醒，使其再次尝试获取同步状态。节点是构成同步队列的基础，同步器有头节点和尾节点的引用。同步队列遵循FIFO，首节点是获取同步状态成功的节点，首节点的线程在释放同步状态时，将会唤醒后继节点，而后继节点将会在获取同步状态成功时将自己设置为首节点。线程若获取同步状态失败，则被构造成节点加入同步队列尾部，这个加入过程通过<code>compareAndSetTail(Node expect, Node update)</code>保证线程安全。</li>
+<li><strong>独占式同步状态获取和释放</strong>：在获取同步状态时，同步器维护一个队列，获取状态失败的线程都会被加入到队列中并在队列中进行自旋，如果还获取不到就阻塞该线程，而被阻塞线程的唤醒主要靠前驱节点的出队或阻塞线程被中断来实现。移出队列的条件是前驱节点为头节点且该线程获取同步状态成功。在释放同步状态时，同步器调用<code>tryRelease(int arg)</code>方法释放同步状态，然后唤醒头结点的后继节点。</li>
+<li><strong>共享式同步状态获取和释放</strong>：与独占式的主要区别在于同一时刻能否有多个线程同时获取到同步状态；<code>tryAcquireShared(int arg)</code>如果返回的值大于0，说明获取同步状态成功。</li>
+</ol>
+<h3 id="17-4-Java中的并发工具类"><a href="#17-4-Java中的并发工具类" class="headerlink" title="17.4 Java中的并发工具类"></a>17.4 Java中的并发工具类</h3><ol>
+<li><code>Semaphore</code>(信号量)-允许多个线程同时访问： <code>synchronized</code> 和 <code>ReentrantLock</code> 都是一次只允许一个线程访问某个资源，<code>Semaphore</code>(信号量)可以指定多个线程同时访问某个资源。</li>
+<li><code>CountDownLatch</code> （倒计时器）： <code>CountDownLatch</code> 是一个同步工具类，用来协调多个线程之间的同步。这个工具通常用来控制线程等待，它可以让某一个线程等待直到倒计时结束，再开始执行。</li>
+<li><code>CyclicBarrier</code>(循环栅栏)： <code>CyclicBarrier</code> 和 <code>CountDownLatch</code> 非常类似，它也可以实现线程间的技术等待，但是它的功能比 <code>CountDownLatch</code> 更加复杂和强大。主要应用场景和 <code>CountDownLatch</code> <code>类似。CyclicBarrier</code> 的字面意思是可循环使用（Cyclic）的屏障（Barrier）。它要做的事情是，让一组线程到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，屏障才会开门，所有被屏障拦截的线程才会继续干活。<code>CyclicBarrier</code> 默认的构造方法是 <code>CyclicBarrier(int parties)</code>，其参数表示屏障拦截的线程数量，每个线程调用 await() 方法告诉 CyclicBarrier 我已经到达了屏障，然后当前线程被阻塞。</li>
+</ol>
+<h2 id="17-5-CyclicBarrier-和-CountDownLatch-的区别"><a href="#17-5-CyclicBarrier-和-CountDownLatch-的区别" class="headerlink" title="17.5 CyclicBarrier 和 CountDownLatch 的区别"></a>17.5 CyclicBarrier 和 CountDownLatch 的区别</h2><ol>
+<li><code>CountDownLatch</code>的计数器只能使用一次，而<code>CyclicBarrier</code>的计数器可以使用<code>reset()</code>方法重置，所以<code>CyclicBarrier</code>能处理更复杂的业务场景。</li>
+<li><code>CyclicBarrier</code>还提供了其他有用的方法，比如<code>getNumberWaiting</code>方法可以获得<code>CyclicBarrier</code>阻塞的线程数量，<code>isBroken()</code>方法用来了解阻塞的线程是否被中断。</li>
+</ol>
+<h2 id="18-非公平锁和公平锁"><a href="#18-非公平锁和公平锁" class="headerlink" title="18. 非公平锁和公平锁"></a>18. 非公平锁和公平锁</h2><ol>
+<li><strong>非公平锁</strong>：多个线程去获取锁的时候，会直接去尝试获取，获取不到，再去进入等待队列，如果能获取到，就直接获取到锁。<ul>
+<li>优点：可以减少CPU唤醒线程的开销，整体的吞吐效率会高点，CPU也不必取唤醒所有线程，会减少唤起线程的数量。</li>
+<li>缺点：你们可能也发现了，这样可能导致队列中间的线程一直获取不到锁或者长时间获取不到锁，导致饿死。</li>
+</ul>
+</li>
+<li><strong>公平锁</strong>：多个线程按照申请锁的顺序去获得锁，线程会直接到队列中去排队，永远都是队列的第一位才能得到锁<ul>
+<li>优点：所有线程都能得到资源，不会饿死</li>
+<li>缺点：吞吐量会下降很多，队列里面除了第一个线程，其他的线程都会阻塞，cpu唤醒阻塞线程的开销会很大。</li>
+</ul>
+</li>
+</ol>
+<h2 id="19-JUC原子类"><a href="#19-JUC原子类" class="headerlink" title="19. JUC原子类"></a>19. JUC原子类</h2><h3 id="19-1-介绍一下Atomic原子类"><a href="#19-1-介绍一下Atomic原子类" class="headerlink" title="19.1 介绍一下Atomic原子类"></a>19.1 介绍一下Atomic原子类</h3><blockquote>
+<p>可认为是其操作都是不可分割的类</p>
+</blockquote>
+<h3 id="19-2-JUC包中的原子类是哪4类"><a href="#19-2-JUC包中的原子类是哪4类" class="headerlink" title="19.2 JUC包中的原子类是哪4类"></a>19.2 JUC包中的原子类是哪4类</h3><ol>
+<li>原子更新基本类型类<ol>
+<li><code>AtomicInteger</code>：原子更新整型</li>
+<li><code>AtomicLong</code>：原子更新长整型</li>
+<li><code>AtomicBoolean</code>：原子更新布尔类型</li>
+</ol>
+</li>
+<li>原子更新数组类型类<ol>
+<li><code>AtomicIntegerArray</code>：原子更新整型数组里的元素</li>
+<li><code>AtomicLongArray</code>：原子更新长整型数组里的元素</li>
+<li><code>AtomicReferenceArray</code>：原子更新引用类型数组里的元素</li>
+</ol>
+</li>
+<li>引用类型<ol>
+<li><code>AtomicReference</code>：原子更新引用类型</li>
+<li><code>AtomicReferenceFieldUpdater</code>：原子更新引用类型里的字段</li>
+<li><code>AtomicMarkableReference</code>：原子更新带有标记位的引用类型</li>
+</ol>
+</li>
+<li>字段类型（对象的属性修改）<ol>
+<li><code>AtomicIntegerFieldUpdater</code>：原子更新整型的字段的更新器</li>
+<li><code>AtomicLongFieldUpdater</code>：原子更新长整型的字段的更新器</li>
+<li><code>AtomisStampedReference</code>：原子更新带有版本号的引用类型。<strong>该类将整数值与引用关联起来，可解决CAS进行原子更新时可能出现的ABA问题</strong></li>
+</ol>
+</li>
+</ol>
+<h3 id="19-3-AtomicInteger的使用"><a href="#19-3-AtomicInteger的使用" class="headerlink" title="19.3 AtomicInteger的使用"></a>19.3 AtomicInteger的使用</h3><ol>
+<li>常用方法 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">get</span><span class="params">()</span> <span class="comment">//获取当前的值</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">getAndSet</span><span class="params">(<span class="type">int</span> newValue)</span><span class="comment">//获取当前的值，并设置新的值</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">getAndIncrement</span><span class="params">()</span><span class="comment">//获取当前的值，并自增</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">getAndDecrement</span><span class="params">()</span> <span class="comment">//获取当前的值，并自减</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">getAndAdd</span><span class="params">(<span class="type">int</span> delta)</span> <span class="comment">//获取当前的值，并加上预期的值</span></span><br><span class="line"><span class="type">boolean</span> <span class="title function_">compareAndSet</span><span class="params">(<span class="type">int</span> expect, <span class="type">int</span> update)</span> <span class="comment">//如果输入的数值等于预期值，则以原子方式将该值设置为输入值（update）</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">lazySet</span><span class="params">(<span class="type">int</span> newValue)</span><span class="comment">//最终设置为newValue,使用 lazySet 设置之后可能导致其他线程在之后的一小段时间内还是可以读到旧的值。</span></span><br></pre></td></tr></table></figure></li>
+<li>使用实例 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">AtomicIntegerTest</span> &#123;</span><br><span class="line">		<span class="keyword">private</span> <span class="type">AtomicInteger</span> <span class="variable">count</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AtomicInteger</span>();</span><br><span class="line">	<span class="comment">//使用AtomicInteger之后，不需要对该方法加锁，也可以实现线程安全。</span></span><br><span class="line">		<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">increment</span><span class="params">()</span> &#123;</span><br><span class="line">				count.incrementAndGet();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getCount</span><span class="params">()</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> count.get();</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="19-4-AtomicInteger类的原理"><a href="#19-4-AtomicInteger类的原理" class="headerlink" title="19.4 AtomicInteger类的原理"></a>19.4 AtomicInteger类的原理</h3><blockquote>
+<p>AtomicInteger 类主要利用unsafe类实现的CAS机制 + volatile 和 native 方法来保证原子操作，从而避免 synchronized 的高开销，执行效率大为提升。</p>
+</blockquote>
+<ol>
+<li>读：AtomicInteger本身提供了get()来获取value值，该方法直接返回value变量。因为value变量是volatile类型，这就保证get()读到的是最新值，因为是直接从主内存中读取value 。 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="type">int</span> value;           </span><br><span class="line"><span class="comment">// volatile保证get()读到的是最新值，因为直接从主内存中读取value </span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">get</span><span class="params">()</span> &#123;    <span class="keyword">return</span> value;    &#125;</span><br></pre></td></tr></table></figure></li>
+<li>写：这个方法的做法为先获取到当前的 value 属性值，然后将 value 加 1，赋值给一个局部的 next 变量，然而，这两步都是非线程安全的，但是内部有一个死循环，不断去做compareAndSet操作，直到成功为止，也就是修改的根本在compareAndSet方法里面。compareAndSet()方法的代码如下： <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">getAndIncrement</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">for</span> (;;) &#123;</span><br><span class="line">			<span class="type">int</span> <span class="variable">current</span> <span class="operator">=</span> get();</span><br><span class="line">			<span class="type">int</span> <span class="variable">next</span> <span class="operator">=</span> current + <span class="number">1</span>;</span><br><span class="line">			<span class="keyword">if</span> (compareAndSet(current, next))</span><br><span class="line">				<span class="keyword">return</span> current;</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">compareAndSet</span><span class="params">(<span class="type">int</span> expect, <span class="type">int</span> update)</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> unsafe.compareAndSwapInt(<span class="built_in">this</span>, valueOffset, expect, update);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="20-两个线程读，一个线程写，如何实现，不用锁可以吗"><a href="#20-两个线程读，一个线程写，如何实现，不用锁可以吗" class="headerlink" title="20. 两个线程读，一个线程写，如何实现，不用锁可以吗"></a>20. 两个线程读，一个线程写，如何实现，不用锁可以吗</h2><br>
+<br>
+<br>    
+	  
+<h2 id="21-线程池作用、参数、有几种"><a href="#21-线程池作用、参数、有几种" class="headerlink" title="21. 线程池作用、参数、有几种"></a>21. 线程池作用、参数、有几种</h2><p><a href="https://www.cnblogs.com/jay-huaxiao/p/11454416.html">csdn线程池</a></p>
+<h3 id="21-1-线程池的好处："><a href="#21-1-线程池的好处：" class="headerlink" title="21.1 线程池的好处："></a>21.1 线程池的好处：</h3><ol>
+<li><strong>降低资源消耗</strong>。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。</li>
+<li><strong>提高响应速度</strong>。当任务到达时，任务可以不需要的等到线程创建就能立即执行。</li>
+<li><strong>提高线程的可管理性</strong>。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控。</li>
+</ol>
+<h2 id="21-2-线程池的创建"><a href="#21-2-线程池的创建" class="headerlink" title="21.2 线程池的创建"></a>21.2 线程池的创建</h2><p>线程池可以通过<code>ThreadPoolExecutor</code>来创建线程，几个核心参数：  </p>
+<ol>
+<li><code>corePoolSize</code>：核心线程数最大值，核心线程就算空闲也不会被回收</li>
+<li><code>maximumPoolSize</code>：最大线程数</li>
+<li><code>keepAliveTime</code>：非核心线程空闲时间保留的最长时间</li>
+<li><code>unit</code>：计算上述时间的时间单位</li>
+<li><code>workQueue</code>：存放任务的阻塞队列（工作队列）<ol>
+<li><code>ArrayBlockingQueue</code>：是一个基于数组结构的<strong>有界</strong>阻塞队列，按FIFO原则对元素排序；</li>
+<li><code>LinkedBlockingQueue</code>：基于链表结构的<strong>无界</strong>阻塞队列，按FIFO原则对元素进行排序；吞吐量高于<code>ArrayBlockingQueue</code>;静态工厂方法<code>Executors.newFixedThreadPool()</code>使用了这个队列；</li>
+<li><code>SynchronousQueue</code>：不存储元素的阻塞队列，每个元素的插入必须要等到另一个元素调用移除操作，否则插入操作一直处于阻塞状态；吞吐量高于<code>LinkedBlockingQueue</code>；静态工厂方法<code>Executors.newCachedThreadPool</code>使用了这个队列。</li>
+<li><code>PriorityBlockingQueue</code>：具有优先级的无限阻塞队列</li>
+</ol>
+</li>
+<li><code>threadFactory</code>：创建线程的工厂</li>
+<li><code>hanlder</code>：拒绝策略；当线程数目已到达最大线程数且工作队列已满，这时如果还有任务被提交到线程池，线程池需要采用一定的饱和策略，一共4种。 <ol>
+<li><code>AbortPolicy</code>    ：        直接抛出异常（默认）</li>
+<li><code>DiscardPolicy</code>    ：        直接不处理，丢弃任务</li>
+<li><code>DiscardOldestPolicy</code>：    丢弃队列中最老的任务，并执行当前任务</li>
+<li><code>CallerRunsPolicy</code>：        交给线程池调用所在的线程进行处理</li>
+</ol>
+</li>
+</ol>
+<h3 id="21-3-线程池的任务执行流程："><a href="#21-3-线程池的任务执行流程：" class="headerlink" title="21.3 线程池的任务执行流程："></a>21.3 线程池的任务执行流程：</h3><p>提交一个新任务到线程池中：  </p>
+<ol>
+<li>若线程池中存活的核心线程数少于<code>corePoolSize</code>，则创建新的核心线程去处理提交的任务。</li>
+<li>如果运行的线程数等于或多于<code>corePoolSize</code>，则将任务加入工作队列中。</li>
+<li>如果工作队列已满，则创建新的线程处理任务。（创建的是非核心线程，这种线程空闲一定时间后会被回收掉）</li>
+<li>如果创建新线程将使当前运行的线程超出<code>maximumPoolSize</code>，任务被拒绝，拒绝策略有四种，由<code>handler</code>参数指定。<blockquote>
+<p>总结：当一个新任务提交到线程池中时，优先让核心线程来处理任务，如果当前核心线程数已达到<code>corePoolSize</code>数目，而且都在运行中，就把当前任务加入工作队列中等待；如果工作队列也满了，就创建非核心线程来处理该任务，非核心线程空闲一段时间就会被回收。如果线程池内的线程数已达到最大线程数，不能创建新线程，就只能采用拒绝策略拒绝该任务。</p>
+</blockquote>
+</li>
+</ol>
+<figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">核心线程比作公司正式员工</span><br><span class="line">非核心线程比作外包员工</span><br><span class="line">阻塞队列比作需求池</span><br><span class="line">提交任务比作提需求</span><br><span class="line"></span><br><span class="line">当产品提个需求，正式员工（核心线程）先接需求（执行任务）</span><br><span class="line">如果正式员工都有需求在做，即核心线程数已满），产品就把需求先放需求池（阻塞队列）。</span><br><span class="line">如果需求池(阻塞队列)也满了，但是这时候产品继续提需求,怎么办呢？那就请外包（非核心线程）来做。</span><br><span class="line">如果所有员工（最大线程数也满了）都有需求在做了，那就执行拒绝策略。</span><br><span class="line">如果外包员工把需求做完了，它经过一段（keepAliveTime）空闲时间，就离开公司了。</span><br></pre></td></tr></table></figure>
+
+<h2 id="22-Executor"><a href="#22-Executor" class="headerlink" title="22. Executor"></a>22. Executor</h2><h3 id="22-1-Executor框架简介"><a href="#22-1-Executor框架简介" class="headerlink" title="22.1 Executor框架简介"></a>22.1 Executor框架简介</h3><blockquote>
+<p>从JDK5开始，把工作单元和执行机制分离开来。工作单元包括<code>Runnable</code>和<code>Callable</code>，而执行机制由<code>Executor</code>框架提供。<br>在上层，Java多线程程序通常把应用分解为若干个任务，然后使用用户级的调度器（Executor框架）将这些任务映射为固定数量的线程；在底层，操作系统内核将这些线程映射到硬件处理器上。</p>
+</blockquote>
+<ul>
+<li>Executor框架的结构，主要由三部分：<ol>
+<li>任务。实现<code>Runnable</code>或<code>Callable</code>接口的对象。</li>
+<li>任务的执行。包括任务执行机制的核心接口<code>Executor</code>，以及继承自<code>Executor</code>的<code>ExecutorService</code>接口。Executor框架有两个关键类实现了<code>ExecutorService</code>接口：<code>ThreadPoolExecutor</code>和<code>ScheduledThreadPoolExecutor</code>。</li>
+<li>异步计算的结果。包括接口<code>Future</code>和实现<code>Future</code>接口的<code>FutureTask</code>类。</li>
+</ol>
+</li>
+<li>Executor框架的使用流程：  <ol>
+<li>主线程首先要创建<code>Runnable</code>或<code>Callable</code>接口的任务对象。（工具类Executors可以把一个<code>Runnable</code>对象封装为一个<code>Callable</code>对象）</li>
+<li>可以把实现<code>Runnable</code>或<code>Callable</code>对象交给<code>ExecutorService</code>执行。（<code>execute()</code>或<code>submit()</code>方法，execute没返回值，submit有返回值）</li>
+<li>如果执行的是<code>ExecutorService.submit()</code>，<code>ExecutorService</code>将返回一个实现<code>Future</code>接口的对象（<code>FutureTask</code>对象）。由于<code>FutureTask</code>实现了<code>Runnable</code>，程序员也可以创建<code>FutureTask</code>，然后直接交给<code>ExecutorService</code>执行。</li>
+<li>最后，主线程可以执行<code>FutureTask.get()</code>方法来等待任务执行完成。主线程也可以执行<code>FutureTask,cancel(boolean mayInterruptIfRunning)</code>来取消此任务的执行。</li>
+</ol>
+</li>
+<li><code>Executor</code>框架的成员<ol>
+<li><code>ThreadPoolExecutor</code><ol>
+<li><code>FixedThreadPool</code></li>
+<li><code>SingleThreadExecutor</code></li>
+<li><code>CachedThreadPool</code></li>
+</ol>
+</li>
+<li><code>ScheduledThreadPoolExecutor</code><ol>
+<li><code>ScheduledThreadPoolExecutor</code></li>
+<li><code>SingleThreadScheduledExecutor</code></li>
+</ol>
+</li>
+<li><code>Future</code>接口<ol>
+<li>实现该接口的<code>FutureTask</code>类</li>
+</ol>
+</li>
+<li><code>Runnable</code>接口</li>
+<li><code>Callable</code>接口</li>
+<li><code>Executors</code></li>
+</ol>
+</li>
+</ul>
+<h3 id="22-2-生命周期"><a href="#22-2-生命周期" class="headerlink" title="22.2 生命周期"></a>22.2 生命周期</h3><blockquote>
+<p>ExecutorService 接口继承自 Executor 接口，定义了终止、提交、执行任务、跟踪任务返回结果等方法。  </p>
+</blockquote>
+<ul>
+<li>ExecutorService 的生命周期有三种状态：运行、关闭和已终止。<ol>
+<li>execute（Runnable command）：履行 Ruannable 类型的任务,</li>
+<li>submit（task）：可用来提交 Callable 或 Runnable 任务，并返回代表此任务的 Future 对象</li>
+<li>shutdown（）：在完成已提交的任务后封闭办事，不再接管新任务,</li>
+<li>shutdownNow（）：停止所有正在履行的任务并封闭办事。</li>
+<li>isTerminated（）：测试是否所有任务都履行完毕了。,</li>
+<li>isShutdown（）：测试是否该 ExecutorService 已被关闭</li>
+</ol>
+</li>
+</ul>
+<h3 id="22-3-ThreadPoolExecutor详解"><a href="#22-3-ThreadPoolExecutor详解" class="headerlink" title="22.3 ThreadPoolExecutor详解"></a>22.3 ThreadPoolExecutor详解</h3><figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">是Executor最核心的类，是线程池的实现类，主要由4个组件构成：</span><br><span class="line">	1. corePool：核心线程池大小</span><br><span class="line">	2. maximumPool：最大线程池大小</span><br><span class="line">	3. BlockingQueue：工作队列</span><br><span class="line">	4. hanlder：拒绝策略</span><br><span class="line"></span><br><span class="line">可以创建3种类型的ThreadPoolExecutor:</span><br><span class="line">	1. FixedThreadPool</span><br><span class="line">	2. SingleThreadExecutor</span><br><span class="line">	3. CachedThreadPool</span><br><span class="line"></span><br><span class="line">面试题：使用无界队列的线程池会导致内存飙升吗？</span><br><span class="line">答案 ：会的，FixedThreadPool和SingleThreadExecutor使用了无界的阻塞队列LinkedBlockingQueue，如果线程获取一个任务后，任务的执行时间比较长(比如，上面demo设置了10秒)，会导致队列的任务越积越多，导致机器内存使用不停飙升， 最终导致OOM。</span><br></pre></td></tr></table></figure>
+<ol>
+<li><code>FixedThreadPool</code><ul>
+<li>适用于为了满足资源管理的需求，需要限制当前线程数量的应用场景，比如负载比较重的服务器。</li>
+<li>特点：<ol>
+<li>核心线程数和最大线程数大小一样</li>
+<li>没有所谓的非空闲时间，即keepAliveTime为0</li>
+<li>阻塞队列为无界队列LinkedBlockingQueue</li>
+</ol>
+</li>
+<li>工作机制：<ol>
+<li>提交任务</li>
+<li>如果线程数少于核心线程，创建核心线程执行任务</li>
+<li>如果线程数等于核心线程（线程池已经完成预热），把任务添加到LinkedBlockingQueue阻塞队列</li>
+<li>如果线程执行完任务，去阻塞队列取任务，继续执行。</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><code>SingleThreadExecutor</code><ul>
+<li>适用于需要保证顺序的执行各个任务；并且在任意时间点，不会有多个线程活动的场景</li>
+<li>特点：<ol>
+<li>核心线程数为1</li>
+<li>最大线程数也为1</li>
+<li>阻塞队列是LinkedBlockingQueue</li>
+<li>keepAliveTime为0</li>
+</ol>
+</li>
+<li>工作机制：<ol>
+<li>提交任务</li>
+<li>线程池是否有一条线程在，如果没有，新建线程执行任务</li>
+<li>如果有，将任务加到阻塞队列</li>
+<li>当前的唯一线程，从队列取任务，执行完一个，再继续取，一个人（一条线程）夜以继日地干活。</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><code>CachedThreadPool</code><ul>
+<li>是大小无界的线程池，是用于执行很多短期异步任务的小程序，或者是负载较轻的服务器。</li>
+<li>特点：<ol>
+<li>核心线程数为0</li>
+<li>最大线程数为Integer.MAX_VALUE</li>
+<li>阻塞队列是SynchronousQueue</li>
+<li>非核心线程空闲存活时间为60秒<blockquote>
+<p>当提交任务的速度大于处理任务的速度时，每次提交一个任务，就必然会创建一个线程。极端情况下会创建过多的线程，耗尽 CPU 和内存资源。由于空闲 60 秒的线程会被终止，长时间保持空闲的 CachedThreadPool 不会占用任何资源。</p>
+</blockquote>
+</li>
+</ol>
+</li>
+<li>工作机制：<ol>
+<li>提交任务</li>
+<li>因为没有核心线程，所以任务直接加到SynchronousQueue队列。</li>
+<li>判断是否有空闲线程，如果有，就去取出任务执行。</li>
+<li>如果没有空闲线程，就新建一个线程执行。</li>
+<li>执行完任务的线程，还可以存活60秒，如果在这期间，接到任务，可以继续活下去；否则，被销毁。</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="22-4-线程池状态转换"><a href="#22-4-线程池状态转换" class="headerlink" title="22.4 线程池状态转换"></a>22.4 线程池状态转换</h3><p><img src="/./image/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2.jpg" alt="线程池状态转换"></p>
+<h2 id="23-Java中如何正常终止线程？"><a href="#23-Java中如何正常终止线程？" class="headerlink" title="23. Java中如何正常终止线程？"></a>23. Java中如何正常终止线程？</h2><ol>
+<li>使用退出标志，使线程正常退出，也就是当 run() 方法完成后线程中止。</li>
+<li>使用 interrupt 方法中断线程。<blockquote>
+<p>stop()，suspend() 和 resume()已被弃用</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="26-主线程可以捕获子线程抛出的异常吗？"><a href="#26-主线程可以捕获子线程抛出的异常吗？" class="headerlink" title="26. 主线程可以捕获子线程抛出的异常吗？"></a>26. 主线程可以捕获子线程抛出的异常吗？</h2><p>正常情况下，如果不做任何处理，捕获不到。<br>要想捕获，要用ExecutorService。</p>
+]]></content>
+      <categories>
+        <category>历史学习记录</category>
+      </categories>
+      <tags>
+        <tag>历史学习记录</tag>
+        <tag>并发</tag>
       </tags>
   </entry>
   <entry>

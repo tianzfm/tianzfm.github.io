@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="一、DQLdata query language  数据查询语言 1. 基础查询 语法：  1select 查询列表 from 表名;  特点：1、查询列表可以是：表中的字段、常量值、表达式、函数2、查询的结果是一个虚拟的表   选中特定的数据库：use employees; 查询表中的单个字段：select last_name from employees; 查询表中的多个字段：select l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql基础语法-历史学习记录">
+<meta property="og:url" content="http://example.com/2025/06/08/mysql%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95-%E5%8E%86%E5%8F%B2%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="有间栈">
+<meta property="og:description" content="一、DQLdata query language  数据查询语言 1. 基础查询 语法：  1select 查询列表 from 表名;  特点：1、查询列表可以是：表中的字段、常量值、表达式、函数2、查询的结果是一个虚拟的表   选中特定的数据库：use employees; 查询表中的单个字段：select last_name from employees; 查询表中的多个字段：select l">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-08T14:41:42.000Z">
+<meta property="article:modified_time" content="2025-06-08T14:43:42.264Z">
+<meta property="article:author" content="Fremont Tian">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="历史学习记录">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2025/06/08/mysql%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95-%E5%8E%86%E5%8F%B2%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2025/06/08/mysql%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95-%E5%8E%86%E5%8F%B2%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/","path":"2025/06/08/mysql基础语法-历史学习记录/","title":"mysql基础语法-历史学习记录"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>mysql基础语法-历史学习记录 | 有间栈</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">有间栈</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81DQL"><span class="nav-number">1.</span> <span class="nav-text">一、DQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%9F%BA%E7%A1%80%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.1.</span> <span class="nav-text">1. 基础查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%9D%A1%E4%BB%B6%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.2.</span> <span class="nav-text">2. 条件查询</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%8C%89%E6%9D%A1%E4%BB%B6%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%AD%9B%E9%80%89"><span class="nav-number">1.2.1.</span> <span class="nav-text">1. 按条件表达式筛选</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E6%8C%89%E9%80%BB%E8%BE%91%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%AD%9B%E9%80%89"><span class="nav-number">1.2.2.</span> <span class="nav-text">2. 按逻辑表达式筛选</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E6%A8%A1%E7%B3%8A%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.2.3.</span> <span class="nav-text">3. 模糊查询</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%8E%92%E5%BA%8F%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.3.</span> <span class="nav-text">3. 排序查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%B8%B8%E8%A7%81%E5%87%BD%E6%95%B0"><span class="nav-number">1.4.</span> <span class="nav-text">4. 常见函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%8D%95%E8%A1%8C%E5%87%BD%E6%95%B0"><span class="nav-number">1.4.1.</span> <span class="nav-text">1. 单行函数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E5%AD%97%E7%AC%A6%E5%87%BD%E6%95%B0"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">1. 字符函数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E6%95%B0%E5%AD%A6%E5%87%BD%E6%95%B0"><span class="nav-number">1.4.1.2.</span> <span class="nav-text">2.数学函数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-%E6%97%A5%E6%9C%9F%E5%87%BD%E6%95%B0"><span class="nav-number">1.4.1.3.</span> <span class="nav-text">3.日期函数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-%E5%85%B6%E5%AE%83%E5%87%BD%E6%95%B0"><span class="nav-number">1.4.1.4.</span> <span class="nav-text">4.其它函数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E5%87%BD%E6%95%B0"><span class="nav-number">1.4.1.5.</span> <span class="nav-text">5.流程控制函数</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%88%86%E7%BB%84%E5%87%BD%E6%95%B0"><span class="nav-number">1.4.2.</span> <span class="nav-text">2.分组函数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">1. 简单使用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E7%89%B9%E7%82%B9"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">2. 特点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%88%86%E7%BB%84%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.5.</span> <span class="nav-text">5. 分组查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2-%E5%8F%88%E7%A7%B0%E5%A4%9A%E8%A1%A8%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.6.</span> <span class="nav-text">6. 连接查询(又称多表查询)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E3%80%81sql92%E8%AF%AD%E6%B3%95"><span class="nav-number">1.6.1.</span> <span class="nav-text">一、sql92语法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%86%85%E8%BF%9E%E6%8E%A5"><span class="nav-number">1.6.2.</span> <span class="nav-text">1. 内连接</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E7%AD%89%E5%80%BC%E8%BF%9E%E6%8E%A5"><span class="nav-number">1.6.2.1.</span> <span class="nav-text">1. 等值连接</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E9%9D%9E%E7%AD%89%E5%80%BC%E8%BF%9E%E6%8E%A5"><span class="nav-number">1.6.2.2.</span> <span class="nav-text">2. 非等值连接</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-%E8%87%AA%E8%BF%9E%E6%8E%A5"><span class="nav-number">1.6.2.3.</span> <span class="nav-text">3. 自连接</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E3%80%81sql99%E8%AF%AD%E6%B3%95%EF%BC%9B"><span class="nav-number">1.6.3.</span> <span class="nav-text">二、sql99语法；</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E5%86%85%E8%BF%9E%E6%8E%A5%EF%BC%9A"><span class="nav-number">1.6.3.1.</span> <span class="nav-text">1. 内连接：</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-%E7%AD%89%E5%80%BC%E8%BF%9E%E6%8E%A5-1"><span class="nav-number">1.6.3.1.1.</span> <span class="nav-text">1. 等值连接</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-%E9%9D%9E%E7%AD%89%E5%80%BC%E8%BF%9E%E6%8E%A5-1"><span class="nav-number">1.6.3.1.2.</span> <span class="nav-text">2. 非等值连接</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-%E8%87%AA%E8%BF%9E%E6%8E%A5-1"><span class="nav-number">1.6.3.1.3.</span> <span class="nav-text">3. 自连接</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E5%A4%96%E8%BF%9E%E6%8E%A5%EF%BC%9A"><span class="nav-number">1.6.3.2.</span> <span class="nav-text">2. 外连接：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-%E4%BA%A4%E5%8F%89%E8%BF%9E%E6%8E%A5"><span class="nav-number">1.6.3.3.</span> <span class="nav-text">3. 交叉连接</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.3.4.</span> <span class="nav-text">4. 总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E5%AD%90%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.7.</span> <span class="nav-text">7. 子查询</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-where%E6%88%96having%E5%90%8E%E9%9D%A2"><span class="nav-number">1.7.1.</span> <span class="nav-text">1. where或having后面</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E6%A0%87%E9%87%8F%E5%AD%90%E6%9F%A5%E8%AF%A2%EF%BC%88%E5%8D%95%E8%A1%8C%E5%AD%90%E6%9F%A5%E8%AF%A2%EF%BC%89"><span class="nav-number">1.7.1.1.</span> <span class="nav-text">1. 标量子查询（单行子查询）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E5%88%97%E5%AD%90%E6%9F%A5%E8%AF%A2%EF%BC%88%E5%A4%9A%E8%A1%8C%E5%AD%90%E6%9F%A5%E8%AF%A2%EF%BC%89"><span class="nav-number">1.7.1.2.</span> <span class="nav-text">2. 列子查询（多行子查询）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-%E8%A1%8C%E5%AD%90%E6%9F%A5%E8%AF%A2%EF%BC%88%E5%A4%9A%E5%88%97%E5%A4%9A%E8%A1%8C%EF%BC%89"><span class="nav-number">1.7.1.3.</span> <span class="nav-text">3. 行子查询（多列多行）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-select%E5%90%8E%E9%9D%A2"><span class="nav-number">1.7.2.</span> <span class="nav-text">2. select后面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-from%E5%90%8E%E9%9D%A2"><span class="nav-number">1.7.3.</span> <span class="nav-text">3. from后面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-exists%E5%90%8E%E9%9D%A2%EF%BC%88%E7%9B%B8%E5%85%B3%E5%AD%90%E6%9F%A5%E8%AF%A2%EF%BC%89"><span class="nav-number">1.7.4.</span> <span class="nav-text">4. exists后面（相关子查询）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.8.</span> <span class="nav-text">8. 分页查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-union%E8%81%94%E5%90%88%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.9.</span> <span class="nav-text">9. union联合查询</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81DML"><span class="nav-number">2.</span> <span class="nav-text">二、DML</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%8F%92%E5%85%A5%E8%AF%AD%E5%8F%A5"><span class="nav-number">2.1.</span> <span class="nav-text">1. 插入语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%88%A0"><span class="nav-number">2.2.</span> <span class="nav-text">2. 删</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%94%B9"><span class="nav-number">2.3.</span> <span class="nav-text">3. 改</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81DDL"><span class="nav-number">3.</span> <span class="nav-text">三、DDL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%BA%93%E7%9A%84%E7%AE%A1%E7%90%86"><span class="nav-number">3.1.</span> <span class="nav-text">1. 库的管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%BA%93%E7%9A%84%E5%88%9B%E5%BB%BA%EF%BC%9B"><span class="nav-number">3.1.1.</span> <span class="nav-text">1.库的创建；</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%BA%93%E7%9A%84%E4%BF%AE%E6%94%B9"><span class="nav-number">3.1.2.</span> <span class="nav-text">2.库的修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E5%BA%93%E7%9A%84%E5%88%A0%E9%99%A4"><span class="nav-number">3.1.3.</span> <span class="nav-text">3.库的删除</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%A1%A8%E7%9A%84%E7%AE%A1%E7%90%86"><span class="nav-number">3.2.</span> <span class="nav-text">2. 表的管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E8%A1%A8%E7%9A%84%E5%88%9B%E5%BB%BA%EF%BC%9A"><span class="nav-number">3.2.1.</span> <span class="nav-text">1.表的创建：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E8%A1%A8%E7%9A%84%E4%BF%AE%E6%94%B9%EF%BC%9A"><span class="nav-number">3.2.2.</span> <span class="nav-text">2.表的修改：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E8%A1%A8%E7%9A%84%E5%88%A0%E9%99%A4%EF%BC%9A"><span class="nav-number">3.2.3.</span> <span class="nav-text">3.表的删除：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6%EF%BC%9A"><span class="nav-number">3.2.4.</span> <span class="nav-text">3.表的复制：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%B8%B8%E8%A7%81%E7%BA%A6%E6%9D%9F"><span class="nav-number">3.3.</span> <span class="nav-text">3.常见约束</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%88%9B%E5%BB%BA%E8%A1%A8%E6%97%B6%E6%B7%BB%E5%8A%A0%E7%BA%A6%E6%9D%9F"><span class="nav-number">3.3.1.</span> <span class="nav-text">1.创建表时添加约束</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E6%B7%BB%E5%8A%A0%E5%88%97%E7%BA%A7%E7%BA%A6%E6%9D%9F"><span class="nav-number">3.3.1.1.</span> <span class="nav-text">1.添加列级约束</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E6%B7%BB%E5%8A%A0%E8%A1%A8%E7%BA%A7%E7%BA%A6%E6%9D%9F"><span class="nav-number">3.3.1.2.</span> <span class="nav-text">2.添加表级约束</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E4%BF%AE%E6%94%B9%E8%A1%A8%E6%97%B6%E6%B7%BB%E5%8A%A0%E7%BA%A6%E6%9D%9F"><span class="nav-number">3.3.2.</span> <span class="nav-text">2.修改表时添加约束</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E4%BF%AE%E6%94%B9%E8%A1%A8%E6%97%B6%E5%88%A0%E9%99%A4%E7%BA%A6%E6%9D%9F"><span class="nav-number">3.3.3.</span> <span class="nav-text">3.修改表时删除约束</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E8%AF%86%E5%88%97"><span class="nav-number">3.4.</span> <span class="nav-text">标识列</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81TCL"><span class="nav-number">4.</span> <span class="nav-text">四、TCL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%86%E5%9B%BE%EF%BC%9B"><span class="nav-number">4.1.</span> <span class="nav-text">视图；</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%B8%B8%E8%A7%81%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%9A"><span class="nav-number">5.</span> <span class="nav-text">五、常见的数据类型：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%95%B4%E5%9E%8B"><span class="nav-number">5.1.</span> <span class="nav-text">1. 整型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%B0%8F%E6%95%B0"><span class="nav-number">5.2.</span> <span class="nav-text">2. 小数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%AD%97%E7%AC%A6%E5%9E%8B"><span class="nav-number">5.3.</span> <span class="nav-text">3. 字符型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%97%A5%E6%9C%9F"><span class="nav-number">5.4.</span> <span class="nav-text">2. 日期</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%8F%98%E9%87%8F"><span class="nav-number">6.</span> <span class="nav-text">六、变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F"><span class="nav-number">6.1.</span> <span class="nav-text">1. 系统变量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F"><span class="nav-number">6.1.1.</span> <span class="nav-text">1. 全局变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E4%BC%9A%E8%AF%9D%E5%8F%98%E9%87%8F"><span class="nav-number">6.1.2.</span> <span class="nav-text">2. 会话变量</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8F%98%E9%87%8F"><span class="nav-number">6.2.</span> <span class="nav-text">2.自定义变量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E7%94%A8%E6%88%B7%E5%8F%98%E9%87%8F"><span class="nav-number">6.2.1.</span> <span class="nav-text">1. 用户变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F"><span class="nav-number">6.2.2.</span> <span class="nav-text">2. 局部变量</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%92%8C%E5%87%BD%E6%95%B0"><span class="nav-number">7.</span> <span class="nav-text">七、存储过程和函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E7%BB%93%E6%9E%84"><span class="nav-number">8.</span> <span class="nav-text">八、流程控制结构</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fremont Tian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/06/08/mysql%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95-%E5%8E%86%E5%8F%B2%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Fremont Tian">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="有间栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="mysql基础语法-历史学习记录 | 有间栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          mysql基础语法-历史学习记录
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-08 22:41:42 / 修改时间：22:43:42" itemprop="dateCreated datePublished" datetime="2025-06-08T22:41:42+08:00">2025-06-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%8E%86%E5%8F%B2%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index"><span itemprop="name">历史学习记录</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>13k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>46 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="一、DQL"><a href="#一、DQL" class="headerlink" title="一、DQL"></a>一、DQL</h2><p>data query language  数据查询语言</p>
+<h3 id="1-基础查询"><a href="#1-基础查询" class="headerlink" title="1. 基础查询"></a>1. 基础查询</h3><ul>
+<li>语法：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select 查询列表 from 表名;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>特点：<br><br>1、查询列表可以是：表中的字段、常量值、表达式、函数<br/><br>2、查询的结果是一个虚拟的表</li>
+</ul>
+<ol>
+<li>选中特定的数据库：<br><code>use employees;</code></li>
+<li>查询表中的单个字段：<br><code>select last_name from employees;</code></li>
+<li>查询表中的多个字段：<br><code>select last_name,salary,email from employees;</code></li>
+<li>查询表中的所有字段：<br><code>select * from employees;</code></li>
+<li>查询常量值：<br><code>select 100;</code><br><code>select &#39;join&#39;;</code></li>
+<li>查询表达式：<br><code>select 100*98;</code></li>
+<li>查询函数：<br><code>select version();</code></li>
+<li>起别名</li>
+</ol>
+<ul>
+<li>便于理解</li>
+<li>如果要查询的字段有重名的情况，可以使用别名可以区分开来<br>方式一：使用as<br><code>select 100% 98 as 结果;</code><br><code>select last_name as 姓,first_name as 名 from employees;</code><br>方式二：省略as,使用空格<br><code>select last_name 姓,first_name 名 from employees;</code><br>案例：<br><code>select salary as &quot;out put&quot; from employees;</code></li>
+</ul>
+<ol start="9">
+<li>去重<ul>
+<li>案例：查询员工表中涉及到的所有的部门编号<br>  <code>select department_id form employees;</code>  不去重<br>  <code>select distinct department_id form employees;</code>　　去重</li>
+</ul>
+</li>
+<li>+号的作用<blockquote>
+<p>java中的＋号：<br></p>
+</blockquote>
+<ol>
+<li>运算符，两个操作数都为数值型;</br></li>
+<li>连接符，只要与一个操作数为字符串;</br><blockquote>
+<p>mysql 中的＋号</br><br>仅仅只有运算符的功能</br><br><code>select 100+90;</code>　两个操作数都是数值型，则做加法运算</br><br>｀select ‘123’+90;｀ 其中一方为字符型，试图将字符型数值转换为数值型，如果转换成功，则继续做加法运算；（213）</br><br>｀select ‘join’ + 90;｀ 如果转换失败，则将字符型数值转换为０；　（90）</br><br><code>select null+10;</code> 只要其中一方为null,则结果肯定为null</br></p>
+</blockquote>
+</li>
+</ol>
+</li>
+</ol>
+<ul>
+<li>案例：查询员工名和姓连接成一个字段，并显示为姓名; </br><br>  <code>select concat(last_name,first_name) as 姓名 from empolyees;</code></li>
+</ul>
+<h3 id="2-条件查询"><a href="#2-条件查询" class="headerlink" title="2. 条件查询"></a>2. 条件查询</h3><ul>
+<li>语法：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">	查询列表</span><br><span class="line">from</span><br><span class="line">	表名</span><br><span class="line">where</span><br><span class="line">	筛选条件;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>分类：<ol>
+<li>按条件表达式筛选<br><br> 条件运算符：&gt; &lt; &#x3D; !&#x3D; &gt;&#x3D; &lt;&#x3D;  &lt;&gt;</li>
+<li>按逻辑表达式筛选<br><br> 逻辑运算符：&amp;&amp; || !<br>     and or not</li>
+<li>模糊查询：<br><br> like <br><br> between and <br><br> in <br/><br> is null <br/></li>
+</ol>
+</li>
+</ul>
+<h4 id="1-按条件表达式筛选"><a href="#1-按条件表达式筛选" class="headerlink" title="1. 按条件表达式筛选"></a>1. 按条件表达式筛选</h4><p>案例１：查询工资 &gt; 12000的员工信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">	*</span><br><span class="line">from</span><br><span class="line">	employees 	</span><br><span class="line">where</span><br><span class="line">	salary &gt; 12000;</span><br></pre></td></tr></table></figure>
+<p>案例２：查询部门编号不等于90号的员工名和部门编号</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">	last_time,</span><br><span class="line">	department_id</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	department_id &lt;&gt; 90;</span><br></pre></td></tr></table></figure>
+<h4 id="2-按逻辑表达式筛选"><a href="#2-按逻辑表达式筛选" class="headerlink" title="2. 按逻辑表达式筛选"></a>2. 按逻辑表达式筛选</h4><p>案例１：查询工资ｚ在10000和20000之间的员工名、工资以及奖金</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">	last_name,</span><br><span class="line">	salary,</span><br><span class="line">	commission_pct</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	salary &gt;= 10000 and salary &lt;= 20000;</span><br></pre></td></tr></table></figure>
+<p>案例２：查询部门编号不是在90到110之间，或者工资高于15000的员工信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">	*</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	not(department_id &gt;=90 and department &lt;=110) or salary&gt;15000;</span><br></pre></td></tr></table></figure>
+<h4 id="3-模糊查询"><a href="#3-模糊查询" class="headerlink" title="3. 模糊查询"></a>3. 模糊查询</h4><ul>
+<li>like <br><br>  特点：<br><ol>
+<li>一般和通配符搭配使用<br><ul>
+<li>%:　任意多个字符，包含０个字符<br></li>
+<li>_：任意单个字符</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>between and <br><ol>
+<li>可以提高语句的简洁度； <br></li>
+<li>包含边界值；<br></li>
+<li>between 后面的值 要 &lt;&#x3D; and后面的值</li>
+</ol>
+</li>
+<li>in <br><ul>
+<li>含义：判断某字段的值是否属于in列表中的一项</li>
+<li>特点：<ol>
+<li>提高语句简洁度；<br></li>
+<li>in列表的值类型必须一致或兼容;<br></li>
+</ol>
+</li>
+</ul>
+</li>
+<li>is null <br><ul>
+<li>&#x3D; 或者&lt;&gt;不能用于判断null值</li>
+<li>判断null要用is null 和 is not null;</li>
+</ul>
+</li>
+<li>is not null <br></li>
+</ul>
+<ol>
+<li>like <br><br> 案例１：查询员工名中包含字符ａ的员工信息 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">	*</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	last_name like　&#x27;%a%&#x27;</span><br></pre></td></tr></table></figure>
+ 案例２：查询员工名中第三个字符为ｅ，第五个字符为ａ的员工名和工资 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">	last_name,</span><br><span class="line">	salary</span><br><span class="line">where</span><br><span class="line">	last_name like &#x27;__e_a%&#x27;;</span><br></pre></td></tr></table></figure>
+ 案例3：查询员工名中第二个字符为_的员工名(escape转义) <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">	last_name</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	last_name like &#x27;_$_%&#x27; escape &#x27;$&#x27;;</span><br></pre></td></tr></table></figure></li>
+<li>between and <br><br> 案例一：查询员工编号在100到120之间的员工信息 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">	*</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	employee_id &gt;= 100 and employees &lt;=120;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">	*</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	employee_id between 100 and 120;</span><br></pre></td></tr></table></figure></li>
+<li>in <br><br> 案例1：查询员工的工种编号是IT_PROG、AD_VP、AD_PRES中的一个的员工名和公众编号 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">	last_name,</span><br><span class="line">	job_id</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	job_id=&#x27;IT_PROG&#x27; or job_id=&#x27;AD_VP&#x27; or job_id=&#x27;AD_PRES&#x27;;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">	last_name,</span><br><span class="line">	job_id</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	job_id in (&#x27;IT_PROG&#x27;,&#x27;AD_VP&#x27;,&#x27;AD_PRES&#x27;);</span><br></pre></td></tr></table></figure></li>
+<li>is null (等于号不能判断null)<br><br> 案例1：查询没有奖金率的员工名和奖金率；<br> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">	last_name,</span><br><span class="line">	commission_pct</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	commission_pct is null;</span><br></pre></td></tr></table></figure>
+ 案例2：查询有奖金率的员工名和奖金率；<br> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">	last_name,</span><br><span class="line">	commission_pct</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	commission_pct is not null;</span><br></pre></td></tr></table></figure></li>
+<li>安全等于  &lt;&#x3D;&gt; <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">	last_name,</span><br><span class="line">	commission_pct</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	commission_pct &lt;=&gt; null;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">	last_name,</span><br><span class="line">	salary</span><br><span class="line">from</span><br><span class="line">	employees</span><br><span class="line">where</span><br><span class="line">	salary &lt;=&gt; 12000;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>is null : 仅仅可以判断null值；<br><br>&lt;&#x3D;&gt; ：  既可以判断null值，又可以判断普通的数值；</p>
+</blockquote>
+</li>
+</ol>
+<p>ifnull(exp1,exp2): 如果表达式1的值为null，就替换为表达式2的值</p>
+<h3 id="3-排序查询"><a href="#3-排序查询" class="headerlink" title="3. 排序查询"></a>3. 排序查询</h3><ul>
+<li>语法：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select 查询列表</span><br><span class="line">from 表</span><br><span class="line">[where 筛选条件]</span><br><span class="line">order by 排序列表 [asc|desc];</span><br></pre></td></tr></table></figure></li>
+<li>案例1：查询员工信息，要求工资从高到低排序 <br><br>  <code>SELECT * FROM employees ORDER BY salary DESC;</code></li>
+<li>特点：<ol>
+<li>asc代表升序，desc代表降序；<br></li>
+<li>如果不写，默认升序；<br></li>
+<li>order by 子句可以支持单个字段、多个字段、表达式、函数、别名；<br></li>
+<li><strong>order by 子句一般放在查询语句的最后面，limit子句除外;</strong> <br></li>
+</ol>
+</li>
+<li>案例2：查询部门编号&gt;&#x3D;90的员工信息，按入职时间的先后进行排序；<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select *</span><br><span class="line">from employees</span><br><span class="line">where department_id &gt;= 90</span><br><span class="line">order by hireday asc;</span><br></pre></td></tr></table></figure></li>
+<li>案例3：按年薪的高低显示员工的信息和年薪【按表达式排序】  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select *, salary*12*(1 + IFNULL(commission_pct,0)) 年薪</span><br><span class="line">from employees</span><br><span class="line">order by salary*12*(1 + IFNULL(commission_pct,0)) desc;</span><br></pre></td></tr></table></figure></li>
+<li>案例4：按年薪的高低显示员工的信息和年薪【按别名排序】  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select *, salary*12*(1 + IFNULL(commission_pct,0)) 年薪</span><br><span class="line">from employees</span><br><span class="line">order by 年薪 desc;</span><br></pre></td></tr></table></figure></li>
+<li>案例5：按姓名的长度显示员工的姓名和工资【按函数排序】  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select LENGTH(last_name) 姓名长度, last_name,salary</span><br><span class="line">from employees</span><br><span class="line">order by LENGTH(last_name) desc;</span><br></pre></td></tr></table></figure></li>
+<li>案例6：查询员工信息，要求先按工资升序排序，再按员工编号降序排序【按多个字段排序】(也就是先按工资排序，如果有俩人工资一样，按员工编号排序)  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select *</span><br><span class="line">from employees</span><br><span class="line">order by salary asc,employee_id desc;</span><br></pre></td></tr></table></figure>
+测试1：查询员工的姓名和部门号和年薪，按年薪降序，按姓名升序</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select last_name,department_id,salary*12*(1+ifnull(commission_pct,0)) 年薪</span><br><span class="line">from employees</span><br><span class="line">order by 年薪 asc,last_name desc;</span><br></pre></td></tr></table></figure>
+<p>测试2：选择工资不在8000到17000的员工的姓名和工资，按工资降序</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select last_name,salary</span><br><span class="line">from employees</span><br><span class="line">where not(salary &gt;= 8000 and salary &lt;= 17000)</span><br><span class="line">order by salary desc;</span><br></pre></td></tr></table></figure>
+<p>测试3：查询邮箱中包含e的员工信息，并先按邮箱的字节数降序，再按部门号升序</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select *</span><br><span class="line">from employees</span><br><span class="line">where email like(&#x27;%e%&#x27;)</span><br><span class="line">order by LENGTH(email) desc,department_id asc;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="4-常见函数"><a href="#4-常见函数" class="headerlink" title="4. 常见函数"></a>4. 常见函数</h3><ul>
+<li>功能：类似于java的方法，将我们的一组逻辑语句封装在方法体中，对外暴露方法名</li>
+<li>好处：<ol>
+<li>隐藏了实现细节；<br></li>
+<li>提高了代码的重用性;<br></li>
+</ol>
+</li>
+<li>调用：<br><br>  <code>select 函数名（参数） 【from 表】；</code></li>
+<li>分类：<ol>
+<li>单行函数<ul>
+<li>concat、length、ifnull等</li>
+</ul>
+</li>
+<li>分组函数<ul>
+<li>功能：做统计使用，又称为统计函数、聚合函数、组函数；</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h4 id="1-单行函数"><a href="#1-单行函数" class="headerlink" title="1. 单行函数"></a>1. 单行函数</h4><h5 id="1-字符函数"><a href="#1-字符函数" class="headerlink" title="1. 字符函数"></a>1. 字符函数</h5><ol>
+<li>length：获取参数值的字节个数；</li>
+<li>concat：拼接字符串；<br><br> <code>select concat(last_name,&#39;_&#39;,first_name) 姓名 from employees;</code></li>
+<li>upper\lower：大小写；<br><br> <code>select UPPER(&#39;john&#39;)</code><br> <code>select concat(UPPER(last_name),&#39;_&#39;,LOWER(first_name)) 姓名 from employees;</code></li>
+<li>substr、substring：截取字符串；<br><br><strong>注意：索引从1开始</strong><br><ul>
+<li>截取从指定索引处后面的所有字符 <br/>(陆展元)<br>  <code>select substr(&#39;李莫愁爱上了陆展元&#39;,7) out_put</code></li>
+<li>截取从指定索引处指定字符长度的字符 <br/>（李莫愁）<br>  <code>select substr(&#39;李莫愁爱上了陆展元&#39;,1,3) out_put</code>  </li>
+<li>案例：姓名中首字符大写，其他字符小写然后用_拼接，显示出来  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select concat(upper(substr(last_name,1,1)),&#x27;_&#x27;,lower(substr(last_name,2)))</span><br><span class="line">from</span><br><span class="line">employees;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>instr：返回子串第一次出现的索引，如果找不到返回0;<br><br> <code>select instr(&#39;杨不殷六侠&#39;，殷六侠) as out_put;</code>  (返回3)</li>
+<li>trim：去掉前后空格；<br><br> <code>selelct trim(&#39;    张翠山    &#39;) as out_put;</code><br> <code>select trim(&#39;a&#39; from &#39;aaaa张aaaaa翠山aaaaaa&#39;) as out_put;</code>(输出张aaaaa翠山)</li>
+<li>lpad：左填充，用指定的字符实现指定长度；<br> <code>select lpad(&#39;殷素素&#39;,5,&#39;*&#39;) as out_put;</code> (**殷素素)</li>
+<li>rpad：右填充，用指定的字符实现指定长度；</li>
+<li>replace 替换<br> <code>select replace(</code>张无忌爱周芷若<code>,</code>周芷若<code>,</code>赵敏<code>) as out_put;</code>(张无忌爱赵敏)</li>
+</ol>
+<h5 id="2-数学函数"><a href="#2-数学函数" class="headerlink" title="2.数学函数"></a>2.数学函数</h5><ol>
+<li>round：四舍五入；<br><br> <code>select round(-1.55);</code>(-2)<br><br> <code>select round(1.567,2);</code>(小数点后保留两位数字；1.57)<br></li>
+<li>ceil：向上取整,返回大于等于该参数的最小整数;<br><br> <code>select ceil(1.02);</code>(2)<br></li>
+<li>floor：向下取整,返回小于等于该参数的最大整数;<br><br> <code>select ceil(-9.9);</code>(-10)<br></li>
+<li>truncate：截断;<br><br> <code>select truncate(1.6999,1)</code>(1.6) <br></li>
+<li>mod：取余 <br><br> <code>select mod(10,-3)</code></li>
+</ol>
+<h5 id="3-日期函数"><a href="#3-日期函数" class="headerlink" title="3.日期函数"></a>3.日期函数</h5><ol>
+<li>now：返回当前系统日期 + 时间；<br><br> <code>select now();</code></li>
+<li>curdate 返回当前日期，不包含时间；<br><br> <code>select curdate();</code></li>
+<li>curtime 返回当前时间，不包含日期；<br><br> <code>select curtime();</code></li>
+<li>可以获取指定的部分，年、月、日、小时、分钟、秒；<br> <code>select year(now()) 年;</code>（2020）<br><br> <code>select year(&#39;1998-1-1&#39;) 年；</code>（1998）<br><br> <code>select month(now()) 月;</code>(九月)<br><br> <code>select monthname(now()) 月；</code> (September) <br></li>
+<li>str_to_date：将日期格式的字符转换成指定格式的日期;<br><br> <code>STR_TO_DATE(&#39;9-13-1999&#39;,&#39;%m-%d-%Y&#39;);</code> (1999-09-13) <br></li>
+<li>date_format：将日期转换成字符；<br><br> <code>DATE_FORMAT(&#39;2018/6/6&#39;,&#39;%Y年%m月%d日&#39;)；</code> (2018年6月6日) <br></li>
+</ol>
+<h5 id="4-其它函数"><a href="#4-其它函数" class="headerlink" title="4.其它函数"></a>4.其它函数</h5><ol>
+<li><code>select version();</code> 显示版本号; <br></li>
+<li><code>select database();</code> 查看当前的库<br></li>
+<li><code>select user();</code> 代表当前用户；<br></li>
+</ol>
+<h5 id="5-流程控制函数"><a href="#5-流程控制函数" class="headerlink" title="5.流程控制函数"></a>5.流程控制函数</h5><ol>
+<li>if函数： if else 的效果；<br><br> <code>select IF(exp1,exp2,exp3)</code> exp1成立的话返回exp2的值，否则返回exp3的值;<br></li>
+<li>case函数：<ul>
+<li>使用1：switch case的效果：<br><ol>
+<li>语法： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">case 要判断的字段或表达式</span><br><span class="line">when 常量1 then 要显示的值1或语句1；</span><br><span class="line">when 常量2 then 要显示的值2或语句2；</span><br><span class="line">...</span><br><span class="line">else 要显示的值n或语句n；</span><br><span class="line">end</span><br></pre></td></tr></table></figure></li>
+<li>案例：查询员工的工资，要去部门号&#x3D;30，现实的工资为1.1倍；部门号&#x3D;40,1.2倍，…其他部门，原工资；<br> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select salary 原始工资，department_id,</span><br><span class="line">case department_id</span><br><span class="line">when 30 then salary*1.1</span><br><span class="line">when 40 then salary*1.2</span><br><span class="line">when 50 then salary*1.3</span><br><span class="line">else salary</span><br><span class="line">end as 新工资</span><br><span class="line">from employees;</span><br></pre></td></tr></table></figure>
+ (结果是三列：原始工资、department_id、新工资) <br></li>
+</ol>
+</li>
+<li>使用2：类似于多重if  <br><ol>
+<li>语法： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">case</span><br><span class="line">when 条件1 then 要显示的值1或语句1</span><br><span class="line">when 条件2 then 要显示的值2或语句2</span><br><span class="line">...</span><br><span class="line">else 要显示的值n或语句n</span><br><span class="line">end</span><br></pre></td></tr></table></figure></li>
+<li>案例：查询员工的工资情况：如果工资&gt;20000，显示A级别；大于15000，显示B级别；大于10000，显示C级别；否则D级别；<br> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select salary,</span><br><span class="line">case</span><br><span class="line">when salary&gt;20000 then &#x27;A&#x27;</span><br><span class="line">when salary&gt;15000 then &#x27;B</span><br><span class="line">when salary&gt;10000 then &#x27;C</span><br><span class="line">else &#x27;D&#x27;</span><br><span class="line">end as 工资级别</span><br><span class="line">from employees;</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+<p>练习：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select(now());</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select id,last_name,salary,salary*1.2 as &quot;new salary&quot;</span><br><span class="line">from employees;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select last_name,LENGTH(last_name) 姓名长度</span><br><span class="line">from employees</span><br><span class="line">order by substr(lastname,1,1);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select job,</span><br><span class="line">case job</span><br><span class="line">when &#x27;AD_PROG&#x27; then &#x27;A&#x27;</span><br><span class="line">when &#x27;ST_MAN&#x27; then &#x27;B&#x27;</span><br><span class="line">when &#x27;IT_PROG&#x27; then &#x27;C&#x27;</span><br><span class="line">else &#x27;D&#x27;</span><br><span class="line">end as grade</span><br><span class="line">from employees;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-分组函数"><a href="#2-分组函数" class="headerlink" title="2.分组函数"></a>2.分组函数</h4><ul>
+<li>功能：用作统计使用，又称为聚合函数或统计函数或组函数；（多个输入，一个输出）</li>
+<li>分类：sum 求和、avg 平均值、max 最大值、min 最小值、count 计算个数；</li>
+</ul>
+<h5 id="1-简单使用"><a href="#1-简单使用" class="headerlink" title="1. 简单使用"></a>1. 简单使用</h5><p><code>select sum(salary) from employees;</code></p>
+<h5 id="2-特点"><a href="#2-特点" class="headerlink" title="2. 特点"></a>2. 特点</h5><ol>
+<li>sum 、avg一般用于处理数值型；max、min、count可以处理任何类型<br></li>
+<li>以上分组函数都忽略null值；<br></li>
+<li>和distinct搭配使用去重；<br><br> <code>select sum(distinct salary),sum(salary) from employees;</code><br> <code>select count(disinct salary) from employees;</code></li>
+<li>count函数；<br><br> <code>select count(salary) from employees;</code> <br><br> <code>select count(*) from employees;</code> (常用来统计行数，更常用) <br><br> <code>select count(1) from employees;</code> (count函数里可以传常量值，表示在表中加一列常量，返回行数) <br><br> 效率： <br><ul>
+<li>MYISAM存储引擎下，count(*) 的效率高；<br></li>
+<li>INNODB存储引擎下，count(*)和count(1)效率差不多，都比count(字段要高一些);<br></li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>练习：<br><br>查询员工工资的最大值、最小值，平均值和总和；<br></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">	max(salary),</span><br><span class="line">	min(salary),</span><br><span class="line">	avg(salary),</span><br><span class="line">	sum(salary)</span><br><span class="line">from</span><br><span class="line">	employees;</span><br></pre></td></tr></table></figure>
+<p>查询员工表中的最大入职时间和最小入职时间的相差天数;<br></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">	DATEDIFF(max(hiredate),min(hiredate)) diffrence</span><br><span class="line">from</span><br><span class="line">	employees;</span><br></pre></td></tr></table></figure>
+<p>查询部门编号为90的员工个数；<br></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select count(*)</span><br><span class="line">from employees</span><br><span class="line">where department_id = 90;</span><br></pre></td></tr></table></figure>
+<h3 id="5-分组查询"><a href="#5-分组查询" class="headerlink" title="5. 分组查询"></a>5. 分组查询</h3><ul>
+<li>分组查询中的筛选条件分为两类：<br><br>  1.分组前查询；(数据源：原始表；位置：group by的前面 where)<br><br>  2.分组后查询;（数据源：分组后的结果集；位置：group by的后面 having）<br><br>  <strong>分组函数做条件肯定是放在having子句中</strong></li>
+<li>group by子句支持单个字段分组，也支持多个字段分组（多个字段之间用逗号隔开没有顺序要求），也支持表达式或函数；<br></li>
+<li>也可添加排序（排序放在group by后面）；</li>
+<li>引入：查询每个部门的平均工资;<br><blockquote>
+<p>可以使用GROUP BY子句将表中的数据分为若干组；</p>
+</blockquote>
+</li>
+<li>语法：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SELECT column(要求出现在group by的后面),group_function(column)</span><br><span class="line">FROM table</span><br><span class="line">[WHERE contion]</span><br><span class="line">[GROUP BY group_by_expression]</span><br><span class="line">[ORDER BY column];</span><br></pre></td></tr></table></figure>
+<strong>column（要查询的列表）比较特殊，要求是分组函数(group_function)和group by后出现的字段</strong><br></li>
+</ul>
+<hr>
+<ul>
+<li>案例一：查询每个工种的最高工资；<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select job_id,max(salary),</span><br><span class="line">from employees</span><br><span class="line">group by job_id;</span><br></pre></td></tr></table></figure></li>
+<li>案例二：查询每个位置上的部门个数；<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select location_id,count(*)</span><br><span class="line">from departments</span><br><span class="line">group by location_id;</span><br></pre></td></tr></table></figure></li>
+<li>案例三：查询邮箱中包含a字符的，每个部门的平均工资；  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select avg(salary),department_id</span><br><span class="line">from employees</span><br><span class="line">where email like &#x27;%a%&#x27;</span><br><span class="line">group by department_id;</span><br></pre></td></tr></table></figure></li>
+<li>案例四：查询每个领导手下有奖金的员工的最高工资；  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select max(salary),manager_id</span><br><span class="line">from employees</span><br><span class="line">where commission_pct is not null</span><br><span class="line">group by manager_id;</span><br></pre></td></tr></table></figure></li>
+<li>案例五：查询哪个部门的员工个数&gt;2 (添加分组后的筛选；先分组，再筛选。关键字HAVING)<ol>
+<li>查询每个部门的员工个数 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select count(*),department_id</span><br><span class="line">from employees</span><br><span class="line">group by department_id;</span><br></pre></td></tr></table></figure></li>
+<li>根据1的结果进行筛选，查询哪个部门的员工个数&gt;2 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select count(*),department_id</span><br><span class="line">from employees</span><br><span class="line">group by department_id</span><br><span class="line">having count(*)&gt;2;</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+<li>案例六：查询每个工种有奖金的员工的最高工资&gt;12000的工种编号和最高工资；  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select job_id,max(salary)</span><br><span class="line">from employees</span><br><span class="line">where commission_pct is not null</span><br><span class="line">group by job_id</span><br><span class="line">having max(salary) &gt; 12000;</span><br></pre></td></tr></table></figure></li>
+<li>案例七：查询领导编号&gt;102的每个领导手下的员工最低工资&gt;5000的领导编号，以及其最低工资；  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select manager_id,min(salary) 最低工资</span><br><span class="line">from employees</span><br><span class="line">where manager_id&gt;102</span><br><span class="line">group by manager_id</span><br><span class="line">having 最低工资&gt;5000;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<p>按表达式或函数分组；<br></p>
+<ul>
+<li>案例1：按员工姓名的长度分组，查询每一组的员工个数，筛选员工个数&gt;5的有哪些  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select length(last_name),count(*)</span><br><span class="line">from employees</span><br><span class="line">group by length(last_name)</span><br><span class="line">having count(*)&gt;5;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<p>按多个字段分组</p>
+<ul>
+<li>案例：查询每个部门每个工种的员工的平均工资  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select department_id,job_id,avg(salary)</span><br><span class="line">from employees</span><br><span class="line">group by department_id,job_id;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<p>添加排序</p>
+<ul>
+<li>案例：查询每个部门每个工种的员工的平均工资，并且按平均工资的高低显示  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select department_id,job_id,avg(salary)</span><br><span class="line">from employees</span><br><span class="line">group by department_id,job_id</span><br><span class="line">order by avg(salary) desc;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<p>练习：<br><br>查询各job_id的员工工资的最大值、最小值、平均值、总和，并按job_id升序；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select job_id,max(salary),min(salary),avg(salary),sum(salary)</span><br><span class="line">from employees</span><br><span class="line">group by job_id</span><br><span class="line">order by job_id asc;</span><br></pre></td></tr></table></figure>
+<p>查询员工的最高工资和最低工资的差距(DIFFERENCE)；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select max(salary) - min(salary) DIFFERENCE</span><br><span class="line">from employees;</span><br></pre></td></tr></table></figure>
+<p>查询各个管理者手下员工的最低工资，其中最低工资不能低于6000，没有管理者的员工不计算在内；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select manager_id,min(salary)</span><br><span class="line">from employees</span><br><span class="line">where manager_id is not null</span><br><span class="line">group by manager_id</span><br><span class="line">having min(salary)&gt;=6000;</span><br></pre></td></tr></table></figure>
+<p>查询所有部门的编号，员工数量和工资平均值，并按平均工资降序；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select department_id,count(*),avg(salary)</span><br><span class="line">from employees</span><br><span class="line">group by department_id</span><br><span class="line">order by avg(salary) desc;</span><br></pre></td></tr></table></figure>
+<p>选择具有各个job_id的员工个数；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select job_id,count(*)</span><br><span class="line">from employees</span><br><span class="line">group by job_id;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-连接查询-又称多表查询"><a href="#6-连接查询-又称多表查询" class="headerlink" title="6. 连接查询(又称多表查询)"></a>6. 连接查询(又称多表查询)</h3><p>当查询的字段来自于多个表时，就会用到连接查询；<br><br><strong>笛卡尔乘积现象</strong>：表1有m行，表2有n行，结果&#x3D;m×n行；<strong>错误原因</strong>：没有添加有效的连接条件；</p>
+<ul>
+<li><p>分类<br><br>  1.按年代分类：<br></p>
+<ul>
+<li>sql92标准；<br></li>
+<li>sql99标准;[推荐]；支持内连+外连(左外和右外)+交叉连接 <br></li>
+</ul>
+<p>  2.按功能分类：<br></p>
+<ul>
+<li>内连接：<br><br>  1.等值连接；<br>  2.非等值连接；<br>  3.自连接；</li>
+<li>外连接:<br><br>  1.左外连接；<br>  2.右外连接；<br>  3.全外连接；</li>
+<li>交叉连接;<br></li>
+</ul>
+</li>
+</ul>
+<h4 id="一、sql92语法"><a href="#一、sql92语法" class="headerlink" title="一、sql92语法"></a>一、sql92语法</h4><h4 id="1-内连接"><a href="#1-内连接" class="headerlink" title="1. 内连接"></a>1. 内连接</h4><h5 id="1-等值连接"><a href="#1-等值连接" class="headerlink" title="1. 等值连接"></a>1. 等值连接</h5><ul>
+<li>案例1：查询女神名和对应的男朋友名<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">selet name,boyname</span><br><span class="line">from boys,beauty</span><br><span class="line">where beauty.boyfriend_id=boys.id;</span><br></pre></td></tr></table></figure></li>
+<li>案例2：查询员工名和对应的部门名<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select last_name,department_name</span><br><span class="line">from employees,departments</span><br><span class="line">where employees.`department_id`=departments.`department_id`;</span><br></pre></td></tr></table></figure></li>
+<li>案例3：查询员工名、工种号、工种名;<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select last_name,e.`job_id`,job_title</span><br><span class="line">from employees as e,jobs as j</span><br><span class="line">where e.`job_id`=j.`job_id`;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>可以为表起别名；</strong>,提高语句的简洁度，区分多个重名的字段；<strong>如果为表起了别名，则查询的字段就不能使用原来的表名去限定，要用别名，要么就不用</strong>；<br></p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select employees.last_name,employees.`job_id`,jobs.job_title</span><br><span class="line">from employees as e,jobs as j</span><br><span class="line">where e.`job_id`=j.`job_id`;</span><br><span class="line">不可取，会报错</span><br></pre></td></tr></table></figure></blockquote>
+</li>
+</ul>
+<hr>
+<ol>
+<li><strong>可以加筛选</strong></li>
+</ol>
+<ul>
+<li>案例1：查询有奖金的员工名、部门名;<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select last_name,department_name</span><br><span class="line">from employees e,departments d</span><br><span class="line">where e.`department_id`=d.`department_id`</span><br><span class="line">and e.commision_pct is not null;</span><br></pre></td></tr></table></figure></li>
+<li>案例2：查询城市中第二个字符为o的部门名和城市名；<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select department_name,city</span><br><span class="line">from departments d,locations l</span><br><span class="line">where d.`location_id`=l.`location_id`</span><br><span class="line">and city like &#x27;_o%&#x27;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<ol start="2">
+<li><strong>可以加分组</strong></li>
+</ol>
+<ul>
+<li>案例1：查询每个城市的部门个数；<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select count(*) 个数,city</span><br><span class="line">from departments d,locations l</span><br><span class="line">where d.`location_id`=l.`location_id`</span><br><span class="line">group by city;</span><br></pre></td></tr></table></figure></li>
+<li>案例2：查询有奖金的每个部门的部门名、部门的领导标号和该部门的最低工资；<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select department_name,d.manager_id ,min(salary)</span><br><span class="line">from employees e,departments d</span><br><span class="line">where e.`department_id`=d.`department_id`</span><br><span class="line">and commision_pct is not null</span><br><span class="line">group by e.department_name,d.manager_id;</span><br><span class="line">group by后面跟两列是保证两列行数相同；</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<ol start="3">
+<li><strong>可以加排序</strong></li>
+</ol>
+<ul>
+<li>案例：查询每个工种的工种名和员工的个数，并且按员工个数降序；<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select count(*),j.job_title</span><br><span class="line">from employees e,jobs j</span><br><span class="line">where e.`job_id`=j.`job_id`</span><br><span class="line">group by j.job_title</span><br><span class="line">order by count(*) desc;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<ol start="4">
+<li><strong>可以实现三表连接</strong></li>
+</ol>
+<ul>
+<li>案例：查询员工名、部门名和所在的城市；<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select last_name,department_name,city</span><br><span class="line">from employees e, departments d, locations l</span><br><span class="line">where e.`department_id`=d.`department_id`</span><br><span class="line">and d.`location_id`=l.`location_id`;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<ol start="5">
+<li><strong>等值连接总结</strong><ol>
+<li>多表连接的结果为多表的交集部分；<br></li>
+<li>n表连接，至少需要n-1个连接条件；<br></li>
+<li>多表的顺序没有要求；<br></li>
+<li>一般需要为表起别名；<br></li>
+<li>可以搭配前面介绍的所有子句；<br></li>
+</ol>
+</li>
+</ol>
+<h5 id="2-非等值连接"><a href="#2-非等值连接" class="headerlink" title="2. 非等值连接"></a>2. 非等值连接</h5><p>连接条件中不用等于号;<br></p>
+<ul>
+<li>案例1：查询员工的工资和工资级别；<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select salary,grade_level</span><br><span class="line">from employees e,job_grades g</span><br><span class="line">where salary between g.`lowest_sal` and g.`highest_sal`;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="3-自连接"><a href="#3-自连接" class="headerlink" title="3. 自连接"></a>3. 自连接</h5><ul>
+<li>案例：查询员工名和上级的名称；<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select e.employee_id,e.last_name,m.employee_id,m.last_name</span><br><span class="line">from employees e, employees m</span><br><span class="line">where e.`manager_id`=m.`employee_id`;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<p>练习：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select max(salary),avg(salary)</span><br><span class="line">from employees;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select employee_id,job_id,last_name</span><br><span class="line">from employees</span><br><span class="line">order by department_id desc,salary asc;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select job_id,last_name</span><br><span class="line">from employees</span><br><span class="line">where job_id like &#x27;%a%e%&#x27;;</span><br></pre></td></tr></table></figure>
+<p>显示所有员工的姓名，部门号和部门名称；<br></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select last_name,d.department_id,department_name</span><br><span class="line">from employees e,departments d</span><br><span class="line">where e.&#x27;department_id&#x27;=d.`department_id`;</span><br></pre></td></tr></table></figure>
+<p>查询90号部门员工的job_id和90号部门的location_id;<br></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select job_id,location_id</span><br><span class="line">from employees e,departments d</span><br><span class="line">where e.`department_id`= d.`department_id`</span><br><span class="line">and e.`department_id`=90;</span><br></pre></td></tr></table></figure>
+<p>选择所有有奖金的员工的last_name,department_name,location_id,city;<br></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select last_name,department_name,location_id,city</span><br><span class="line">from employees e,departments d,locations l</span><br><span class="line">where e.`department_id`=d.`department_id`</span><br><span class="line">and d.`location_id`=l.`location_id`</span><br><span class="line">and e.`commission_pct` is not null;</span><br></pre></td></tr></table></figure>
+<p>选择city在Toronto工作的员工的last_name,job_id,department_id,department_name;<br></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select last_name,job_id,department_id,department_name</span><br><span class="line">from employees e,departments d,locations l</span><br><span class="line">where e.`department_id`=d.`department_id`</span><br><span class="line">and d.`location_id`=l.`location_id`</span><br><span class="line">and city=&#x27;Toronto&#x27;;</span><br></pre></td></tr></table></figure>
+<p>查询每个工种、每个部门的部门名、工种名和最低工资；<br></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select deparment_name,job_title,min(salary)</span><br><span class="line">from employees e,departments d,jobs j</span><br><span class="line">where e.`department_id`=d.`department_id`</span><br><span class="line">and e.`job_id`=j.`job_id`</span><br><span class="line">group by j.job_title,d.department_id;</span><br></pre></td></tr></table></figure>
+<p>查询每个国家下的部门个数大于2的国家编号；<br></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select country_id,count(*)</span><br><span class="line">from departments d,locations l</span><br><span class="line">where d.`location_id`=l.`location_id`</span><br><span class="line">group by country_id</span><br><span class="line">having count(*)&gt;2;</span><br></pre></td></tr></table></figure>
+<h4 id="二、sql99语法；"><a href="#二、sql99语法；" class="headerlink" title="二、sql99语法；"></a>二、sql99语法；</h4><ul>
+<li>语法：<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select 查询列表</span><br><span class="line">from 表1 别名 【连接类型】</span><br><span class="line">join 表2 别名</span><br><span class="line">on 连接条件</span><br><span class="line">【where 筛选条件】</span><br><span class="line">【group by 分组】</span><br><span class="line">【having 筛选条件】</span><br><span class="line">【order by 排序列表】</span><br></pre></td></tr></table></figure></li>
+<li>分类<ol>
+<li>内连接：inner <br><ul>
+<li>等值连接；<br></li>
+<li>非等值连接；<br></li>
+<li>自连接；<br></li>
+</ul>
+</li>
+<li>外连接：<ul>
+<li>左外：left [outer] <br></li>
+<li>右外：right [outer] <br></li>
+<li>全外： full [outer] <br></li>
+</ul>
+</li>
+<li>交叉连接：cross <br></li>
+</ol>
+</li>
+</ul>
+<h5 id="1-内连接："><a href="#1-内连接：" class="headerlink" title="1. 内连接："></a>1. 内连接：</h5><ul>
+<li>语法：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select 查询列表</span><br><span class="line">from 表1 别名</span><br><span class="line">inner join 表2 别名</span><br><span class="line">on 连接条件;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h6 id="1-等值连接-1"><a href="#1-等值连接-1" class="headerlink" title="1. 等值连接"></a>1. 等值连接</h6><blockquote>
+<p>sql99的等值连接特点：<br><br>1.可以添加排序、分组和筛选；<br><br>2.inner可以省略；<br><br>3.筛选条件放在where后面，连接条件放在on后面，提高分离性，便于阅读;<br><br>4.inner join和sql92语法中的等值连接效果是一样的，<strong>都是查询多表的交集部分</strong>；<br></p>
+</blockquote>
+<ul>
+<li>案例1：查询员工名、部门名；  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select last_name,department_name</span><br><span class="line">from employees e</span><br><span class="line">inner join departments d</span><br><span class="line">on e.`department_id`=d.`department_id`;</span><br></pre></td></tr></table></figure></li>
+<li>案例2：查询名字中包含e的员工名和工种名(筛选)  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select last_name,job_title</span><br><span class="line">from employees e</span><br><span class="line">inner join jobs j</span><br><span class="line">on e.`job_id`=j.`job_id`</span><br><span class="line">where e.`last_name` like &#x27;%e%&#x27;;</span><br></pre></td></tr></table></figure></li>
+<li>案例3：查询部门个数&gt;3的城市名和部门个数；(分组+筛选)  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select l.city,count(*)</span><br><span class="line">from locations l</span><br><span class="line">inner join departments d</span><br><span class="line">on l.`location_id`=d.`location_id`</span><br><span class="line">group by l.city</span><br><span class="line">having count(*)&gt;3;</span><br></pre></td></tr></table></figure></li>
+<li>案例4：查询哪个部门的部门员工个数&gt;3的部门名和员工个数，并按个数降序排列；(排序)  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select department_name,count(*)</span><br><span class="line">from departments d</span><br><span class="line">inner join employees e</span><br><span class="line">on d.`department_id`=e.`department_id`</span><br><span class="line">group by department_name</span><br><span class="line">having count(*)&gt;3</span><br><span class="line">order by count(*) desc;</span><br></pre></td></tr></table></figure></li>
+<li>案例5：查询员工名、部门名、工种名，并按部门名降序(三表连接)  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select last_name,department_name,job_title</span><br><span class="line">from employees e</span><br><span class="line">inner join departments d</span><br><span class="line">on e.`department_id`=d.`department_id`</span><br><span class="line">inner join jobs j</span><br><span class="line">on e.`job_id`=j.`job_id`</span><br><span class="line">order by d.department_name desc;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h6 id="2-非等值连接-1"><a href="#2-非等值连接-1" class="headerlink" title="2. 非等值连接"></a>2. 非等值连接</h6><ul>
+<li>案例：查询员工的工资级别；  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select salary,grade_level</span><br><span class="line">from employee e</span><br><span class="line">join job_grade g</span><br><span class="line">on e.`salary` between g.`lowest_sal` and g.`highest_sal`;</span><br></pre></td></tr></table></figure></li>
+<li>案例：查询工资级别的个数&gt;2的个数，并且按工资级别降序；  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select count(*),grade_level</span><br><span class="line">from employees e</span><br><span class="line">join job_grade g</span><br><span class="line">where e.`salary` between g.`lowest_sal` and g.`highest_sal`</span><br><span class="line">group by grade_level</span><br><span class="line">having count(*)&gt;20</span><br><span class="line">order by grade_level desc;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h6 id="3-自连接-1"><a href="#3-自连接-1" class="headerlink" title="3. 自连接"></a>3. 自连接</h6><ul>
+<li>案例：查询员工名和对应的经理名；  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select e.`last_name`,m.`last_name`</span><br><span class="line">from employees e</span><br><span class="line">join employees m</span><br><span class="line">where e.`manager_id`=m.`employee_id`;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="2-外连接："><a href="#2-外连接：" class="headerlink" title="2. 外连接："></a>2. 外连接：</h5><blockquote>
+<p>应用场景：用于查询一个表中有，另一个表中没有的记录；<br><br>特点：<br><br>1. 外连接的查询结果为主表中的所有记录，<br><br>	如果从表中有和它匹配的，则显示匹配的值；<br><br>	如果从表中没有和它匹配的，则显示null；<br><br>	外连接查询的结果 &#x3D; 内连接查询结果 + 主表中有而从表中没有的记录；<br><br>2. 左外连接，left join左边的是主表；<br><br>	右外连接，right join右边的是主表；<br><br>3. 左外和右外，交换两个表的顺序，可以实现同样的效果；<br><br>4. 全外连接 &#x3D; 内连接的结果 + 表1中有但表2没有的 + 表2中有但表1中没有的；<br></p>
+</blockquote>
+<ul>
+<li>引入:查询男朋友名字不在男神表中的女神名；  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select b.name</span><br><span class="line">from beauty b</span><br><span class="line">left outer join boys bo</span><br><span class="line">on b.`boyfriend_id`=bo.`id`</span><br><span class="line">where bo.`id` is null;</span><br></pre></td></tr></table></figure></li>
+<li>案例1：查询哪个部门没有员工；  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select d.`department_name`</span><br><span class="line">from departments d</span><br><span class="line">left outer join employees e</span><br><span class="line">on d.`department_id`=e.`department_id`</span><br><span class="line">where e.`employee.id` is null;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="3-交叉连接"><a href="#3-交叉连接" class="headerlink" title="3. 交叉连接"></a>3. 交叉连接</h5><blockquote>
+<p>其实就是笛卡尔乘积；</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select b.*,bo.*</span><br><span class="line">from beauty b,</span><br><span class="line">cross join boys bo;</span><br></pre></td></tr></table></figure>
+<h5 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h5><ol>
+<li>内连接：求交集；<br></li>
+<li>外连接：分主表和从表，查询主表的所有记录；（查询交集和主表特有的部分）<br><br>（可以画图理解，交集并集图）</li>
+</ol>
+<hr>
+<p>练习：<br><br>查询编号&gt;3的女神的男朋友信息，如果有则列出详细，如果没有，用null填充；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select b.`name`,bo.*</span><br><span class="line">from beauty b</span><br><span class="line">left outer join boys bo</span><br><span class="line">on b.`boyfriend_id`=bo.`id`</span><br><span class="line">where b.`id`&gt;3;</span><br></pre></td></tr></table></figure>
+<p>查询哪个城市没有部门</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select city</span><br><span class="line">from locations l</span><br><span class="line">left outer departments d</span><br><span class="line">on l.`location_id`=d.`location_id`</span><br><span class="line">where d.`department_id` is null;</span><br></pre></td></tr></table></figure>
+<p>查询部门名为SAL或IT的员工信息；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select e.*</span><br><span class="line">from employees e</span><br><span class="line">right outer join departments d</span><br><span class="line">on e.`department_id`=d.`department_id`</span><br><span class="line">where d.`department_name` in(&#x27;SAL&#x27;,&#x27;IT&#x27;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-子查询"><a href="#7-子查询" class="headerlink" title="7. 子查询"></a>7. 子查询</h3><blockquote>
+<p>含义：出现在其他语句内部的select语句，称为子查询或内查询；内部嵌套其他select语句的查询，成为外查询或主查询；<br><br>分类：<br><br>1.按子查询出现的位置：<br><br>select后面（只支持标量子查询）；<br><br>from后面；（支持表子查询）<br><br>where或having后面；（支持标量子查询，列子查询，行子查询） 【重点】<br><br>exists后面（相关子查询）（表子查询）;<br><br>2.按结果集的行列数不同：<br><br>标量子查询（结果集只有一行一列）；<br><br>列子查询（结果集有一列多行）；<br><br>行子查询（结果集有一行多列）；<br><br>表子查询（结果集一般为多行多列）；<br></p>
+</blockquote>
+<h4 id="1-where或having后面"><a href="#1-where或having后面" class="headerlink" title="1. where或having后面"></a>1. where或having后面</h4><blockquote>
+<p>特点：<br><br>子查询一般放在小括号内；<br><br>子查询一般放在条件的右侧；<br><br>标量子查询，一般搭配着单行操作符使用；(&gt; &lt; &#x3D; &lt;&gt; &gt;&#x3D; &lt;&#x3D; )<br><br>列子查询，一般搭配着多行操作符使用；(in&#x2F;not in,any&#x2F;some,all);<br><br>子查询的执行优先于主查询；<br></p>
+</blockquote>
+<h5 id="1-标量子查询（单行子查询）"><a href="#1-标量子查询（单行子查询）" class="headerlink" title="1. 标量子查询（单行子查询）"></a>1. 标量子查询（单行子查询）</h5><ul>
+<li>案例1：谁的工资比Abel高？  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select *</span><br><span class="line">from employees</span><br><span class="line">where salary&gt;(</span><br><span class="line">	select salary</span><br><span class="line">	from employees</span><br><span class="line">	where last_name=&#x27;Abel&#x27;</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>案例2：返回job_id与141号员工相同，salary比143号员工多的员工的姓名，job_id和工资  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">select last_name,job_id,salary</span><br><span class="line">from employees</span><br><span class="line">where job_id=(</span><br><span class="line">	select job_id</span><br><span class="line">	from employees</span><br><span class="line">	where employee_id=141</span><br><span class="line">)and salary&gt;(</span><br><span class="line">	select salary</span><br><span class="line">	from employees</span><br><span class="line">	where employee_id=143</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>案例3：返回公司工资最少的员工的last_name,job_id和salary  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select last_name,job_id,salary</span><br><span class="line">from employees</span><br><span class="line">where salary=(</span><br><span class="line">	select min(salary)</span><br><span class="line">	from employees</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>案例4：查询最低工资大于50部门最低工资的部门id和其最低工资  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select department_id,min(salary)</span><br><span class="line">from employees</span><br><span class="line">group by department_id</span><br><span class="line">having min(salary)&gt;(</span><br><span class="line">	select min(salary)</span><br><span class="line">	from employees</span><br><span class="line">	where department_id=50</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="2-列子查询（多行子查询）"><a href="#2-列子查询（多行子查询）" class="headerlink" title="2. 列子查询（多行子查询）"></a>2. 列子查询（多行子查询）</h5><ul>
+<li>案例1：返回location_id是1400或1700的部门中的所有员工姓名  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">   select last_name</span><br><span class="line">from employees</span><br><span class="line">where department_id in(</span><br><span class="line">	select distinct department_id</span><br><span class="line">	from departments</span><br><span class="line">	where location_id in (1400,1700)</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>案例2：返回其它工种中比job_id为‘IT_PROG’工种任一工资低的员工的员工号、姓名、job_id以及salary;  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select employee_id,last_name,job_id,salary</span><br><span class="line">from employees</span><br><span class="line">where salary&lt;any(</span><br><span class="line">	select distinct salary</span><br><span class="line">	from employees</span><br><span class="line">	where job_id=&#x27;IT_PROG&#x27;</span><br><span class="line">) and job_id&lt;&gt;&#x27;IT_PROG&#x27;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="3-行子查询（多列多行）"><a href="#3-行子查询（多列多行）" class="headerlink" title="3. 行子查询（多列多行）"></a>3. 行子查询（多列多行）</h5><ul>
+<li>案例1：查询员工编号最小并且工资最高的员工信息;<br><br>  以前的做法：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">select *</span><br><span class="line">from employees</span><br><span class="line">where employee_id=(</span><br><span class="line">	select min(employee_id)</span><br><span class="line">	from employees</span><br><span class="line">) and salary=(</span><br><span class="line">	select max(salary)</span><br><span class="line">	from employees</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+  行子查询方法：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select *</span><br><span class="line">from employees</span><br><span class="line">where (employee_id,salary)=(</span><br><span class="line">	select min(employee_id),max(salary)</span><br><span class="line">	from employees</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="2-select后面"><a href="#2-select后面" class="headerlink" title="2. select后面"></a>2. select后面</h4><ul>
+<li>案例:查询每个部门的员工个数  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select d.*,(</span><br><span class="line">	select count(*)</span><br><span class="line">	from employee e</span><br><span class="line">	where e.department_id = d.department_id</span><br><span class="line">) 个数</span><br><span class="line">from departments d;</span><br></pre></td></tr></table></figure></li>
+<li>案例2：查询员工号&#x3D;120的部门名；  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select (</span><br><span class="line">	select department_name</span><br><span class="line">	from departments d</span><br><span class="line">	inner join employees e</span><br><span class="line">	on d.department_id=e.department_id</span><br><span class="line">	where e.employee_id=102</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="3-from后面"><a href="#3-from后面" class="headerlink" title="3. from后面"></a>3. from后面</h4><blockquote>
+<p>将子查询结果充当一张表，要求必须起别名；</p>
+</blockquote>
+<ul>
+<li>案例：查询每个部门的平均工资的工资等级  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select ag_dep.ag,g.grade_level</span><br><span class="line">from(</span><br><span class="line">	select avg(salary) ag,department_id</span><br><span class="line">	from employees</span><br><span class="line">	group by department_id</span><br><span class="line">) ag_dep</span><br><span class="line">inner join job_grades g</span><br><span class="line">on ag_dep.ag between lowest_sal and highest_sal;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="4-exists后面（相关子查询）"><a href="#4-exists后面（相关子查询）" class="headerlink" title="4. exists后面（相关子查询）"></a>4. exists后面（相关子查询）</h4><blockquote>
+<p>exists（完整的查询语句）,结果是布尔值；</p>
+</blockquote>
+<ul>
+<li>案例1：查询有员工的部门名  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select department_name</span><br><span class="line">from departments d</span><br><span class="line">where exists(</span><br><span class="line">	select *</span><br><span class="line">	from employees e</span><br><span class="line">	where e.`department_id`=d.`department_id`</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#用in也可以做</span><br><span class="line">select department_name</span><br><span class="line">from departments d</span><br><span class="line">where d.`department_id` in(</span><br><span class="line">	select department_id</span><br><span class="line">	from employees</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>案例2：查询没有女朋友的男神信息；  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select boys.*</span><br><span class="line">from boys</span><br><span class="line">where boys.id not in(</span><br><span class="line">	select boyfriend_id</span><br><span class="line">	from beauty</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select boys.*</span><br><span class="line">from boys</span><br><span class="line">where  not exists(</span><br><span class="line">	select *</span><br><span class="line">	frmo beauty</span><br><span class="line">	where beauty.boyfriend_id=boys.id</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<p>练习：<br></p>
+<ol>
+<li>查询和Zlotkey相同部门的员工姓名和工资； <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select last_name,salary</span><br><span class="line">from employees</span><br><span class="line">where department_id=(</span><br><span class="line">	select department_id</span><br><span class="line">	from employees</span><br><span class="line">	where last_name=&#x27;Zlotkey&#x27;</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>查询工资比公司平均工资高的员工的员工号，姓名和工资； <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select employee_id,last_name,salary</span><br><span class="line">from employees</span><br><span class="line">where salary &gt; (</span><br><span class="line">	select avg(salary)</span><br><span class="line">	from employees</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>查询各部门中工资比本部门平均工资高的员工的员工号，姓名和工资； <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">select employee_id,last_name,salary,department_id</span><br><span class="line">from (</span><br><span class="line">	select avg(salary) avg,department_id</span><br><span class="line">	from employees</span><br><span class="line">	group by department_id</span><br><span class="line">) avg_dep</span><br><span class="line">inner join employees e</span><br><span class="line">on avg_dep.`department_id`=e.`department_id`</span><br><span class="line">where e.salary &gt; avg_dep.avg;</span><br></pre></td></tr></table></figure></li>
+<li>查询和姓名中包含字母u的员工在相同部门的员工的员工号和姓名 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select employee_id,last_name</span><br><span class="line">from employees e</span><br><span class="line">where e.department_id in(</span><br><span class="line">	select distinct department_id</span><br><span class="line">	from employees</span><br><span class="line">	where last_name = &#x27;%u%&#x27;</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>查询在部门的location_id为1700的部门工作的员工的员工号； <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select employee_id</span><br><span class="line">from employees</span><br><span class="line">where department_id in(</span><br><span class="line">	select distinct department_id</span><br><span class="line">	from departments</span><br><span class="line">	where location_id=1700</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>查询管理者是King的员工姓名和工资； <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select last_name,salary</span><br><span class="line">from employees</span><br><span class="line">where manager_id=(</span><br><span class="line">	select employee_id</span><br><span class="line">	from employees</span><br><span class="line">	where last_name = &#x27;King&#x27;</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>查询工资最高的员工的姓名，要求first_name和last_name显示为一列，列名为姓名； <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select concat(first_name,last_name) 姓名</span><br><span class="line">from employees</span><br><span class="line">where salary=(</span><br><span class="line">	select max(salary)</span><br><span class="line">	from employees</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+<p>子查询经典案例：<br></p>
+<ol>
+<li>查询工资最低的员工信息：last_name,salary <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select last_name,salary</span><br><span class="line">from employees</span><br><span class="line">where salary = (</span><br><span class="line">	select min(salary)</span><br><span class="line">	from employees</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>查询平均工资最低的部门信息； <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">select department_id,department_name</span><br><span class="line">from(</span><br><span class="line">	select avg(salary),department_id</span><br><span class="line">	from employees</span><br><span class="line">	group by department_id</span><br><span class="line">	order by avg(salary) asc</span><br><span class="line">	limit 1</span><br><span class="line">) avg_dep</span><br><span class="line">inner join departments d</span><br><span class="line">on d.`department_id`=avg_dep.`department_id;`</span><br></pre></td></tr></table></figure></li>
+<li>查询平均工资最低的部门信息和该部门的平均工资； <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">select d.*,avg_dep.avg(salary)</span><br><span class="line">from(</span><br><span class="line">	#平均工资最低的部门id</span><br><span class="line">	select avg(salary),department_id</span><br><span class="line">	from employees</span><br><span class="line">	group by department_id</span><br><span class="line">	order by avg(salary) asc</span><br><span class="line">	limit 1</span><br><span class="line">) avg_dep</span><br><span class="line">inner join departments d</span><br><span class="line">on d.`department_id`=avg_dep.`department_id;`</span><br></pre></td></tr></table></figure></li>
+<li>查询平均工资最高的job信息； <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">select *</span><br><span class="line">from jobs</span><br><span class="line">where job_id =(</span><br><span class="line">	# 查询平均工资最高的job_id</span><br><span class="line">	select avg(salary),job_id</span><br><span class="line">	from employees </span><br><span class="line">	group by job_id</span><br><span class="line">	order by avg(salary) desc</span><br><span class="line">	limit 1</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li>查询平均工资高于公司平均工资的部门有哪些； <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select department_id,avg(salary) 部门平均工资</span><br><span class="line">from employees e</span><br><span class="line">group by department_id</span><br><span class="line">having 部门平均工资&gt;(</span><br><span class="line">	select avg(salary) 公司平均工资</span><br><span class="line">	from employees</span><br><span class="line">)；</span><br></pre></td></tr></table></figure></li>
+<li>查询出公司中所有manager的详细信息； <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select *</span><br><span class="line">from employees </span><br><span class="line">where employees_id=any(</span><br><span class="line">	select distinct manager_id</span><br><span class="line">	from employees</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li>各个部门中最高工资最低的那个部门的最低工资是多少；<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">select min(salary),department_id</span><br><span class="line">from employees</span><br><span class="line">where department_id = (</span><br><span class="line">	# 最高工资最低的部门id</span><br><span class="line">	select department_id</span><br><span class="line">	from employees e</span><br><span class="line">	group by department_id; </span><br><span class="line">	order by max(salary) </span><br><span class="line">	limit 1</span><br><span class="line">) </span><br></pre></td></tr></table></figure></li>
+<li>查询平均工资最高的部门的manager的详细信息：last_name,department_id,email,salary; <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">select last_name,e.department_id,email,salary</span><br><span class="line">from employees e</span><br><span class="line">inner join departments d </span><br><span class="line">on e.department_id=d.department_id</span><br><span class="line">where d.department_id = (</span><br><span class="line">	#平均工资最高的部门id</span><br><span class="line">	select department_id,</span><br><span class="line">	from employees</span><br><span class="line">	group by department_id</span><br><span class="line">	order by avg(salary) desc</span><br><span class="line">	limit 1</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="8-分页查询"><a href="#8-分页查询" class="headerlink" title="8. 分页查询"></a>8. 分页查询</h3><blockquote>
+<p>当要显示的数据一页显示不全，需要分页提交sql请求;<br><br>特点：<br><br>limit 子句要放在sql语句的最后。也是最后执行limit； <br><br>公式：要显示的页数page，每页的条目数size    <br><br>select .. from .. limit (page-1)*size,size;</p>
+</blockquote>
+<ul>
+<li>语法：<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">select 查询列表</span><br><span class="line">from 表</span><br><span class="line">【join type join 表2</span><br><span class="line">on 连接条件</span><br><span class="line">where 筛选条件</span><br><span class="line">group by 分组字段</span><br><span class="line">having 分组后的筛选</span><br><span class="line">order by排序后的字段】</span><br><span class="line">limit 【offset,】size；</span><br></pre></td></tr></table></figure>
+  offset要显示条目的起始索引（<strong>起始索引和instr，substr不同，从0开始</strong>）,size 要现实的条目个数</li>
+<li>案例1：查询前五条员工信息；  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select * from employees</span><br><span class="line">limit 0,5;</span><br></pre></td></tr></table></figure>
+  <strong>offset如果是0，可以省略不写</strong></li>
+<li>案例2：查询第11条到第25条；  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from employees limit 10,25;</span><br></pre></td></tr></table></figure></li>
+<li>案例3：有奖金的员工信息，并且工资较高的前10名显示出来；  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select *</span><br><span class="line">from employees</span><br><span class="line">where commission_pct is not null</span><br><span class="line">order by salary desc</span><br><span class="line">limit 10;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="9-union联合查询"><a href="#9-union联合查询" class="headerlink" title="9. union联合查询"></a>9. union联合查询</h3><blockquote>
+<p>将多条查询语句的结果合并成一个结果<br><br>应用场景：<br><br>要查询的结果来自于多个表，且多个表没有直接的连接关系，但查询的信息一致时；<br><br>特点：<br><br>要求多条查询语句的查询列数一致；<br><br>要求多条查询语句查询的每一列的类型和顺序最好一致；<br><br>union关键字默认去重，如果使用 union all ，则不去重；<br></p>
+</blockquote>
+<ul>
+<li>语法：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">查询语句1</span><br><span class="line">union</span><br><span class="line">查询语句2</span><br><span class="line">union</span><br><span class="line">...</span><br></pre></td></tr></table></figure></li>
+<li>引入案例：查询部门编号&gt;90或邮箱包含a的员工信息  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select * from employees where email like &#x27;%a%&#x27;</span><br><span class="line">union</span><br><span class="line">select * from employees where department_id&gt;90;</span><br></pre></td></tr></table></figure></li>
+<li>案例： 查询中国用户中男性的信息以及外国用户中男性的信息；  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select id, cname, cname,csex from t_ca where csex=&#x27;男&#x27;</span><br><span class="line">union</span><br><span class="line">select t_id,tName,tGender from t_ua where tGender=&#x27;mail&#x27;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="二、DML"><a href="#二、DML" class="headerlink" title="二、DML"></a>二、DML</h2><blockquote>
+<p>data manipulation 数据操作语言;<br><br>插入：insert	<br><br>修改：update	<br><br>删除：delete	<br></p>
+</blockquote>
+<h3 id="1-插入语句"><a href="#1-插入语句" class="headerlink" title="1. 插入语句"></a>1. 插入语句</h3><ul>
+<li>语法一：<br>  <code>insert into 表名（列名，...） values（值1，...）</code></li>
+<li>注意：<ol>
+<li>插入值的类型要与列的类型一致或兼容；<br></li>
+<li>不可以为null的值必须插入值，可以为null的列要么插入null，要么直接不写；<br></li>
+<li>列的顺序可以调换；<br></li>
+<li>插入的时候列数和值数必须一致；<br></li>
+<li>可以省略列名，默认所有列，而且列的顺序和表中列的顺序一致<br></li>
+</ol>
+</li>
+<li>语法二：<br>  <code>insert into 表名 set 列名=值，列名=值...</code></li>
+<li>两种语法比较：<br></li>
+</ul>
+<ol>
+<li>方式一支持插入多行，方式二不支持； <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">insert into beauty </span><br><span class="line">values(......,....,....),</span><br><span class="line">values(....,.....,...);</span><br></pre></td></tr></table></figure></li>
+<li>方式一支持子查询，方式二不支持； <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">insert into beauty(id,name,phone)</span><br><span class="line">select 26,&#x27;宋茜&#x27;,&#x27;11023&#x27;;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="2-删"><a href="#2-删" class="headerlink" title="2. 删"></a>2. 删</h3><ol>
+<li>方式1：delete</li>
+</ol>
+<ul>
+<li>语法：<ol>
+<li>单表的删除；<br><br>  <code>delete from 表名 where 筛选条件</code>(删除整行)<br>- 案例1：删除手机号以9结尾的女神信息；<br> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delete from beauty where phone like &#x27;%9&#x27;;</span><br></pre></td></tr></table></figure></li>
+<li>多表的删除；<br><ul>
+<li>sql92语法：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">delete 表1，表2</span><br><span class="line">from 表1 别名，表2 别名</span><br><span class="line">where 连接条件</span><br><span class="line">and 筛选条件;</span><br></pre></td></tr></table></figure></li>
+<li>sql99语法：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">delete 表1，表2</span><br><span class="line">from 表1 别名</span><br><span class="line">inner |left |right join 表2 别名 on 连接条件</span><br><span class="line">where 筛选条件;</span><br></pre></td></tr></table></figure></li>
+<li>案例：删除张无忌的女朋友的信息;  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">delete b</span><br><span class="line">from boys bo</span><br><span class="line">inner join beauty b on b.`boyfriend_id`=bo.`id`</span><br><span class="line">where bo.`boyName`=&#x27;张无忌&#x27;;</span><br></pre></td></tr></table></figure></li>
+<li>案例：删除黄晓明的信息以及他女朋友的信息  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">delete b,bo</span><br><span class="line">from boys bo</span><br><span class="line">inner join beauty b on b.`boyfriend_id`=bo.`id`</span><br><span class="line">where bo.`boyName`=&#x27;黄晓明&#x27;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<ol start="2">
+<li>方式2：truncate</li>
+</ol>
+<ul>
+<li>语法：<br>  <code>truncate table 表名</code>(整表删除，不能加where筛选条件)<br>也就是整表清空；<br></li>
+</ul>
+<ol start="3">
+<li><strong>delete和truncate比较；</strong><br><ol>
+<li>delete可以加where条件，truncate不能；<br></li>
+<li>truncate删除效率较高；<br></li>
+<li>加入要删除的表中有自增长列，如果用delete删除后再插入数据，自增长列的值从断电开始；<br> 而truncate删除后，再插入数据，自增长列从1开始；<br></li>
+<li>truncate删除没有返回值，delete删除有返回值；<br></li>
+<li>truncate删除不能回滚，delete删除可以回滚；<br></li>
+</ol>
+</li>
+</ol>
+<h3 id="3-改"><a href="#3-改" class="headerlink" title="3. 改"></a>3. 改</h3><ul>
+<li>语法：<br></li>
+</ul>
+<ol>
+<li>修改单表的记录： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">update 表名</span><br><span class="line">set 列=新值，列=新值，...</span><br><span class="line">where 筛选条件；</span><br></pre></td></tr></table></figure>
+<ul>
+<li>案例1：修改beauty中姓唐的人的电话为1883  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">	update beauty set phone = &#x27;1883&#x27;</span><br><span class="line">	where name like &#x27;唐%&#x27;;</span><br><span class="line">- 案例2：修改boys中id号为2的名称为张飞，魅力值为10；</span><br><span class="line">	```mysql</span><br><span class="line">	update boys set boyname=&#x27;张飞&#x27;,usercp=10</span><br><span class="line">	where id=2;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>修改多表的记录:<br><ul>
+<li>sql92语法：</li>
+</ul>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">update 表1 别名，表2 别名</span><br><span class="line">set 列=值，...</span><br><span class="line">where 连接条件</span><br><span class="line">and 筛选条件；</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>sql99 语法：</li>
+</ul>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">update 表1 别名</span><br><span class="line">inner|left|right join 表2 别名</span><br><span class="line">on 连接条件</span><br><span class="line">set 列=值,...</span><br><span class="line">where 筛选条件;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>案例1：修改张无忌女朋友的手机号为114</li>
+</ul>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">update boys bo</span><br><span class="line">inner join beauty b</span><br><span class="line">on bo.`id`=b.`boyfriend_id`</span><br><span class="line">set b.`phone`=&#x27;114&#x27;</span><br><span class="line">where bo.&#x27;boyName&#x27;=&#x27;张无忌&#x27;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>案例2：修改没有男朋友的女神的男朋友编号都为2号；</li>
+</ul>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">update boys bo </span><br><span class="line">right join beauty b </span><br><span class="line">on bo.`id`=b.`boyfriend_id`</span><br><span class="line">set b.`boyfriend_id`=2</span><br><span class="line">where bo.`id` is null;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="三、DDL"><a href="#三、DDL" class="headerlink" title="三、DDL"></a>三、DDL</h2><blockquote>
+<p>data define language 数据定义语言，库和表的管理；</p>
+</blockquote>
+<ul>
+<li>创建：create</li>
+<li>修改：alter</li>
+<li>删除：drop</li>
+</ul>
+<h3 id="1-库的管理"><a href="#1-库的管理" class="headerlink" title="1. 库的管理"></a>1. 库的管理</h3><blockquote>
+<p>创建、修改、删除</p>
+</blockquote>
+<h4 id="1-库的创建；"><a href="#1-库的创建；" class="headerlink" title="1.库的创建；"></a>1.库的创建；</h4><ul>
+<li>语法：<br>  <code>create database 库名;</code><br>  <code>create database if not exists 库名;</code></li>
+</ul>
+<h4 id="2-库的修改"><a href="#2-库的修改" class="headerlink" title="2.库的修改"></a>2.库的修改</h4><ol>
+<li>更改库的字符集：<br> <code>alter database books character set gbk;</code></li>
+</ol>
+<h4 id="3-库的删除"><a href="#3-库的删除" class="headerlink" title="3.库的删除"></a>3.库的删除</h4><pre><code>`drop database if exists books;`
+</code></pre>
+<h3 id="2-表的管理"><a href="#2-表的管理" class="headerlink" title="2. 表的管理"></a>2. 表的管理</h3><blockquote>
+<p>创建、修改、删除</p>
+</blockquote>
+<h4 id="1-表的创建："><a href="#1-表的创建：" class="headerlink" title="1.表的创建："></a>1.表的创建：</h4><ul>
+<li>语法：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">create table 表名(</span><br><span class="line">		列名 列的类型【（长度） 约束】</span><br><span class="line">		列名 列的类型【（长度） 约束】</span><br><span class="line">		...</span><br><span class="line">		列名 列的类型【（长度） 约束】</span><br><span class="line">)	</span><br></pre></td></tr></table></figure></li>
+<li>案例：创建表Book  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">create table Book(</span><br><span class="line">	id int,</span><br><span class="line">	bName varchar(20),</span><br><span class="line">	price double,</span><br><span class="line">	author varchar(20),</span><br><span class="line">	publishDate datetime</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="2-表的修改："><a href="#2-表的修改：" class="headerlink" title="2.表的修改："></a>2.表的修改：</h4><ul>
+<li>语法：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">alter table 表名</span><br><span class="line">add|drop|modify|change column 列名 【列类型 约束】;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol>
+<li>修改列名 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># column 可以省略</span><br><span class="line">alter table book change column publishdate pubDate DATETIME;</span><br></pre></td></tr></table></figure></li>
+<li>修改列的类型或约束<br> <code>alter table book modify column pubDate TIMESTAMP;</code></li>
+<li>添加新列<br> <code>alter table author add column annual double;</code></li>
+<li>删除列<br> <code>alter table author drop column annual;</code></li>
+<li>修改表名<br> <code>alter table author rename to book_author</code></li>
+</ol>
+<h4 id="3-表的删除："><a href="#3-表的删除：" class="headerlink" title="3.表的删除："></a>3.表的删除：</h4><pre><code>`drop table if exists author;`
+</code></pre>
+<p>通用写法：<br><br>	<code>drop database if exists 旧库名;</code><br>	<code>create database 新库名;</code><br>	<code>drop table if exists 旧表名;</code><br>	<code>create table 表名();</code></p>
+<h4 id="3-表的复制："><a href="#3-表的复制：" class="headerlink" title="3.表的复制："></a>3.表的复制：</h4><ol>
+<li>仅仅复制表的结构：<br> <code>create table copy like author;</code></li>
+<li>复制表的结构外加数据 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">create table copy2 </span><br><span class="line">select * from author</span><br></pre></td></tr></table></figure></li>
+<li>只复制部分数据 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">create table copy3</span><br><span class="line">select id,au_name</span><br><span class="line">from author </span><br><span class="line">where nation=&#x27;中国&#x27;;</span><br></pre></td></tr></table></figure></li>
+<li>仅复制某些列，不带数据 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">create table copy4</span><br><span class="line">select id,au_name</span><br><span class="line">from author</span><br><span class="line">where 0;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="3-常见约束"><a href="#3-常见约束" class="headerlink" title="3.常见约束"></a>3.常见约束</h3><blockquote>
+<p>一种限制，用于限制表中的数据，为了保证表中的数据的准确和可靠性</p>
+</blockquote>
+<ul>
+<li><p>分类：六大约束</p>
+<ol>
+<li>NOT NULL:非空，用于保证该字段的值非空；比如姓名，学号等；</li>
+<li>DEFAULT：用于保证该字段有默认值；</li>
+<li>PRIMARY KEY：主键约束，用于保证该字段的值具有唯一性，并且非空；</li>
+<li>UNIQUE：唯一，用于保证该字段的值具有唯一性，但可以为空；比如座位号；</li>
+<li>CHECK：检查约束，【mysql中不支持】；比如年龄、性别（性别只能有男女）</li>
+<li>FOREIGN KEY：外键，用于限制两个表的关系，用于保证该字段的值必须来自于主表的关联列的值；<br> 在从表中添加外键约束，用于引用主表中的某列的值；<br> 比如：学生表的专业编号，员工表的部门编号等；</li>
+</ol>
+</li>
+<li><p>添加约束的时机：</p>
+<ol>
+<li>创建表时；</li>
+<li>修改表时；</li>
+</ol>
+</li>
+<li><p>约束的添加分类：</p>
+<ol>
+<li>列级约束；<ul>
+<li>在语法上六大约束都支持，但外键约束没有效果</li>
+</ul>
+</li>
+<li>表级约束；<ul>
+<li>除了非空、默认，其他的都支持；</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h4 id="1-创建表时添加约束"><a href="#1-创建表时添加约束" class="headerlink" title="1.创建表时添加约束"></a>1.创建表时添加约束</h4><h5 id="1-添加列级约束"><a href="#1-添加列级约束" class="headerlink" title="1.添加列级约束"></a>1.添加列级约束</h5><pre><code><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">create table stuinfo(</span><br><span class="line">	id int primary key,#主键</span><br><span class="line">	stuName varchar(20) not null,# 非空</span><br><span class="line">	gender char(1) check(gender=&#x27;男&#x27; or gender=&#x27;女&#x27;),#检查</span><br><span class="line">	seat int unique,# 唯一</span><br><span class="line">	age int default 18,#默认</span><br><span class="line">	majorId int references major(id)#外键	（mysql不支持）	</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+**show index from stuinfo** 查看stuinfo表中所有的索引；
+</code></pre>
+<h5 id="2-添加表级约束"><a href="#2-添加表级约束" class="headerlink" title="2.添加表级约束"></a>2.添加表级约束</h5><ul>
+<li>语法：在各个字段的最下面<br>【contraint 约束名】  约束类型(字段名)<br>  create table stuinfo(<br>  id int,<br>  stuName varchar(20),<br>  gender char(1),<br>  seat int,<br>  age int,<br>  majorId int<br>  CONSTRAINT pk PRIMARY KEY(id),<br>  CONSTRAINT uq UNIQUE(seat),<br>  CONSTRAINT ck check(gender&#x3D;’男’ or gender&#x3D;’女’),<br>  CONSTRAINT fk_stuinfo_major FROEIGN KEY(majorid) references major(id)#外键<br>  );</li>
+</ul>
+<p><strong>最好外键约束写成表级的，其他约束写成列级的</strong></p>
+<blockquote>
+<p>主键和唯一的对比：<br>	保证唯一性	是否允许为空	一个表中可以有多少个	是否允许组合（不推荐使用）<br>主键	√		×		最多一个		允许（PRIMARY KEY(id,stuName)）<br>唯一	√		√		可以多个		允许（和主键一样）</p>
+</blockquote>
+<ul>
+<li>外键：<ol>
+<li>要求在从表设置外键关系；</li>
+<li>从表的外键列的类型和主表的关联列的类型要求一致或兼容，名称则无要求；</li>
+<li>主表中的关联列必须是一个key(一般是主键或唯一键)；</li>
+<li>插入数据时，先插入主表，再插入从表；删除数据时，先删除从表，再删除主表；</li>
+</ol>
+</li>
+</ul>
+<h4 id="2-修改表时添加约束"><a href="#2-修改表时添加约束" class="headerlink" title="2.修改表时添加约束"></a>2.修改表时添加约束</h4><ul>
+<li>添加列级约束：<br>  <code>alter table 表名 modify column 字段名 字段类型 新约束;</code></li>
+<li>添加表级约束：<br>  <code>alter table 表名 add 【constraint 约束名】 约束类型(字段名);</code></li>
+</ul>
+<p><code>alter table stuinfo modify column stuname varchar(20) NOT NULL;</code><br><code>alter table stuinfo modify column age int default 18;</code><br><code>alter table stuinfo modify column id int primary key;</code><br>或者：<br><code>alter table stuinfo add primary key(id);</code></p>
+<h4 id="3-修改表时删除约束"><a href="#3-修改表时删除约束" class="headerlink" title="3.修改表时删除约束"></a>3.修改表时删除约束</h4><h3 id="标识列"><a href="#标识列" class="headerlink" title="标识列"></a>标识列</h3><blockquote>
+<p>又称为自增长列，可以不用手动的插入值，系统提供默认的序列值；</p>
+</blockquote>
+<ul>
+<li>特点：<ol>
+<li>标识列必须和key搭配（主键或unique键或外键）；</li>
+<li>一个表中最多只能有一个自增长列；</li>
+<li>标识列的类型只能是数值型；（int float double）</li>
+<li>标识列可以通过<code>set auto_increment_increment=3;</code>设置步长，还可以通过手动插入值设置起始值；</li>
+</ol>
+</li>
+</ul>
+<ol>
+<li>创建表时设置标识列 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">create table tab_identity(</span><br><span class="line">	ind int primary key auto_increment,</span><br><span class="line">	name varchar(20)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+ <code>show variables like &#39;%auto_increment%&#39;</code>;  显示自增长的起始值和步长；<br> <code>set auto_increment_increment=3;</code>  设置自增长的步长</li>
+</ol>
+<h2 id="四、TCL"><a href="#四、TCL" class="headerlink" title="四、TCL"></a>四、TCL</h2><blockquote>
+<p>transaction control language 事物控制语言<br>事务：一个或一组sql语句组成一个执行单元，这个执行单元要么全部执行<br>要么全部不执行；整个单独单元作为一个不可分割的整体，如果单元中<br>某条sql语句一旦执行失败或产生错误，整个单元将会回滚。所有受到<br>影响的数据将返回到事务开始以前的状态；如果单元中的所有sql语句均<br>执行成功，则事物被顺利执行；</p>
+</blockquote>
+<ul>
+<li>事务的acid属性：<ol>
+<li>原子性(Atomicity)：指事务是一个不可分割的工作单位，事务中的操作<strong>要么同时执行，要么都不执行</strong>；</li>
+<li>一致性(Consistency)：事务必须使数据库从一个一致性状态变换到另外一个一致性状态；</li>
+<li>隔离性(Isolation)：事务的隔离性是指一个事务的执行不能被其他食物干扰，即一个事务内部的操作及<br>     使用的数据对并发的其他事务是隔离的，并发执行的各个事务之间不能互相干扰。</li>
+<li>持久性(Durability)：一个事务一旦被提交，它对数据库的改变就是永久性的，接下来的其他操作和数据<br>     库故障不应该对其有任何影响；</li>
+</ol>
+</li>
+<li>事务的创建：<ol>
+<li><p>隐式事务：事务没有明显的开启和结束的标记；比如insert、update、delete语句 </p>
+</li>
+<li><p>显式事务：事务没有明显的开启和结束的标记；<br> 前提：必须先设置自动提交功能为禁用；set autocommit&#x3D;0;</p>
+<p> 步骤1：开启事务<br> set auto commit&#x3D;0;<br> start transaction;  可选<br> 步骤2：编写事务中的sql语句(select insert update delete)<br> 语句1；<br> 语句2；<br> …<br> 步骤3：结束事务<br> commit;提交事务<br> rollback；回滚事务<br> 提交和回滚都算结束事务；</p>
+<ul>
+<li>演示事务的使用步骤：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 开启事务</span><br><span class="line">set auto commit=0;</span><br><span class="line">start transaction;</span><br><span class="line"># 编写一组事务的语句</span><br><span class="line">update account set balance = 500 where username = &#x27;张无忌&#x27;;</span><br><span class="line">update account set balance = 1500 where username = &#x27;赵敏&#x27;；</span><br><span class="line"># 结束事务</span><br><span class="line">commit;</span><br></pre></td></tr></table></figure></li>
+<li>回滚点：savepoint;(搭配rollback使用)  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">set autocommitt=0;</span><br><span class="line">start transaction;</span><br><span class="line">delete from account where id=25;</span><br><span class="line">savepoint a; #设置保存点</span><br><span class="line">delete from account where id=28;</span><br><span class="line">rollback to a; #回滚到保存点</span><br><span class="line">#25号删了；28 没删</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>数据库的隔离级别<br>  对于同时运行的多个事务，当这些事务访问数据库相同的数据时，如果没有采取必要的<br>  隔离措施，就会导致各种并发问题：<br>  1. 脏读：两个事务T1、T2，T1读取了已经被T2更新但还没提交的字段之后，若T2回滚，T1读取的内容就是临时且无效的；<br>  2. 不可重复读：T1读取了一个字段，然后T2更新了该字段之后，T1再次读同一个字段，值就不同了；<br>  3. 幻读：T1从一个表中读取了一个字段，然后T2在该表中插入了一些新的行，如果T1再次读取同一个表，就会多出几行；<br>  数据事务的隔离性：数据库系统必须具有隔离并发运行的哥哥事物的能力，使它们之间不会相互影响，避免各种并发问题；<br>  一个事务与其他事务隔离的成都成为隔离级别。隔离级别越高，数据一致性越好，但并发性越弱；<br>  1. read uncommitted(读未提交数据)：允许事务读取未被其他事务提交的变更。脏读、不可重复读和幻读的问题都会出现；<br>  2. read committed(读已提交数据)：只允许事务读取已经被其他事务提交的变更。可以避免脏读，但不可重复读和幻读的问题仍然可能出现；<br>  3. repeadable read(可重复读)：确保事务可以多次从一个字段中读取相同的值。在这个事务持续期间，禁止其他事务对这个字段进行更新。可以避免脏读和不可重复读。幻读仍存在；<br>  4. serializable(串行化)：确保事务可以从一个表中读取相同的行。在这个事务持续期间，禁止其他事务对该表执行插入、更新和删除操作。所有的并发问题都可以避免，但性能十分低下；<br>  查看当前的隔离级别：<code>select@@tx_isolation;</code><br>  设置当前mysql连接的隔离级别：<code>set transaction isolation level READ COMMITTED;</code><br>  设置数据库系统的全局的隔离级别：<code>set global transaction isolation level read committed;</code></li>
+</ul>
+<h3 id="视图；"><a href="#视图；" class="headerlink" title="视图；"></a>视图；</h3><p><strong>有点像封装的方法（也就是函数）</strong></p>
+<blockquote>
+<p>虚拟表，和普通表一样使用。仅保存查询逻辑，不保存查询结果。并动态生成临时查询的结果表。</p>
+</blockquote>
+<ul>
+<li>应用场景：<ol>
+<li>多个地方用到同样的查询结果；</li>
+<li>该查询结果使用的sql语句较复杂；</li>
+</ol>
+</li>
+<li>创建视图的语法：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">create view 视图名</span><br><span class="line">as</span><br><span class="line">查询语句;</span><br></pre></td></tr></table></figure></li>
+<li>视图的好处：<ol>
+<li>实现了sql语句的重用；</li>
+<li>简化复杂的sql操作，不必知道它的查询细节；</li>
+<li>保护数据，提高安全性；</li>
+</ol>
+</li>
+<li>视图的修改：<br>  方式1：<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">create or replace view 视图名</span><br><span class="line">as</span><br><span class="line">查询语句;</span><br></pre></td></tr></table></figure><br>  方式2：<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alter view 视图名</span><br><span class="line">as </span><br><span class="line">查询语句;</span><br></pre></td></tr></table></figure></li>
+<li>删除视图：<br>  语法：<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drop view 视图名1，视图名2...</span><br></pre></td></tr></table></figure></li>
+<li>查看视图：<br>  语法：<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">desc 视图名;</span><br><span class="line">或</span><br><span class="line">show create view 视图名;</span><br></pre></td></tr></table></figure></li>
+<li>案例1：创建视图emp_v1，要求查询电话号码以’011’开头的员工姓名和工资、邮箱；  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">create or replace view emp_v1</span><br><span class="line">as </span><br><span class="line">select last_name,salary,email</span><br><span class="line">from employees</span><br><span class="line">where phone_number like &#x27;011%&#x27;;</span><br></pre></td></tr></table></figure></li>
+<li>案例2：创建视图emp_v2,要求查询部门的最高工资高于12000的部门信息；  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">create or replace view emp_v2</span><br><span class="line">as </span><br><span class="line">#最高工资高于12000的部门名</span><br><span class="line">select max(salary) mx_dep,department_id</span><br><span class="line">from employees</span><br><span class="line">group by department_id</span><br><span class="line">having mx_dep&gt;12000;</span><br><span class="line"></span><br><span class="line">select d.*,m.mx_dep </span><br><span class="line">from departments d</span><br><span class="line">inner join emp_v2 m</span><br><span class="line">on d.department_id = m.department_id;</span><br></pre></td></tr></table></figure></li>
+<li>视图的更新：<br>  一般不用；语法和表的更新一样 insert into ;delete; update;</li>
+</ul>
+<h2 id="五、常见的数据类型："><a href="#五、常见的数据类型：" class="headerlink" title="五、常见的数据类型："></a>五、常见的数据类型：</h2><ol>
+<li>数值型：<ul>
+<li>整型:</li>
+<li>小数：<ol>
+<li>定点数</li>
+<li>浮点数</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>字符型：<ul>
+<li>较短的文本：char、varchar</li>
+<li>较长的文本：text、blob（较长的二进制数据）</li>
+</ul>
+</li>
+<li>日期型：</li>
+</ol>
+<h3 id="1-整型"><a href="#1-整型" class="headerlink" title="1. 整型"></a>1. 整型</h3><p>分类：<br>	tinyint、smallint、mediumint、int&#x2F;integer、bigint<br>字节数	1	  2		3	4	    8	</p>
+<ul>
+<li>特点：<ol>
+<li>如果不设置无符号还是有符号，默认是有符号，如果想设置无符号，需要添加unsigned关键字；</li>
+<li>如果插入超出了整型的范围，会报out of range异常，并且插入临界值；</li>
+<li>如果不设置长度，会有默认的长度；</li>
+</ol>
+</li>
+</ul>
+<h3 id="2-小数"><a href="#2-小数" class="headerlink" title="2. 小数"></a>2. 小数</h3><ul>
+<li>分类：<ol>
+<li>浮点型：<br> float(M,D)<br> double(M,D)  </li>
+<li>定点型：<br> dec(M,D)<br> decimal(M,D)</li>
+</ol>
+</li>
+<li>特点：<br>  1.<br>  M：整数部位+小数部位<br>  D：小数部位<br>  如果超过范围，则插入临界值；<br><br>  2.<br>  M和D都可以省略；<br>  如果是decimal，则M默认为10，D默认为0；<br>  如果是float和double，则会根据插入的数值的精度来决定精度；</li>
+</ul>
+<h3 id="3-字符型"><a href="#3-字符型" class="headerlink" title="3. 字符型"></a>3. 字符型</h3><h3 id="2-日期"><a href="#2-日期" class="headerlink" title="2. 日期"></a>2. 日期</h3><ul>
+<li>分类：<ol>
+<li>date        只有日期</li>
+<li>datetime    日期和时间    </li>
+<li>timestamp    某个时刻（时间戳）</li>
+<li>time        只有时间</li>
+<li>year        只有年份</li>
+</ol>
+</li>
+</ul>
+<h2 id="六、变量"><a href="#六、变量" class="headerlink" title="六、变量"></a>六、变量</h2><h3 id="1-系统变量"><a href="#1-系统变量" class="headerlink" title="1. 系统变量"></a>1. 系统变量</h3><blockquote>
+<p>由系统提供，不是用户定义，属于服务器层面；</p>
+</blockquote>
+<ul>
+<li>语法<ol>
+<li>查看所有的系统变量:<code>show global | session variables;</code></li>
+<li>查看满足条件的部分系统变量：<code>show global | session variables like &#39;%char%&#39;;</code></li>
+<li>查看指定的某个系统变量的值：<code>select @@global | session.系统变量名;</code></li>
+<li>为某个系统变量赋值: <code>set global | session 系统变量名 = 值;</code></li>
+</ol>
+</li>
+</ul>
+<h4 id="1-全局变量"><a href="#1-全局变量" class="headerlink" title="1. 全局变量"></a>1. 全局变量</h4><h4 id="2-会话变量"><a href="#2-会话变量" class="headerlink" title="2. 会话变量"></a>2. 会话变量</h4><h3 id="2-自定义变量"><a href="#2-自定义变量" class="headerlink" title="2.自定义变量"></a>2.自定义变量</h3><h4 id="1-用户变量"><a href="#1-用户变量" class="headerlink" title="1. 用户变量"></a>1. 用户变量</h4><blockquote>
+<p>用户自定义<br>使用步骤：声明 赋值  使用<br>作用域：针对当前会话（连接） 有效，等同于会话变量的作用域；</p>
+</blockquote>
+<ul>
+<li>声明并初始化：<br>  <code>set @用户变量名=值;</code><br>  <code>set @用户变量名:=值;</code><br>  <code>select @用户变量名:=值;</code></li>
+<li>赋值：<br>  方式1：<br>  <code>set @用户变量名=值;</code><br>  <code>set @用户变量名:=值;</code><br>  <code>select @用户变量名:=值;</code><br>  方式2：<br>  <code>select 字段 into 变量名 from 表;</code></li>
+<li>查看<br>  <code>select @用户变量名;</code></li>
+</ul>
+<h4 id="2-局部变量"><a href="#2-局部变量" class="headerlink" title="2. 局部变量"></a>2. 局部变量</h4><ul>
+<li>声明：<br>  <code>declare 变量名 类型;</code><br>  <code>declare 变量名 类型 default 值;</code></li>
+</ul>
+<h2 id="七、存储过程和函数"><a href="#七、存储过程和函数" class="headerlink" title="七、存储过程和函数"></a>七、存储过程和函数</h2><ul>
+<li>创建存储过程：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">create procedure 存储过程名(参数)</span><br><span class="line">begin</span><br><span class="line">	存储过程体(一组合法的sql语句)</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<ul>
+<li>注意：参数列表包含三部分：参数模式 参数名 参数类型</li>
+</ul>
+<ol>
+<li>参数模式：<ul>
+<li>in：该参数可以作为输入，需要调用方传入值</li>
+<li>out：该参数可以作为输出，可以作为返回值</li>
+<li>inout：即可做输入，又可做输出。即需要传入值，有需要返回值；</li>
+</ul>
+</li>
+<li>如果存储过程体只有一句话，begin end可以省略；</li>
+<li>存储过程体的每条sql的结尾要求必须加分号；存储过程的结尾可以使用DELIMITER重新设置；<br> DELIMITER $</li>
+</ol>
+</li>
+<li>调用语法：<br>  <code>CALL 存储过程名(实参列表);</code></li>
+<li>创建函数：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create function 函数名(参数列表) returns 返回类型</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="八、流程控制结构"><a href="#八、流程控制结构" class="headerlink" title="八、流程控制结构"></a>八、流程控制结构</h2>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+              <a href="/tags/%E5%8E%86%E5%8F%B2%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" rel="tag"># 历史学习记录</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/08/jvm%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98-%E5%8E%86%E5%8F%B2%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" rel="prev" title="jvm常见问题-历史学习记录">
+                  <i class="fa fa-angle-left"></i> jvm常见问题-历史学习记录
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Fremont Tian</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">48k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:56</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
