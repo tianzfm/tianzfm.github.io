@@ -19,23 +19,32 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
 
-    <meta property="og:type" content="website">
-<meta property="og:title" content="有间栈">
-<meta property="og:url" content="http://example.com/index.html">
+    <meta name="description" content="我们需要将石头分成两堆，使得两堆石头的重量差最小。这可以转化为 ​​0&#x2F;1背包问题​​，即找到一个子集，使得其和尽可能接近 总重量 &#x2F; 2。 1. 暴力解法(超时)123456789101112131415161718192021222324252627class Solution &#123;    int min &#x3D; Integer.MAX_VALUE;    public int">
+<meta property="og:type" content="article">
+<meta property="og:title" content="post">
+<meta property="og:url" content="http://example.com/2025/06/08/%E6%9C%80%E5%90%8E%E4%B8%80%E5%9D%97%E7%9F%B3%E5%A4%B4%E7%9A%84%E9%87%8D%E9%87%8F2/index.html">
 <meta property="og:site_name" content="有间栈">
+<meta property="og:description" content="我们需要将石头分成两堆，使得两堆石头的重量差最小。这可以转化为 ​​0&#x2F;1背包问题​​，即找到一个子集，使得其和尽可能接近 总重量 &#x2F; 2。 1. 暴力解法(超时)123456789101112131415161718192021222324252627class Solution &#123;    int min &#x3D; Integer.MAX_VALUE;    public int">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-08T04:13:26.000Z">
+<meta property="article:modified_time" content="2025-06-08T04:14:27.327Z">
 <meta property="article:author" content="tianzfm">
-<meta property="article:tag" content="Java, Spring Boot, 算法，编程技术">
+<meta property="article:tag" content="leetcode">
+<meta property="article:tag" content="动态规划">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="背包">
+<meta property="article:tag" content="0&#x2F;1 背包">
+<meta property="article:tag" content="dp">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2025/06/08/%E6%9C%80%E5%90%8E%E4%B8%80%E5%9D%97%E7%9F%B3%E5%A4%B4%E7%9A%84%E9%87%8D%E9%87%8F2/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2025/06/08/%E6%9C%80%E5%90%8E%E4%B8%80%E5%9D%97%E7%9F%B3%E5%A4%B4%E7%9A%84%E9%87%8D%E9%87%8F2/","path":"2025/06/08/最后一块石头的重量2/","title":"post"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>有间栈</title>
+<title>post | 有间栈</title>
   
 
 
@@ -88,7 +97,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">有间栈</h1>
+      <p class="site-title">有间栈</p>
       <i class="logo-line"></i>
     </a>
       <p class="site-subtitle" itemprop="description">奔赴山海，保持热爱</p>
@@ -142,7 +151,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -155,6 +164,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%9A%B4%E5%8A%9B%E8%A7%A3%E6%B3%95-%E8%B6%85%E6%97%B6"><span class="nav-number">1.</span> <span class="nav-text">1. 暴力解法(超时)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%B8%A6%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E5%9B%9E%E6%BA%AF%EF%BC%8C-%E5%90%91%E8%AE%B0%E5%BF%86%E5%8C%96%E6%95%B0%E7%BB%84%E5%92%8Cdp%E7%9A%84%E5%BD%A2%E5%BC%8F%E9%9D%A0%E8%BF%91"><span class="nav-number">2.</span> <span class="nav-text">2. 带返回值的回溯， 向记忆化数组和dp的形式靠近</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%8Eindex-0-%E9%80%92%E5%BD%92"><span class="nav-number">2.1.</span> <span class="nav-text">从index &#x3D; 0 递归</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%8Eindex-length-1%E5%BC%80%E5%A7%8B%E9%80%92%E5%BD%92"><span class="nav-number">2.2.</span> <span class="nav-text">从index &#x3D; length - 1开始递归</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%AE%B0%E5%BF%86%E5%8C%96%E6%95%B0%E7%BB%84"><span class="nav-number">3.</span> <span class="nav-text">3. 记忆化数组</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -194,16 +204,17 @@
 
     </div>
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2025/06/08/%E6%9C%80%E5%90%8E%E4%B8%80%E5%9D%97%E7%9F%B3%E5%A4%B4%E7%9A%84%E9%87%8D%E9%87%8F2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -217,13 +228,13 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 有间栈">
+      <meta itemprop="name" content="post | 有间栈">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/08/%E6%9C%80%E5%90%8E%E4%B8%80%E5%9D%97%E7%9F%B3%E5%A4%B4%E7%9A%84%E9%87%8D%E9%87%8F2/" class="post-title-link" itemprop="url">post</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          post
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -247,6 +258,13 @@
     </span>
 
   
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
     <span class="post-meta-break"></span>
     <span class="post-meta-item" title="本文字数">
       <span class="post-meta-item-icon">
@@ -270,8 +288,7 @@
     
     
     
-    <div class="post-body" itemprop="articleBody">
-          <p>我们需要将石头分成两堆，使得两堆石头的重量差最小。这可以转化为 ​<strong>​0&#x2F;1背包问题​</strong>​，即找到一个子集，使得其和尽可能接近 <code>总重量 / 2</code>。</p>
+    <div class="post-body" itemprop="articleBody"><p>我们需要将石头分成两堆，使得两堆石头的重量差最小。这可以转化为 ​<strong>​0&#x2F;1背包问题​</strong>​，即找到一个子集，使得其和尽可能接近 <code>总重量 / 2</code>。</p>
 <h3 id="1-暴力解法-超时"><a href="#1-暴力解法-超时" class="headerlink" title="1. 暴力解法(超时)"></a>1. 暴力解法(超时)</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">min</span> <span class="operator">=</span> Integer.MAX_VALUE;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">lastStoneWeightII</span><span class="params">(<span class="type">int</span>[] stones)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (stones == <span class="literal">null</span> || stones.length == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> stone: stones) &#123;</span><br><span class="line">            sum += stone;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> stones.length;</span><br><span class="line">        backtrack(stones, sum, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">return</span> min;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">backtrack</span><span class="params">(<span class="type">int</span>[] stone, <span class="type">int</span> sum, <span class="type">int</span> currentSum, <span class="type">int</span> index)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (index &gt;= stone.length) &#123;</span><br><span class="line">	        <span class="comment">// 记录两部分子数组 之差 的最小值</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">otherSum</span> <span class="operator">=</span> sum - currentSum;</span><br><span class="line">            min = Math.min(min, Math.abs(otherSum - currentSum));</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="comment">// 两个选择：选index处的元素，或者不选</span></span><br><span class="line">        backtrack(stone, sum, currentSum + stone[index], index + <span class="number">1</span>);</span><br><span class="line">        backtrack(stone, sum, currentSum, index + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="2-带返回值的回溯，-向记忆化数组和dp的形式靠近"><a href="#2-带返回值的回溯，-向记忆化数组和dp的形式靠近" class="headerlink" title="2. 带返回值的回溯， 向记忆化数组和dp的形式靠近"></a>2. 带返回值的回溯， 向记忆化数组和dp的形式靠近</h3><h4 id="从index-0-递归"><a href="#从index-0-递归" class="headerlink" title="从index &#x3D; 0 递归"></a>从index &#x3D; 0 递归</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">	<span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="comment">// int min = Integer.MAX_VALUE;</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">lastStoneWeightII</span><span class="params">(<span class="type">int</span>[] stones)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (stones == <span class="literal">null</span> || stones.length == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> stone: stones) &#123;</span><br><span class="line">            sum += stone;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// **从0开始递归**</span></span><br><span class="line">        <span class="keyword">return</span> backtrack(stones, sum, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 前index数组，分为两个子序列，返回这两个子序列之差的最小值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="title function_">backtrack</span><span class="params">(<span class="type">int</span>[] stone, <span class="type">int</span> sum, <span class="type">int</span> currentSum, <span class="type">int</span> index)</span> &#123;</span><br><span class="line">        <span class="comment">// 递归结束条件</span></span><br><span class="line">        <span class="comment">// 返回index结尾的子数组 分为的两个子序列之差</span></span><br><span class="line">        <span class="keyword">if</span> (index &gt;= stone.length) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">otherSum</span> <span class="operator">=</span> sum - currentSum;</span><br><span class="line">            <span class="keyword">return</span> Math.abs(otherSum - currentSum);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 递，两条路径，选择index，或不选择index</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">include</span> <span class="operator">=</span> backtrack(stone, sum, currentSum + stone[index], index + <span class="number">1</span>);</span><br><span class="line">        <span class="type">int</span> <span class="variable">exclude</span> <span class="operator">=</span> backtrack(stone, sum, currentSum, index + <span class="number">1</span>);</span><br><span class="line">        <span class="comment">// 归，返回选择index 和不选择 index 的最小值</span></span><br><span class="line">        <span class="keyword">return</span> Math.min(include, exclude);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -340,7 +357,6 @@
 </li>
 </ol>
 
-      
     </div>
 
     
@@ -348,323 +364,30 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+          <div class="post-tags">
+              <a href="/tags/leetcode/" rel="tag"># leetcode</a>
+              <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag"># 动态规划</a>
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/%E8%83%8C%E5%8C%85/" rel="tag"># 背包</a>
+              <a href="/tags/0-1-%E8%83%8C%E5%8C%85/" rel="tag"># 0/1 背包</a>
+              <a href="/tags/dp/" rel="tag"># dp</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/08/%E5%88%86%E5%89%B2%E7%AD%89%E5%92%8C%E5%AD%90%E9%9B%86/" rel="prev" title="dp-分割等和子集">
+                  <i class="fa fa-angle-left"></i> dp-分割等和子集
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
     </footer>
   </article>
 </div>
 
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2025/06/08/%E5%88%86%E5%89%B2%E7%AD%89%E5%92%8C%E5%AD%90%E9%9B%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="tianzfm">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="有间栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 有间栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/08/%E5%88%86%E5%89%B2%E7%AD%89%E5%92%8C%E5%AD%90%E9%9B%86/" class="post-title-link" itemprop="url">dp-分割等和子集</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-08 12:07:07 / 修改时间：12:09:34" itemprop="dateCreated datePublished" datetime="2025-06-08T12:07:07+08:00">2025-06-08</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>621</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">给你一个 **只包含正整数** 的 **非空** 数组 `nums` 。请你判断是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。</span><br><span class="line"></span><br><span class="line">**示例 1：**</span><br><span class="line">输入：nums = [1,5,11,5]</span><br><span class="line">输出：true</span><br><span class="line">解释：数组可以分割成 [1, 5, 5] 和 [11] 。</span><br><span class="line"></span><br><span class="line">**示例 2：**</span><br><span class="line">输入：nums = [1,2,3,5]</span><br><span class="line">输出：false</span><br><span class="line">解释：数组不能分割成两个元素和相等的子集。</span><br></pre></td></tr></table></figure>
-
-<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>0-1背包问题<br>回溯 -&gt; 带返回值的回溯 -&gt; 记忆化数组 -&gt; dp<br>遍历数组nums，对每个元素都有两个选择：选或不选<br>转移方程： <code>dp[i][j] = dp[i - 1][j] + dp[i - 1][j - nums[i]]</code></p>
-<p>不带返回值的回溯</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="variable">found</span> <span class="operator">=</span> <span class="literal">false</span>; <span class="comment">// 成员变量记录是否找到解</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">canPartition</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (nums == <span class="literal">null</span> || nums.length == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> num : nums) &#123;</span><br><span class="line">            sum += num;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (sum % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> <span class="variable">target</span> <span class="operator">=</span> sum / <span class="number">2</span>;</span><br><span class="line">        backtrack(nums, target, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">return</span> found;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">backtrack</span><span class="params">(<span class="type">int</span>[] nums, <span class="type">int</span> target, <span class="type">int</span> start)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (found) <span class="keyword">return</span>; <span class="comment">// 提前终止，如果已经找到解</span></span><br><span class="line">        <span class="keyword">if</span> (target == <span class="number">0</span>) &#123;</span><br><span class="line">            found = <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (target &lt; <span class="number">0</span> || start &gt;= nums.length) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 选择当前数字</span></span><br><span class="line">        backtrack(nums, target - nums[start], start + <span class="number">1</span>);</span><br><span class="line">        <span class="comment">// 不选择当前数字</span></span><br><span class="line">        backtrack(nums, target, start + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>带返回值的回溯</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">canPartition</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (nums == <span class="literal">null</span> || nums.length == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> num : nums) &#123;</span><br><span class="line">            sum += num;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (sum % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> <span class="variable">target</span> <span class="operator">=</span> sum / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">return</span> backtrack(nums, target, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">backtrack</span><span class="params">(<span class="type">int</span>[] nums, <span class="type">int</span> target, <span class="type">int</span> start)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (target == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (target &lt; <span class="number">0</span> || start &gt;= nums.length) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 当前数字的两个选择：选 或 不选</span></span><br><span class="line">        <span class="keyword">return</span> backtrack(nums, target, start + <span class="number">1</span>) || backtrack(nums, target - nums[start], start + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>记忆化数组<br>上述回溯算法会超时。所以加入记忆化数组优化<br>记忆化数组的定义要能唯一的确定一个状态</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">canPartition</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (nums == <span class="literal">null</span> || nums.length == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> num : nums) &#123;</span><br><span class="line">            sum += num;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (sum % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> <span class="variable">target</span> <span class="operator">=</span> sum / <span class="number">2</span>;</span><br><span class="line">        Boolean[][] memo = <span class="keyword">new</span> <span class="title class_">Boolean</span>[nums.length + <span class="number">1</span>][target + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> backtrack(nums, target, <span class="number">0</span>, memo);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">backtrack</span><span class="params">(<span class="type">int</span>[] nums, <span class="type">int</span> target, <span class="type">int</span> start, Boolean[][] memo)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (target == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (target &lt; <span class="number">0</span> || start &gt;= nums.length) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (memo[start][target] != <span class="literal">null</span>) <span class="keyword">return</span> memo[start][target];</span><br><span class="line">        memo[start][target] = backtrack(nums, target, start + <span class="number">1</span>, memo) || backtrack(nums, target - nums[start], start + <span class="number">1</span>, memo);</span><br><span class="line">        <span class="keyword">return</span> memo[start][target];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>dp</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">canPartition</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (nums == <span class="literal">null</span> || nums.length == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> num : nums) &#123;</span><br><span class="line">            sum += num;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (sum % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> nums.length;</span><br><span class="line">        <span class="type">int</span> <span class="variable">target</span> <span class="operator">=</span> sum / <span class="number">2</span>;</span><br><span class="line">        <span class="type">boolean</span>[][] dp = <span class="keyword">new</span> <span class="title class_">boolean</span>[len + <span class="number">1</span>][target + <span class="number">1</span>];</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= len; i ++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt;= target; j ++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (j &gt;= nums[i - <span class="number">1</span>]) &#123;</span><br><span class="line">                    dp[i][j] = dp[i - <span class="number">1</span>][j] || dp[i - <span class="number">1</span>][j - nums[i - <span class="number">1</span>]];</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;    </span><br><span class="line">                    dp[i][j] = dp[i - <span class="number">1</span>][j];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[len][target];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2025/06/07/hexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="tianzfm">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="有间栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 有间栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/07/hexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" class="post-title-link" itemprop="url">hexo博客新增和部署命令</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-06-07 21:50:20" itemprop="dateCreated datePublished" datetime="2025-06-07T21:50:20+08:00">2025-06-07</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>58</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hexo c == hexo clean      # 清除缓存  </span><br><span class="line">hexo g == hexo generate   # 生成静态文件</span><br><span class="line">hexo d == hexo deploy     # 部署到github中，更新网页端的内容</span><br><span class="line">hexo s == hexo server     # 通过启动本地服务器，预览文章效果</span><br><span class="line">hexo n == hexo new  </span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2025/06/07/%E6%B1%89%E6%98%8E%E8%B7%9D%E7%A6%BB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="tianzfm">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="有间栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 有间栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/07/%E6%B1%89%E6%98%8E%E8%B7%9D%E7%A6%BB/" class="post-title-link" itemprop="url">汉明距离</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-06-07 21:43:48" itemprop="dateCreated datePublished" datetime="2025-06-07T21:43:48+08:00">2025-06-07</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>512</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <blockquote>
-<blockquote>
-<p>位运算基础题</p>
-</blockquote>
-</blockquote>
-<h3 id="1-java支持的位运算："><a href="#1-java支持的位运算：" class="headerlink" title="1. java支持的位运算："></a>1. java支持的位运算：</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&amp;：按位与。 同1为1，否则为0</span><br><span class="line"></span><br><span class="line">|：按位或。 只要有一个为1，就是1</span><br><span class="line"></span><br><span class="line">~：按位非。 取反</span><br><span class="line"></span><br><span class="line">^：按位异或。 相同为0，不同为1</span><br><span class="line"></span><br><span class="line">&lt;&lt;：左位移运算符。</span><br><span class="line">&gt;&gt; ：右位移运算符。</span><br><span class="line"></span><br><span class="line">&lt;&lt;&lt;：无符号右移运算符。</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-工具函数"><a href="#2-工具函数" class="headerlink" title="2. 工具函数"></a>2. 工具函数</h3><p>lowbit函数</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int lowbit(int x) &#123; </span><br><span class="line">	return x &amp; -x; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>​<strong>​输入​</strong>​：任意整数 <code>x</code>（正、负均可）。</li>
-<li>​<strong>​输出​</strong>​：<code>x</code> 的二进制表示中​<strong>​最低位的 1 及其后所有 0​</strong>​组成的数。</li>
-</ul>
-<h4 id="应用场景："><a href="#应用场景：" class="headerlink" title="应用场景："></a>应用场景：</h4><h5 id="1-统计二进制中-1-的个数​-​"><a href="#1-统计二进制中-1-的个数​-​" class="headerlink" title="1. 统计二进制中 1 的个数​**​"></a>1. 统计二进制中 1 的个数​**​</h5><p>通过循环减去 <code>lowbit(x)</code> 直到 <code>x</code> 为 0，统计操作次数即为 1 的个数：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hammingDistance</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">	<span class="type">int</span> <span class="variable">ans</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">	<span class="type">int</span> <span class="variable">tmp</span> <span class="operator">=</span> x ^ y;</span><br><span class="line">	<span class="keyword">while</span> (tmp &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		tmp -= lowbit(tmp);</span><br><span class="line">		ans ++;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span> <span class="title function_">lowbit</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> x &amp; -x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="2-​​树状数组（Fenwick-Tree）​​"><a href="#2-​​树状数组（Fenwick-Tree）​​" class="headerlink" title="2. ​​树状数组（Fenwick Tree）​​"></a>2. ​<strong>​树状数组（Fenwick Tree）​</strong>​</h5><ul>
-<li><code>lowbit</code> 用于快速定位树状数组中需要更新或查询的节点。例如：</li>
-<li>​<strong>​单点更新​</strong>​：从当前位置 <code>i</code> 开始，不断加上 <code>lowbit(i)</code>，直到超出数组范围。</li>
-<li>​<strong>​前缀和查询​</strong>​：从当前位置 <code>i</code> 开始，不断减去 <code>lowbit(i)</code>，累加对应节点的值。</li>
-</ul>
-<h5 id="3-其他应用​-​"><a href="#3-其他应用​-​" class="headerlink" title="3. 其他应用​**​"></a>3. 其他应用​**​</h5><ul>
-<li>​<strong>​判断 2 的幂​</strong>​：若 <code>lowbit(x) == x</code>，则 <code>x</code> 是 2 的幂（如 <code>x=8</code> 的二进制为 <code>1000</code>）。</li>
-<li>​<strong>​区间合并与离散化​</strong>​：在算法题中用于快速处理区间边界（如 AcWing 802. 区间和问题）。</li>
-</ul>
-<h4 id="while-x-y-0-作用"><a href="#while-x-y-0-作用" class="headerlink" title="while ((x | y) !&#x3D; 0) 作用"></a>while ((x | y) !&#x3D; 0) 作用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hammingDistance</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">ans</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> ((x | y) != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">a</span> <span class="operator">=</span> x &amp; <span class="number">1</span>, b = y &amp; <span class="number">1</span>;</span><br><span class="line">            ans += a ^ b;</span><br><span class="line">            x &gt;&gt;= <span class="number">1</span>; y &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>while ((x | y) != 0)</code> 的作用:<br>确保循环处理 <code>x</code> 和 <code>y</code> 的​<strong>​所有二进制位​</strong>​，直到所有位都被右移出（即 <code>x</code> 和 <code>y</code> 均变为 0）。</p>
-<p>按位或运算的特性​​</p>
-<ul>
-<li>​<strong>​<code>x | y</code>​</strong>​ 会对 <code>x</code> 和 <code>y</code> 的每一位执行逻辑或操作：<ul>
-<li>若 <code>x</code> 或 <code>y</code> 的某一位为 1，结果的该位为 1。</li>
-<li>仅当 <code>x</code> 和 <code>y</code> 的所有位均为 0 时，结果才为 0。</li>
-</ul>
-</li>
-<li>​<strong>​循环终止条件​</strong>​：当 <code>x</code> 和 <code>y</code> 的所有位均处理完毕（即均为 0）时，循环结束。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
 
 
 
