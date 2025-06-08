@@ -166,7 +166,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -194,6 +194,133 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/06/08/%E8%82%A1%E7%A5%A8%E4%B9%B0%E5%8D%96%E9%97%AE%E9%A2%98-%E5%8E%86%E5%8F%B2%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%E5%BD%92%E6%A1%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Fremont Tian">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="有间栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 有间栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/08/%E8%82%A1%E7%A5%A8%E4%B9%B0%E5%8D%96%E9%97%AE%E9%A2%98-%E5%8E%86%E5%8F%B2%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%E5%BD%92%E6%A1%A3/" class="post-title-link" itemprop="url">股票买卖问题-历史学习记录归档</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-08 17:34:24 / 修改时间：17:37:37" itemprop="dateCreated datePublished" datetime="2025-06-08T17:34:24+08:00">2025-06-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>760</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="股票买卖问题总结"><a href="#股票买卖问题总结" class="headerlink" title="股票买卖问题总结"></a>股票买卖问题总结</h1><h2 id="题号"><a href="#题号" class="headerlink" title="题号"></a>题号</h2><p>121<br>122<br>123<br>188<br>309<br>714  </p>
+<h2 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h2><ol>
+<li>状态有三个：i表示是第几天，k表示当前可用的交易次数，0 or 1 分别表示现在手中没有持有或者持有股票</li>
+<li>定义dp数组：   <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> prices.length;</span><br><span class="line"><span class="type">int</span>[][][] dp = <span class="keyword">new</span> <span class="title class_">int</span>[len][k][<span class="number">2</span>];</span><br></pre></td></tr></table></figure></li>
+<li>base case: <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">dp[-<span class="number">1</span>][k][<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line"><span class="comment">//解释：因为 i 是从 0 开始的，所以 i = -1 意味着还没有开始，这时候的利润当然是 0 。</span></span><br><span class="line">dp[-<span class="number">1</span>][k][<span class="number">1</span>] = -infinity</span><br><span class="line"><span class="comment">//解释：还没开始的时候，是不可能持有股票的，用负无穷表示这种不可能。</span></span><br><span class="line">dp[i][<span class="number">0</span>][<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line"><span class="comment">//解释：因为 k 是从 1 开始的，所以 k = 0 意味着根本不允许交易，这时候利润当然是 0 。</span></span><br><span class="line">dp[i][<span class="number">0</span>][<span class="number">1</span>] = -infinity</span><br><span class="line"><span class="comment">//解释：不允许交易的情况下，是不可能持有股票的，用负无穷表示这种不可能。</span></span><br></pre></td></tr></table></figure></li>
+<li>状态转移方程：   <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt; len; i ++)&#123;</span><br><span class="line">    <span class="comment">//解释：今天我没有持有股票，有两种可能：</span></span><br><span class="line">    <span class="comment">//要么是我昨天就没有持有，然后今天选择 rest，所以我今天还是没有持有；</span></span><br><span class="line">    <span class="comment">//要么是我昨天持有股票，但是今天我 sell 了，所以我今天没有持有股票了。</span></span><br><span class="line">    dp[i][k][<span class="number">0</span>] = Math.max(</span><br><span class="line">        <span class="comment">// 昨天就没有股票</span></span><br><span class="line">        dp[i - <span class="number">1</span>][k][<span class="number">0</span>],</span><br><span class="line">        <span class="comment">//  昨天有股票，今天卖了</span></span><br><span class="line">        dp[i - <span class="number">1</span>][k][<span class="number">1</span>] + prices[i]</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">//解释：今天我持有着股票，有两种可能：</span></span><br><span class="line">    <span class="comment">//要么我昨天就持有着股票，然后今天选择 rest，所以我今天还持有着股票；</span></span><br><span class="line">    <span class="comment">//要么我昨天本没有持有，但今天我选择 buy，所以今天我就持有股票了。</span></span><br><span class="line">    dp[i][k][<span class="number">1</span>] = Math.max(</span><br><span class="line">        <span class="comment">//</span></span><br><span class="line">        dp[i - <span class="number">1</span>][k][<span class="number">1</span>],</span><br><span class="line">        <span class="comment">//</span></span><br><span class="line">        dp[i - <span class="number">1</span>][k - <span class="number">1</span>][<span class="number">0</span>] - prices[i]</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="k-1"><a href="#k-1" class="headerlink" title="k &#x3D; 1"></a>k &#x3D; 1</h2><blockquote>
+<p>k &#x3D; 1 和 k &#x3D; inf 不同的地方在于k &#x3D; 1时 状态转移方程中的k和k-1是不一样的，而k&#x3D;inf时，k 和 k - 1可以认为一样；</p>
+</blockquote>
+<ol>
+<li>化简模板中的状态转移方程  </li>
+<li>用化简后的状态转移方程和模板中的base case 推出 初始条件：    <pre><code class="language-java">dp[i][k][0] = Math.max(dp[i - 1][k][0], dp[i - 1][k][1] + prices[i])
+因为k为定值1
+dp[0][0] = 0;
+dp[0][1] = - prices[0];
+</code></pre>
+</li>
+</ol>
+<h2 id="k-inf"><a href="#k-inf" class="headerlink" title="k &#x3D; inf"></a>k &#x3D; inf</h2><ol>
+<li>化简模板中的状态转移方程<pre><code class="language-java">dp[i][k][0] = max(dp[i-1][k][0], dp[i-1][k][1] + prices[i])
+dp[i][k][1] = max(dp[i-1][k][1], dp[i-1][k-1][0] - prices[i])
+            = max(dp[i-1][k][1], dp[i-1][k][0] - prices[i])
+
+我们发现数组中的 k 已经不会改变了，也就是说不需要记录 k 这个状态了：
+dp[i][0] = max(dp[i-1][0], dp[i-1][1] + prices[i])
+dp[i][1] = max(dp[i-1][1], dp[i-1][0] - prices[i])
+</code></pre>
+</li>
+<li>根据化简后的状态转移方程和base case推初始条件：<br> dp[0][0] &#x3D; 0;<br> dp[0][1] &#x3D; - prices[0];</li>
+</ol>
+<blockquote>
+<p>总结就是先根据题意，化简模板中的状态转移方程，然后根据化简后的状态转移方程，推base case；就这么简单</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -755,7 +882,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-08 12:07:07 / 修改时间：12:09:34" itemprop="dateCreated datePublished" datetime="2025-06-08T12:07:07+08:00">2025-06-08</time>
+      <time title="创建时间：2025-06-08 12:07:07 / 修改时间：17:36:34" itemprop="dateCreated datePublished" datetime="2025-06-08T12:07:07+08:00">2025-06-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1065,13 +1192,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">10k</span>
+    <span title="站点总字数">11k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">37 分钟</span>
+    <span title="站点阅读时长">40 分钟</span>
   </span>
 </div>
 <div class="busuanzi-count">
