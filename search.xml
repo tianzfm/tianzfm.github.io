@@ -19,6 +19,12 @@
 ]]></content>
   </entry>
   <entry>
+    <title>hexo博客新增和部署命令</title>
+    <url>/2025/06/07/hexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</url>
+    <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo c == hexo clean      # 清除缓存  </span><br><span class="line">hexo g == hexo generate   # 生成静态文件</span><br><span class="line">hexo d == hexo deploy     # 部署到github中，更新网页端的内容</span><br><span class="line">hexo s == hexo server     # 通过启动本地服务器，预览文章效果</span><br><span class="line">hexo n == hexo new  </span><br></pre></td></tr></table></figure>
+]]></content>
+  </entry>
+  <entry>
     <title>汉明距离</title>
     <url>/2025/06/07/%E6%B1%89%E6%98%8E%E8%B7%9D%E7%A6%BB/</url>
     <content><![CDATA[<blockquote>
@@ -26,43 +32,37 @@
 <p>位运算基础题</p>
 </blockquote>
 </blockquote>
-<h3 id="1-java支持的位运算:"><a href="#1-java支持的位运算:" class="headerlink" title="1. java支持的位运算:"></a>1. java支持的位运算:</h3><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">&amp;:按位与。 同1为1,否则为0</span><br><span class="line"></span><br><span class="line">|:按位或。 只要有一个为1,就是1</span><br><span class="line"></span><br><span class="line">~:按位非。 取反</span><br><span class="line"></span><br><span class="line">^:按位异或。 相同为0,不同为1</span><br><span class="line"></span><br><span class="line">&lt;&lt;:左位移运算符。</span><br><span class="line">&gt;&gt; :右位移运算符。</span><br><span class="line"></span><br><span class="line">&lt;&lt;&lt;:无符号右移运算符。</span><br></pre></td></tr></table></figure>
+<h3 id="1-java支持的位运算："><a href="#1-java支持的位运算：" class="headerlink" title="1. java支持的位运算："></a>1. java支持的位运算：</h3><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">&amp;：按位与。 同1为1，否则为0</span><br><span class="line"></span><br><span class="line">|：按位或。 只要有一个为1，就是1</span><br><span class="line"></span><br><span class="line">~：按位非。 取反</span><br><span class="line"></span><br><span class="line">^：按位异或。 相同为0，不同为1</span><br><span class="line"></span><br><span class="line">&lt;&lt;：左位移运算符。</span><br><span class="line">&gt;&gt; ：右位移运算符。</span><br><span class="line"></span><br><span class="line">&lt;&lt;&lt;：无符号右移运算符。</span><br></pre></td></tr></table></figure>
 
 <h3 id="2-工具函数"><a href="#2-工具函数" class="headerlink" title="2. 工具函数"></a>2. 工具函数</h3><p>lowbit函数</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int lowbit(int x) &#123; </span><br><span class="line">	return x &amp; -x; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li>​<strong>​输入​</strong>​:任意整数 <code>x</code>（正、负均可)。</li>
-<li>​<strong>​输出​</strong>​:<code>x</code> 的二进制表示中​<strong>​最低位的 1 及其后所有 0​</strong>​组成的数。</li>
+<li>​<strong>​输入​</strong>​：任意整数 <code>x</code>（正、负均可）。</li>
+<li>​<strong>​输出​</strong>​：<code>x</code> 的二进制表示中​<strong>​最低位的 1 及其后所有 0​</strong>​组成的数。</li>
 </ul>
-<h4 id="应用场景:"><a href="#应用场景:" class="headerlink" title="应用场景:"></a>应用场景:</h4><h5 id="1-统计二进制中-1-的个数​-​"><a href="#1-统计二进制中-1-的个数​-​" class="headerlink" title="1. 统计二进制中 1 的个数​**​"></a>1. 统计二进制中 1 的个数​**​</h5><p>通过循环减去 <code>lowbit(x)</code> 直到 <code>x</code> 为 0,统计操作次数即为 1 的个数:</p>
+<h4 id="应用场景："><a href="#应用场景：" class="headerlink" title="应用场景："></a>应用场景：</h4><h5 id="1-统计二进制中-1-的个数​-​"><a href="#1-统计二进制中-1-的个数​-​" class="headerlink" title="1. 统计二进制中 1 的个数​**​"></a>1. 统计二进制中 1 的个数​**​</h5><p>通过循环减去 <code>lowbit(x)</code> 直到 <code>x</code> 为 0，统计操作次数即为 1 的个数：</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hammingDistance</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">	<span class="type">int</span> <span class="variable">ans</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">	<span class="type">int</span> <span class="variable">tmp</span> <span class="operator">=</span> x ^ y;</span><br><span class="line">	<span class="keyword">while</span> (tmp &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		tmp -= lowbit(tmp);</span><br><span class="line">		ans ++;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span> <span class="title function_">lowbit</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> x &amp; -x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="2-​​树状数组(Fenwick-Tree)​​"><a href="#2-​树状数组(Fenwick-Tree)​" class="headerlink" title="2. ​​树状数组（Fenwick Tree)​​"></a>2. ​<strong>​树状数组（Fenwick Tree)​</strong>​</h5><ul>
-<li><code>lowbit</code> 用于快速定位树状数组中需要更新或查询的节点。例如:</li>
-<li>​<strong>​单点更新​</strong>​:从当前位置 <code>i</code> 开始,不断加上 <code>lowbit(i)</code>,直到超出数组范围。</li>
-<li>​<strong>​前缀和查询​</strong>​:从当前位置 <code>i</code> 开始,不断减去 <code>lowbit(i)</code>,累加对应节点的值。</li>
+<h5 id="2-​​树状数组（Fenwick-Tree）​​"><a href="#2-​​树状数组（Fenwick-Tree）​​" class="headerlink" title="2. ​​树状数组（Fenwick Tree）​​"></a>2. ​<strong>​树状数组（Fenwick Tree）​</strong>​</h5><ul>
+<li><code>lowbit</code> 用于快速定位树状数组中需要更新或查询的节点。例如：</li>
+<li>​<strong>​单点更新​</strong>​：从当前位置 <code>i</code> 开始，不断加上 <code>lowbit(i)</code>，直到超出数组范围。</li>
+<li>​<strong>​前缀和查询​</strong>​：从当前位置 <code>i</code> 开始，不断减去 <code>lowbit(i)</code>，累加对应节点的值。</li>
 </ul>
-<h5 id="3-其他应用​-"><a href="#3-其他应用​​" class="headerlink" title="3. 其他应用​**​"></a>3. 其他应用​**​</h5><ul>
-<li>​<strong>​判断 2 的幂​</strong>​:若 <code>lowbit(x) == x</code>,则 <code>x</code> 是 2 的幂（如 <code>x=8</code> 的二进制为 <code>1000</code>)。</li>
-<li>​<strong>​区间合并与离散化​</strong>​:在算法题中用于快速处理区间边界（如 AcWing 802. 区间和问题)。</li>
+<h5 id="3-其他应用​-​"><a href="#3-其他应用​-​" class="headerlink" title="3. 其他应用​**​"></a>3. 其他应用​**​</h5><ul>
+<li>​<strong>​判断 2 的幂​</strong>​：若 <code>lowbit(x) == x</code>，则 <code>x</code> 是 2 的幂（如 <code>x=8</code> 的二进制为 <code>1000</code>）。</li>
+<li>​<strong>​区间合并与离散化​</strong>​：在算法题中用于快速处理区间边界（如 AcWing 802. 区间和问题）。</li>
 </ul>
 <h4 id="while-x-y-0-作用"><a href="#while-x-y-0-作用" class="headerlink" title="while ((x | y) !&#x3D; 0) 作用"></a>while ((x | y) !&#x3D; 0) 作用</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hammingDistance</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">ans</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> ((x | y) != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">a</span> <span class="operator">=</span> x &amp; <span class="number">1</span>, b = y &amp; <span class="number">1</span>;</span><br><span class="line">            ans += a ^ b;</span><br><span class="line">            x &gt;&gt;= <span class="number">1</span>; y &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><code>while ((x | y) != 0)</code> 的作用:<br>确保循环处理 <code>x</code> 和 <code>y</code> 的​<strong>​所有二进制位​</strong>​,直到所有位都被右移出（即 <code>x</code> 和 <code>y</code> 均变为 0)。</p>
+<p><code>while ((x | y) != 0)</code> 的作用:<br>确保循环处理 <code>x</code> 和 <code>y</code> 的​<strong>​所有二进制位​</strong>​，直到所有位都被右移出（即 <code>x</code> 和 <code>y</code> 均变为 0）。</p>
 <p>按位或运算的特性​​</p>
 <ul>
-<li>​<strong>​<code>x | y</code>​</strong>​ 会对 <code>x</code> 和 <code>y</code> 的每一位执行逻辑或操作:<ul>
-<li>若 <code>x</code> 或 <code>y</code> 的某一位为 1,结果的该位为 1。</li>
-<li>仅当 <code>x</code> 和 <code>y</code> 的所有位均为 0 时,结果才为 0。</li>
+<li>​<strong>​<code>x | y</code>​</strong>​ 会对 <code>x</code> 和 <code>y</code> 的每一位执行逻辑或操作：<ul>
+<li>若 <code>x</code> 或 <code>y</code> 的某一位为 1，结果的该位为 1。</li>
+<li>仅当 <code>x</code> 和 <code>y</code> 的所有位均为 0 时，结果才为 0。</li>
 </ul>
 </li>
-<li>​<strong>​循环终止条件​</strong>​:当 <code>x</code> 和 <code>y</code> 的所有位均处理完毕（即均为 0)时,循环结束。</li>
+<li>​<strong>​循环终止条件​</strong>​：当 <code>x</code> 和 <code>y</code> 的所有位均处理完毕（即均为 0）时，循环结束。</li>
 </ul>
-]]></content>
-  </entry>
-  <entry>
-    <title>hexo博客新增和部署命令</title>
-    <url>/2025/06/07/hexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</url>
-    <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo c == hexo clean      # 清除缓存  </span><br><span class="line">hexo g == hexo generate   # 生成静态文件</span><br><span class="line">hexo d == hexo deploy     # 部署到github中,更新网页端的内容</span><br><span class="line">hexo s == hexo server     # 通过启动本地服务器,预览文章效果</span><br><span class="line">hexo n == hexo new  </span><br></pre></td></tr></table></figure>
 ]]></content>
   </entry>
 </search>
