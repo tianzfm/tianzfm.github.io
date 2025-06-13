@@ -7,11 +7,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>hot-100笔记</title>
-    <url>/2025/06/13/hot-100%E7%AC%94%E8%AE%B0/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Mysql常见问题-历史学习记录归档</title>
     <url>/2025/06/08/MySQL%E5%8E%86%E5%8F%B2%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</url>
     <content><![CDATA[<h2 id="1-事务"><a href="#1-事务" class="headerlink" title="1. 事务"></a>1. 事务</h2><p>事务就是一组原子性的SQL查询，或者说一个独立的工作单元。如果数据库引擎能成功的对数据库应用该组查询的全部语句，那么就执行该组查询。如果其中有任何一条语句因为崩溃或其他原因无法执行，那么所有的语句都不会执行。也就是说，事务内的语句，要么全部执行成功，要么全部执行失败。</p>
@@ -291,6 +286,11 @@
         <tag>历史学习记录</tag>
         <tag>面试问题总结</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>hot-100笔记</title>
+    <url>/2025/06/13/hot-100%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>jvm常见问题-历史学习记录</title>
@@ -656,11 +656,6 @@
         <tag>面试问题总结</tag>
         <tag>jvm</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>任务执行引擎+线程池动态配置</title>
-    <url>/2025/06/13/%E4%BB%BB%E5%8A%A1%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E+%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>mysql基础语法-历史学习记录</title>
@@ -1533,6 +1528,11 @@
       </tags>
   </entry>
   <entry>
+    <title>任务执行引擎+线程池动态配置</title>
+    <url>/2025/06/13/%E4%BB%BB%E5%8A%A1%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E+%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>dp-分割等和子集</title>
     <url>/2025/06/08/%E5%88%86%E5%89%B2%E7%AD%89%E5%92%8C%E5%AD%90%E9%9B%86/</url>
     <content><![CDATA[<h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">给你一个 **只包含正整数** 的 **非空** 数组 `nums` 。请你判断是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。</span><br><span class="line"></span><br><span class="line">**示例 1：**</span><br><span class="line">输入：nums = [1,5,11,5]</span><br><span class="line">输出：true</span><br><span class="line">解释：数组可以分割成 [1, 5, 5] 和 [11] 。</span><br><span class="line"></span><br><span class="line">**示例 2：**</span><br><span class="line">输入：nums = [1,2,3,5]</span><br><span class="line">输出：false</span><br><span class="line">解释：数组不能分割成两个元素和相等的子集。</span><br></pre></td></tr></table></figure>
@@ -1574,7 +1574,39 @@
   <entry>
     <title>待办</title>
     <url>/2025/06/13/%E5%BE%85%E5%8A%9E/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<ul>
+<li><p>适配器模块</p>
+</li>
+<li><p>ThreadLocal</p>
+</li>
+<li><p>并发常用实践</p>
+</li>
+<li><p>三级缓存常用实践</p>
+</li>
+<li><p>支付系统异常记录与补偿（异常表设计，延迟消息自验证、异常分类处理与兜底模块）</p>
+</li>
+<li><p>责任链模式调度</p>
+</li>
+<li><p>频控模块设计（lua + 模板 + 工厂）</p>
+</li>
+<li><p>hot100 刷题笔记</p>
+</li>
+<li><p>cola架构分层实践</p>
+</li>
+<li><p>任务执行引擎 + 线程池动态配置</p>
+</li>
+<li><p>源码</p>
+<ul>
+<li>nacos源码</li>
+<li>aop、ioc源码</li>
+<li>spring事务</li>
+<li>AQS、executor源码</li>
+</ul>
+</li>
+<li><p>降级、限流策略</p>
+</li>
+</ul>
+]]></content>
   </entry>
   <entry>
     <title>并发常见问题-历史学习记录</title>
