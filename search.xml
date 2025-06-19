@@ -334,7 +334,11 @@
 
 <h3 id="8-合并二叉树"><a href="#8-合并二叉树" class="headerlink" title="8. 合并二叉树"></a>8. <a href="https://leetcode.cn/problems/merge-two-binary-trees/description/">合并二叉树</a></h3><p>递归 没啥好说的</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> TreeNode <span class="title function_">mergeTrees</span><span class="params">(TreeNode root1, TreeNode root2)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (root1 == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> root2;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (root2 == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> root1;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">TreeNode</span> <span class="variable">node</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TreeNode</span>(root1.val + root2.val);</span><br><span class="line">        node.left = mergeTrees(root1.left, root2.left);</span><br><span class="line">        node.right = mergeTrees(root1.right, root2.right);</span><br><span class="line">        <span class="keyword">return</span> node;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="9-二叉树展开为链表"><a href="#9-二叉树展开为链表" class="headerlink" title="9. 二叉树展开为链表"></a>9. <a href="https://leetcode.cn/problems/flatten-binary-tree-to-linked-list/description/">二叉树展开为链表</a></h3><h3 id="10-把二叉树转换为累加树"><a href="#10-把二叉树转换为累加树" class="headerlink" title="10. 把二叉树转换为累加树"></a>10. <a href="https://leetcode.cn/problems/convert-bst-to-greater-tree/description/">把二叉树转换为累加树</a></h3><h3 id="11-二叉树的直径"><a href="#11-二叉树的直径" class="headerlink" title="11. 二叉树的直径"></a>11. <a href="https://leetcode.cn/problems/diameter-of-binary-tree/description/">二叉树的直径</a></h3><h3 id="12-二叉树的序列化与反序列化"><a href="#12-二叉树的序列化与反序列化" class="headerlink" title="12. 二叉树的序列化与反序列化"></a>12. <a href="https://leetcode.cn/problems/serialize-and-deserialize-binary-tree/">二叉树的序列化与反序列化</a></h3><h3 id="13-打家劫舍3"><a href="#13-打家劫舍3" class="headerlink" title="13. 打家劫舍3"></a>13. <a href="https://leetcode.cn/problems/house-robber-iii/description/">打家劫舍3</a></h3><h3 id="14-路径总和"><a href="#14-路径总和" class="headerlink" title="14. 路径总和"></a>14. <a href="https://leetcode.cn/problems/path-sum-iii/description/">路径总和</a></h3><h3 id="15-二叉树的最大路径和"><a href="#15-二叉树的最大路径和" class="headerlink" title="15. 二叉树的最大路径和"></a>15. <a href="https://leetcode.cn/problems/binary-tree-maximum-path-sum/description/">二叉树的最大路径和</a></h3><h3 id="16-翻转二叉树"><a href="#16-翻转二叉树" class="headerlink" title="16. 翻转二叉树"></a>16. <a href="https://leetcode.cn/problems/invert-binary-tree/description/">翻转二叉树</a></h3><h3 id="17-二叉树的最近公共祖先"><a href="#17-二叉树的最近公共祖先" class="headerlink" title="17. 二叉树的最近公共祖先"></a>17. <a href="https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/description/">二叉树的最近公共祖先</a></h3><h2 id="排序相关"><a href="#排序相关" class="headerlink" title="排序相关"></a>排序相关</h2><h3 id="1-排序链表"><a href="#1-排序链表" class="headerlink" title="1. 排序链表"></a>1. <a href="https://leetcode.cn/problems/sort-list/description/">排序链表</a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">给你链表的头结点 head ，请将其按 升序 排列并返回 排序后的链表 。</span><br><span class="line"></span><br><span class="line">输入：head = [4,2,1,3]</span><br><span class="line">输出：[1,2,3,4]</span><br></pre></td></tr></table></figure>
+<h3 id="9-二叉树展开为链表"><a href="#9-二叉树展开为链表" class="headerlink" title="9. 二叉树展开为链表"></a>9. <a href="https://leetcode.cn/problems/flatten-binary-tree-to-linked-list/description/">二叉树展开为链表</a></h3><p>重点：要识别出来用后序遍历</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">flatten</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (root == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 后序</span></span><br><span class="line">        flatten(root.left);</span><br><span class="line">        flatten(root.right);</span><br><span class="line">        <span class="comment">// 保存当前root的右子树</span></span><br><span class="line">        <span class="type">TreeNode</span> <span class="variable">right</span> <span class="operator">=</span> root.right;</span><br><span class="line">        <span class="comment">// 展开过程</span></span><br><span class="line">        root.right = root.left;</span><br><span class="line">        root.left = <span class="literal">null</span>;</span><br><span class="line">        <span class="comment">// 找到当前右子树的末尾，并接上原来的右子树</span></span><br><span class="line">        <span class="type">TreeNode</span> <span class="variable">cur</span> <span class="operator">=</span> root;</span><br><span class="line">        <span class="keyword">while</span> (cur.right != <span class="literal">null</span>) &#123;</span><br><span class="line">            cur = cur.right;</span><br><span class="line">        &#125;</span><br><span class="line">        cur.right = right;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="10-把二叉树转换为累加树"><a href="#10-把二叉树转换为累加树" class="headerlink" title="10. 把二叉树转换为累加树"></a>10. <a href="https://leetcode.cn/problems/convert-bst-to-greater-tree/description/">把二叉树转换为累加树</a></h3><h3 id="11-二叉树的直径"><a href="#11-二叉树的直径" class="headerlink" title="11. 二叉树的直径"></a>11. <a href="https://leetcode.cn/problems/diameter-of-binary-tree/description/">二叉树的直径</a></h3><p>要定一个ans来记录最大值，这个没想到。还是对递归理解不够深啊</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">ans</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">diameterOfBinaryTree</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (root == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// int left = diameterOfBinaryTree(root.left);</span></span><br><span class="line">        <span class="comment">// int right = diameterOfBinaryTree(root.right);</span></span><br><span class="line">        <span class="comment">// return left + right;</span></span><br><span class="line">        maxDepth(root);</span><br><span class="line">        <span class="keyword">return</span> ans; </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="title function_">maxDepth</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (root == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> maxDepth(root.left);</span><br><span class="line">        <span class="type">int</span> <span class="variable">right</span> <span class="operator">=</span> maxDepth(root.right);</span><br><span class="line">        ans = Math.max(ans, left + right );</span><br><span class="line">        <span class="keyword">return</span> Math.max(left, right) + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="12-二叉树的序列化与反序列化"><a href="#12-二叉树的序列化与反序列化" class="headerlink" title="12. 二叉树的序列化与反序列化"></a>12. <a href="https://leetcode.cn/problems/serialize-and-deserialize-binary-tree/">二叉树的序列化与反序列化</a></h3><h3 id="13-打家劫舍3"><a href="#13-打家劫舍3" class="headerlink" title="13. 打家劫舍3"></a>13. <a href="https://leetcode.cn/problems/house-robber-iii/description/">打家劫舍3</a></h3><h3 id="14-路径总和"><a href="#14-路径总和" class="headerlink" title="14. 路径总和"></a>14. <a href="https://leetcode.cn/problems/path-sum-iii/description/">路径总和</a></h3><h3 id="15-二叉树的最大路径和"><a href="#15-二叉树的最大路径和" class="headerlink" title="15. 二叉树的最大路径和"></a>15. <a href="https://leetcode.cn/problems/binary-tree-maximum-path-sum/description/">二叉树的最大路径和</a></h3><h3 id="16-翻转二叉树"><a href="#16-翻转二叉树" class="headerlink" title="16. 翻转二叉树"></a>16. <a href="https://leetcode.cn/problems/invert-binary-tree/description/">翻转二叉树</a></h3><h3 id="17-二叉树的最近公共祖先"><a href="#17-二叉树的最近公共祖先" class="headerlink" title="17. 二叉树的最近公共祖先"></a>17. <a href="https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/description/">二叉树的最近公共祖先</a></h3><h2 id="排序相关"><a href="#排序相关" class="headerlink" title="排序相关"></a>排序相关</h2><h3 id="1-排序链表"><a href="#1-排序链表" class="headerlink" title="1. 排序链表"></a>1. <a href="https://leetcode.cn/problems/sort-list/description/">排序链表</a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">给你链表的头结点 head ，请将其按 升序 排列并返回 排序后的链表 。</span><br><span class="line"></span><br><span class="line">输入：head = [4,2,1,3]</span><br><span class="line">输出：[1,2,3,4]</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>核心思想：归并排序</p>
@@ -802,11 +806,6 @@
         <tag>面试问题总结</tag>
         <tag>jvm</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>任务执行引擎+线程池动态配置</title>
-    <url>/2025/06/13/%E4%BB%BB%E5%8A%A1%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E+%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>mysql基础语法-历史学习记录</title>
@@ -1679,6 +1678,11 @@
       </tags>
   </entry>
   <entry>
+    <title>任务执行引擎+线程池动态配置</title>
+    <url>/2025/06/13/%E4%BB%BB%E5%8A%A1%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E+%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>dp-分割等和子集</title>
     <url>/2025/06/08/%E5%88%86%E5%89%B2%E7%AD%89%E5%92%8C%E5%AD%90%E9%9B%86/</url>
     <content><![CDATA[<h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">给你一个 **只包含正整数** 的 **非空** 数组 `nums` 。请你判断是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。</span><br><span class="line"></span><br><span class="line">**示例 1：**</span><br><span class="line">输入：nums = [1,5,11,5]</span><br><span class="line">输出：true</span><br><span class="line">解释：数组可以分割成 [1, 5, 5] 和 [11] 。</span><br><span class="line"></span><br><span class="line">**示例 2：**</span><br><span class="line">输入：nums = [1,2,3,5]</span><br><span class="line">输出：false</span><br><span class="line">解释：数组不能分割成两个元素和相等的子集。</span><br></pre></td></tr></table></figure>
@@ -1706,11 +1710,6 @@
         <tag>算法</tag>
         <tag>动态规划</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>基于redis的频控模块设计</title>
-    <url>/2025/06/13/%E5%9F%BA%E4%BA%8Eredis%E7%9A%84%E9%A2%91%E6%8E%A7%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>分布式理论及问题</title>
@@ -1780,6 +1779,11 @@
       </tags>
   </entry>
   <entry>
+    <title>基于redis的频控模块设计</title>
+    <url>/2025/06/13/%E5%9F%BA%E4%BA%8Eredis%E7%9A%84%E9%A2%91%E6%8E%A7%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>布隆过滤器</title>
     <url>/2025/06/18/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/</url>
     <content><![CDATA[]]></content>
@@ -1790,41 +1794,9 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>待办</title>
-    <url>/2025/06/13/%E5%BE%85%E5%8A%9E/</url>
-    <content><![CDATA[<ul>
-<li><p>适配器模块</p>
-</li>
-<li><p>ThreadLocal</p>
-</li>
-<li><p>并发常用实践</p>
-</li>
-<li><p>三级缓存常用实践</p>
-</li>
-<li><p>支付系统异常记录与补偿（异常表设计，延迟消息自验证、异常分类处理与兜底模块）</p>
-</li>
-<li><p>责任链模式调度</p>
-</li>
-<li><p>频控模块设计（lua + 模板 + 工厂）</p>
-</li>
-<li><p>hot100 刷题笔记</p>
-</li>
-<li><p>cola架构分层实践</p>
-</li>
-<li><p>任务执行引擎 + 线程池动态配置</p>
-</li>
-<li><p>源码</p>
-<ul>
-<li>nacos源码</li>
-<li>aop、ioc源码</li>
-<li>spring事务</li>
-<li>AQS、executor源码</li>
-</ul>
-</li>
-<li><p>降级、限流策略</p>
-</li>
-</ul>
-]]></content>
+    <title>支付系统容错设计</title>
+    <url>/2025/06/13/%E6%94%AF%E4%BB%98%E7%B3%BB%E7%BB%9F%E5%AE%B9%E9%94%99%E8%AE%BE%E8%AE%A1/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>并发常见问题-历史学习记录</title>
@@ -2489,11 +2461,6 @@
       </tags>
   </entry>
   <entry>
-    <title>支付系统容错设计</title>
-    <url>/2025/06/13/%E6%94%AF%E4%BB%98%E7%B3%BB%E7%BB%9F%E5%AE%B9%E9%94%99%E8%AE%BE%E8%AE%A1/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>最后一块石头的重量2</title>
     <url>/2025/06/08/%E6%9C%80%E5%90%8E%E4%B8%80%E5%9D%97%E7%9F%B3%E5%A4%B4%E7%9A%84%E9%87%8D%E9%87%8F2/</url>
     <content><![CDATA[<p>我们需要将石头分成两堆，使得两堆石头的重量差最小。这可以转化为 ​<strong>​0&#x2F;1背包问题​</strong>​，即找到一个子集，使得其和尽可能接近 <code>总重量 / 2</code>。</p>
@@ -2578,6 +2545,43 @@
       </tags>
   </entry>
   <entry>
+    <title>待办</title>
+    <url>/2025/06/13/%E5%BE%85%E5%8A%9E/</url>
+    <content><![CDATA[<ul>
+<li><p>适配器模块</p>
+</li>
+<li><p>ThreadLocal</p>
+</li>
+<li><p>并发常用实践</p>
+</li>
+<li><p>三级缓存常用实践</p>
+</li>
+<li><p>支付系统异常记录与补偿（异常表设计，延迟消息自验证、异常分类处理与兜底模块）</p>
+</li>
+<li><p>责任链模式调度</p>
+</li>
+<li><p>频控模块设计（lua + 模板 + 工厂）</p>
+</li>
+<li><p>hot100 刷题笔记</p>
+</li>
+<li><p>cola架构分层实践</p>
+</li>
+<li><p>任务执行引擎 + 线程池动态配置</p>
+</li>
+<li><p>源码</p>
+<ul>
+<li>nacos源码</li>
+<li>aop、ioc源码</li>
+<li>spring事务</li>
+<li>AQS、executor源码</li>
+</ul>
+</li>
+<li><p>降级、限流策略</p>
+</li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
     <title>汉明距离</title>
     <url>/2025/06/07/%E6%B1%89%E6%98%8E%E8%B7%9D%E7%A6%BB/</url>
     <content><![CDATA[<blockquote>
@@ -2624,28 +2628,6 @@
         <tag>leetcode</tag>
         <tag>算法</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>短链服务器</title>
-    <url>/2025/06/18/%E7%9F%AD%E9%93%BE%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<p><a href="https://cloud.tencent.com/developer/article/2330726">https://cloud.tencent.com/developer/article/2330726</a></p>
-<p><a href="https://yuanjava.com/short-link-system/">https://yuanjava.com/short-link-system/</a></p>
-<h2 id="1-为什么要用短链"><a href="#1-为什么要用短链" class="headerlink" title="1. 为什么要用短链"></a>1. 为什么要用短链</h2><ol>
-<li>排版美观</li>
-<li>链接占用的字数少</li>
-<li>节省成本</li>
-</ol>
-<h2 id="2-基本原理"><a href="#2-基本原理" class="headerlink" title="2. 基本原理"></a>2. 基本原理</h2><p>301 永久重定向<br>302 临时重定向</p>
-<h2 id="3-生成短链："><a href="#3-生成短链：" class="headerlink" title="3. 生成短链："></a>3. 生成短链：</h2><h3 id="1-hash算法。"><a href="#1-hash算法。" class="headerlink" title="1. hash算法。"></a>1. hash算法。</h3><p>见的哈希算法就是 MD5、SHA 等，但实际上并不需要这些复杂的哈希算法。因为在生成短链这个问题上不需要考虑反向解密的难度，只需要关心哈希算法的计算速度和冲突概率就可以了。<br>MurmurHash 算法提供了两种长度的哈希值，一种是 32bits，一种是 128bits。为了让最终生成的短链尽可能短，我们可以选择 32bits 的哈希值。比如假设某个长链接经过 MurmurHash 计算后得到的哈希值是 181338494，再拼上短链服务的域名就变成了最终的短链 <a href="http://sourl.cn/181338494%EF%BC%88%E5%85%B6%E4%B8%AD%EF%BC%8Chttp://sourl.cn">http://sourl.cn/181338494（其中，http://sourl.cn</a> 是短链服务的域名）。</p>
-<ul>
-<li>进一步缩短链接<br>将 10 进制的哈希值，转化成更高进制的哈希值，这样哈希值就变短了。</li>
-</ul>
-<p>16 进制中，用 A～F，来表示 10～15。在网址 URL 中，常用的合法字符有 0～9、a～z、A～Z 这样 62 个字符。为了让哈希值表示起来尽可能短，我们可以将 10 进制的哈希值转化成 62 进制<br>6位62进制数字，就可以表示几百亿的数据范围，完全够用了</p>
-<ol start="3">
-<li>hash冲突的解决<br>在mysql中存储短链和原始链接的对应关系，并将短链字段加上唯一键约束，避免重复，并加快查询速度<br>在插入短链前，先查询该短链是否存在，若不存在，再插入；若存在，进一步确认该短链对应的原链接和现在的原链接是否相同，如果不同，说明发生了hash冲突。这个时候，我们可以给原始网址拼接一串特殊字符，比如 DUPLICATED，然后再重新计算哈希值，两次哈希计算都冲突的概率，显然是非常低的。假设出现非常极端的情况，又发生冲突了，我们可以再换一个拼接字符串，比如 OHMYGOD，再计算哈希值。然后把计算得到的哈希值，跟原始网址拼接了特殊字符串之后的文本，一并存储在 MySQL 数据库中。</li>
-</ol>
-<p>进一步优化性能：<br>把已经生成的短链，构建成布隆过滤器。当有新的短链生成的时候，我们先拿这个新生成的短链，在布隆过滤器中查找。如果查找的结果是不存在，那就说明这个新生成的短链并没有冲突。这个时候，我们只需要再执行写入短链和对应原始网页的 SQL 语句就可以了。</p>
-<h3 id="2-ID生成器"><a href="#2-ID生成器" class="headerlink" title="2. ID生成器"></a>2. ID生成器</h3>]]></content>
   </entry>
   <entry>
     <title>股票买卖问题-历史学习记录归档</title>
@@ -2695,6 +2677,28 @@ dp[i][1] = max(dp[i-1][1], dp[i-1][0] - prices[i])
         <tag>动态规划</tag>
         <tag>dp</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>短链服务器</title>
+    <url>/2025/06/18/%E7%9F%AD%E9%93%BE%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<p><a href="https://cloud.tencent.com/developer/article/2330726">https://cloud.tencent.com/developer/article/2330726</a></p>
+<p><a href="https://yuanjava.com/short-link-system/">https://yuanjava.com/short-link-system/</a></p>
+<h2 id="1-为什么要用短链"><a href="#1-为什么要用短链" class="headerlink" title="1. 为什么要用短链"></a>1. 为什么要用短链</h2><ol>
+<li>排版美观</li>
+<li>链接占用的字数少</li>
+<li>节省成本</li>
+</ol>
+<h2 id="2-基本原理"><a href="#2-基本原理" class="headerlink" title="2. 基本原理"></a>2. 基本原理</h2><p>301 永久重定向<br>302 临时重定向</p>
+<h2 id="3-生成短链："><a href="#3-生成短链：" class="headerlink" title="3. 生成短链："></a>3. 生成短链：</h2><h3 id="1-hash算法。"><a href="#1-hash算法。" class="headerlink" title="1. hash算法。"></a>1. hash算法。</h3><p>见的哈希算法就是 MD5、SHA 等，但实际上并不需要这些复杂的哈希算法。因为在生成短链这个问题上不需要考虑反向解密的难度，只需要关心哈希算法的计算速度和冲突概率就可以了。<br>MurmurHash 算法提供了两种长度的哈希值，一种是 32bits，一种是 128bits。为了让最终生成的短链尽可能短，我们可以选择 32bits 的哈希值。比如假设某个长链接经过 MurmurHash 计算后得到的哈希值是 181338494，再拼上短链服务的域名就变成了最终的短链 <a href="http://sourl.cn/181338494%EF%BC%88%E5%85%B6%E4%B8%AD%EF%BC%8Chttp://sourl.cn">http://sourl.cn/181338494（其中，http://sourl.cn</a> 是短链服务的域名）。</p>
+<ul>
+<li>进一步缩短链接<br>将 10 进制的哈希值，转化成更高进制的哈希值，这样哈希值就变短了。</li>
+</ul>
+<p>16 进制中，用 A～F，来表示 10～15。在网址 URL 中，常用的合法字符有 0～9、a～z、A～Z 这样 62 个字符。为了让哈希值表示起来尽可能短，我们可以将 10 进制的哈希值转化成 62 进制<br>6位62进制数字，就可以表示几百亿的数据范围，完全够用了</p>
+<ol start="3">
+<li>hash冲突的解决<br>在mysql中存储短链和原始链接的对应关系，并将短链字段加上唯一键约束，避免重复，并加快查询速度<br>在插入短链前，先查询该短链是否存在，若不存在，再插入；若存在，进一步确认该短链对应的原链接和现在的原链接是否相同，如果不同，说明发生了hash冲突。这个时候，我们可以给原始网址拼接一串特殊字符，比如 DUPLICATED，然后再重新计算哈希值，两次哈希计算都冲突的概率，显然是非常低的。假设出现非常极端的情况，又发生冲突了，我们可以再换一个拼接字符串，比如 OHMYGOD，再计算哈希值。然后把计算得到的哈希值，跟原始网址拼接了特殊字符串之后的文本，一并存储在 MySQL 数据库中。</li>
+</ol>
+<p>进一步优化性能：<br>把已经生成的短链，构建成布隆过滤器。当有新的短链生成的时候，我们先拿这个新生成的短链，在布隆过滤器中查找。如果查找的结果是不存在，那就说明这个新生成的短链并没有冲突。这个时候，我们只需要再执行写入短链和对应原始网页的 SQL 语句就可以了。</p>
+<h3 id="2-ID生成器"><a href="#2-ID生成器" class="headerlink" title="2. ID生成器"></a>2. ID生成器</h3>]]></content>
   </entry>
   <entry>
     <title>股票买卖问题一网打尽</title>
